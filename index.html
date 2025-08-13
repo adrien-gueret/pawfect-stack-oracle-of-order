@@ -3,14 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TODO: Your game name</title>
+    <title>Pawfect Stack</title>
     <link href="./style.css" rel="stylesheet" />
     <link id="favIcon" rel="icon shortcut" />
   </head>
   <body>
     <main>
       <section id="title">
-        <h1 class="sectionTitle">TODO: Your game name</h1>
+        <div class="logos">
+          <h1>Pawfect Stack</h1>
+
+          <h2>Oracle of Chaos</h2>
+        </div>
 
         <p class="p">
           <a href="#newGame">Click to start</a>
@@ -22,9 +26,17 @@
       </section>
     </main>
 
-      <p class="p" id="gameOptions">
-        <label><input id="soundsCheckbox" type="checkbox" /> Enable sounds</label>
-      </p>
-      <script type="module" src="scripts/index.js"></script>
+    <p class="p" id="gameOptions">
+      <label><input id="soundsCheckbox" type="checkbox" /> Enable sounds</label>
+    </p>
+
+    <script>
+      window.process = {
+        env: {
+          GAME_TYPE: "chaos",
+        },
+      };
+    </script>
+    <script type="module" src="scripts/index.js"></script>
   </body>
 </html>

@@ -5,9 +5,23 @@ import { Packer } from "roadroller";
 import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
 
 (async () => {
+  // Parse command line arguments
+  const args = process.argv.slice(2);
+  const gameArg = args.find((arg) => arg.startsWith("--game="));
+  const gameName = gameArg ? gameArg.split("=")[1] : null;
+
+  if (gameName !== "chaos" && gameName !== "order") {
+    console.error("Error: --game argument is invalid");
+    process.exit(1);
+  }
+
+  console.log(`Building game: ${gameName}`);
+
+  const zipPathname = `./entry-${gameName}.zip`;
+
   console.log("Remove previous entry files...");
   fs.rmSync("./entry", { recursive: true, force: true });
-  fs.rmSync("./entry.zip", { force: true });
+  fs.rmSync(zipPathname, { force: true });
 
   console.log("Get project files content...");
 
@@ -20,7 +34,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     .replaceAll("const ", "let ")
     .replaceAll("undefined", "void 0");
 
-  fs.unlinkSync('./index.js');
+  fs.unlinkSync("./index.js");
 
   console.log("Minify JS...");
   const minifiedJS = await minify.js(indexJS);
@@ -45,9 +59,12 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
       () => `<style>${minifiedCSS}</style>`
     )
     .replaceAll('"use strict";', "")
-    // TODO: add your own long texts to replace
-    //.replaceAll("./images/sprites.png", toBase64Url("./images/sprites.png"))
-    //.replaceAll("--primary-light", "--pl");
+    .replaceAll("./images/logo.png", toBase64Url("./images/logo.png"))
+    .replaceAll(
+      "./images/logo-oracle.png",
+      toBase64Url("./images/logo-oracle.png")
+    );
+  //.replaceAll("--primary-light", "--pl");
 
   const ids = [...indexHTML.matchAll(/id="([^"]*?)"/g)];
 
@@ -58,7 +75,6 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
   });
 
   const minifiedHTML = await minify.html(indexHTML);
-
   console.log("Pack project...");
   const inputToPack = [
     {
@@ -79,16 +95,17 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
 
   fs.writeFileSync(
     "./entry/index.html",
-    `<script>${packedCode.firstLine + packedCode.secondLine}</script>`,
+    minifiedHTML,
+    //`<script>${packedCode.firstLine + packedCode.secondLine}</script>`,
     { encoding: "utf8" }
   );
 
   console.log("Zip entry folder...");
-  await zip("./entry", "./entry.zip", { compression: COMPRESSION_LEVEL.high });
+  await zip("./entry", zipPathname, { compression: COMPRESSION_LEVEL.high });
 
   console.log("Compress zip...");
   try {
-    await execSync("ect.exe -9 -zip ./entry.zip", { env: process.env });
+    await execSync(`ect.exe -9 -zip ${zipPathname}`, { env: process.env });
   } catch (e) {
     console.warn(
       "⚠ Cannot compress zip, please be sure ect.exe is installed and available from global scope"
@@ -96,7 +113,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
   }
 
   console.log("Get entry size...");
-  const { size } = fs.statSync("./entry.zip");
+  const { size } = fs.statSync(zipPathname);
 
   console.log("Entry size: " + size + " bytes");
 

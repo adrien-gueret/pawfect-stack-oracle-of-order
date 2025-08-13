@@ -46,5 +46,6 @@ function renderFavicon() {
 }
 
 export default async function init() {
+  document.body.classList.add(process.env.GAME_TYPE);
   renderFavicon();
 }

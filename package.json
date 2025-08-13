@@ -1,10 +1,19 @@
 {
+  "type": "module",
   "dependencies": {
     "minify": "9.2.0",
     "roadroller": "^2.1.0",
     "zip-a-folder": "^3.1.9"
   },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.5",
+    "cross-env": "^10.0.0"
+  },
   "scripts": {
-    "build:entry": "npx rollup ./scripts/index.js --file index.js --format iife && node build.mjs"
+    "__rollup:chaos": "cross-env GAME_TYPE=chaos npx rollup ./scripts/index.js --file index.js --format iife -c rollup.config.js",
+    "__rollup:order": "cross-env GAME_TYPE=order npx rollup ./scripts/index.js --file index.js --format iife -c rollup.config.js",
+    "build:chaos": "npm run __rollup:chaos && node build.mjs --game=chaos",
+    "build:order": "npm run __rollup:order && node build.mjs --game=order",
+    "build:entries": "npm run build:chaos && npm run build:order"
   }
 }
