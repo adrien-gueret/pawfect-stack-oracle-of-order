@@ -77,7 +77,7 @@ body:not([data-current-section]) #gameOptions,
 #gameOptions {
   font-size: 1rem;
   font-weight: bold;
-  color: var(--main-background);
+  color: inherit;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,6 +118,19 @@ body:not([data-current-section]) #gameOptions,
   background-size: 360px 150px;
   background-repeat: no-repeat;
   margin-top: 4px;
+  transform: translateX(200%);
+  animation: slideRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 1s;
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(200%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 #title .logos {
@@ -130,19 +143,8 @@ body:not([data-current-section]) #gameOptions,
   margin-top: 96px;
 }
 
-@keyframes subtleBlink {
-  0%,
-  93.75% {
-    opacity: 1;
-  }
-  93.76%,
-  100% {
-    opacity: 0;
-  }
-}
-
-a,
-a:hover {
+#title a,
+#title a:hover {
   color: inherit;
   text-decoration: none;
   display: inline-block;
@@ -153,11 +155,9 @@ a:hover {
   border-radius: var(--radius);
   transition: transform 0.2s ease;
   box-shadow: inset 3px 3px 0 #c2c2c2;
-  animation: subtleBlink 2s infinite;
 }
 
 a:hover {
-  animation: none;
   transform: scale(1.05);
 }
 
@@ -202,3 +202,15 @@ body.order[data-current-section="title"] main {
   );
   background-color: #fff7f3;
 }
+
+/* ================= */
+/* ================= */
+/* Game */
+/* ================= */
+/* ================= */
+
+/*
+border color #FEEBC9
+background #331C1A
+text #613531
+*/

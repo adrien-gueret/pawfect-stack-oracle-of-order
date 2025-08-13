@@ -59,6 +59,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
       () => `<style>${minifiedCSS}</style>`
     )
     .replaceAll('"use strict";', "")
+    .replaceAll("./images/sprites.png", toBase64Url("./images/sprites.png"))
     .replaceAll("./images/logo.png", toBase64Url("./images/logo.png"))
     .replaceAll(
       "./images/logo-oracle.png",
@@ -95,8 +96,8 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
 
   fs.writeFileSync(
     "./entry/index.html",
-    minifiedHTML,
-    //`<script>${packedCode.firstLine + packedCode.secondLine}</script>`,
+    //minifiedHTML,
+    `<script>${packedCode.firstLine + packedCode.secondLine}</script>`,
     { encoding: "utf8" }
   );
 
