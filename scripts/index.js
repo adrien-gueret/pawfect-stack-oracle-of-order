@@ -7,9 +7,7 @@ import initSounds from "./sounds.js";
 import specificGame from "./specificGame/index.js";
 
 (async () => {
-  specificGame();
-
-  await initUI();
+  await initUI(specificGame.renderFavicon);
 
   initState();
 

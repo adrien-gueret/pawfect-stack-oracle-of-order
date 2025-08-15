@@ -15,43 +15,6 @@ export function onSoundsCheckboxChange(callback) {
   soundsCheckbox.onchange = callback;
 }
 
-function renderFavicon() {
-  // TODO: replace with your own favicon if needed
-  const pixels = [
-    [0, 0, 0, 0, 1, 1, 1, 1],
-    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [0, 1, 2, 2, 2, 1, 1, 2, 2, 2, 1],
-    [0, 1, 2, 2, 2, 1, 1, 2, 2, 2, 1],
-    [0, 1, 2, 2, 1, 1, 1, 1, 2, 2, 1],
-    [1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1],
-    [1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 1],
-    [0, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
-    [0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-    [0, 0, 1, 2, 1, 2, 2, 1, 2, 1],
-    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-    [0, 0, 0, 1, 1, 1, 1, 1, 1],
-  ];
-
-  const c = document.createElement("canvas");
-  c.width = 16;
-  c.height = 16;
-  const ctx = c.getContext("2d");
-
-  const colors = ["transparent", "#fff", "#3f2631"];
-
-  pixels.forEach((row, rowIndex) => {
-    row.forEach((pixelValue, columnIndex) => {
-      ctx.fillStyle = colors[pixelValue];
-      ctx.fillRect(columnIndex + 2, rowIndex, 1, 1);
-    });
-  });
-
-  favIcon.href = c.toDataURL();
-}
-
 function renderWallsCanvas() {
   wallsCanvas.width = 576;
   wallsCanvas.height = 576;
@@ -150,12 +113,12 @@ function prepareItemToDrop(itemId) {
     } else {
       gameTable.style.cursor = "not-allowed";
       overlaps.forEach(({ row, col }) => {
-        ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+        ctx.fillStyle = "rgba(255, 0, 0, 0.6)";
         ctx.fillRect(col * 48, row * 48, 48, 48);
       });
     }
 
-    drawItem(ctx, item);
+    drawItem(ctx, item, "rgba(255, 255, 255, 0.2)");
   };
 
   gameTable.onclick = (e) => {
@@ -216,8 +179,9 @@ function prepareItemToDrop(itemId) {
   };
 }
 
-export default async function init() {
+export default async function init(renderFavicon) {
   document.body.classList.add(process.env.GAME_TYPE);
+
   renderFavicon();
 
   const debugBoard = Array.from({ length: 10 }, () => Array(10).fill(0));
@@ -232,5 +196,5 @@ export default async function init() {
   debugBoard[9][6] = -1;
 
   initGameTable(debugBoard);
-  prepareItemToDrop(3);
+  prepareItemToDrop(6);
 }

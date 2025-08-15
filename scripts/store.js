@@ -14,5 +14,4 @@ export const dispatch = (action) => setState(reducer(state, action));
 export default function init(defaultReducer, defaultState) {
   reducer = defaultReducer;
   state = defaultState;
-  console.log(state);
 }

@@ -21,13 +21,41 @@ const items = [
     y: 0,
   },
   {
-    name: "temp",
+    name: "Fish",
     shape: [
       [1, 1],
       [1, 0],
     ],
     x: 0,
     y: 0,
+  },
+  {
+    name: "Hat",
+    shape: [
+      [0, 1],
+      [1, 1],
+    ],
+    x: 32,
+    y: 32,
+  },
+  {
+    name: "Broom",
+    shape: [
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ],
+    x: 32,
+    y: 80,
+  },
+  {
+    name: "Carnivorous Plant",
+    shape: [
+      [1, 1],
+      [0, 1],
+    ],
+    x: 32,
+    y: 64,
   },
 ];
 

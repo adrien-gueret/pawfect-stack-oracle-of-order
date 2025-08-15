@@ -1,22 +1,40 @@
-export default function () {
-  console.log(`
-    Bienvenue dans le mode Chaos !
-    ----------------------------------------
-    Ce mode est conçu pour tester la robustesse de votre application
-    en introduisant des comportements imprévisibles et des scénarios inattendus.
-    Préparez-vous à voir des logs inhabituels, des erreurs simulées,
-    et des situations qui ne devraient jamais arriver en production.
+function renderFavicon() {
+  const pixels = [
+    [],
+    [],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 1, 1, 0, 0, 1, 1],
+    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 1, 2, 1, 1, 2, 1],
+    [0, 0, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1],
+    [0, 0, 0, 0, 1, 1, 2, 1, 1, 1],
+    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+  ];
 
-    Voici quelques exemples de ce que vous pourriez rencontrer :
-    - Des délais aléatoires dans les réponses réseau
-    - Des données corrompues ou inattendues
-    - Des exceptions levées à des moments imprévus
-    - Des ressources temporairement indisponibles
-    - Des messages de log très longs comme celui-ci, pour tester l'affichage
+  const c = document.createElement("canvas");
+  c.width = 16;
+  c.height = 16;
+  const ctx = c.getContext("2d");
 
-    N'oubliez pas de désactiver le mode Chaos avant de déployer en production !
-    ----------------------------------------
-    Merci d'utiliser le mode Chaos pour améliorer la résilience de votre application.
-    Bonne chance !
-  `);
+  const colors = ["transparent", "#331c1a", "#FEEBC9"];
+
+  pixels.forEach((row, rowIndex) => {
+    row.forEach((pixelValue, columnIndex) => {
+      ctx.fillStyle = colors[pixelValue];
+      ctx.fillRect(columnIndex + 2, rowIndex, 1, 1);
+    });
+  });
+
+  favIcon.href = c.toDataURL();
 }
+
+export default {
+  renderFavicon,
+};
