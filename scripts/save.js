@@ -1,4 +1,4 @@
-const STORAGE_KEY = "YOUR-LOCALSTORAGE-KEY";
+const STORAGE_KEY = "pawfect-stack-storage";
 
 function getSave() {
   const save = localStorage.getItem(STORAGE_KEY);

@@ -214,3 +214,66 @@ border color #FEEBC9
 background #331C1A
 text #613531
 */
+
+#game {
+  background: #331c1a;
+}
+
+#walls {
+  margin: 24px auto 0 auto;
+  padding: 48px;
+  position: relative;
+}
+
+#wallsCanvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#gameTable {
+  position: relative;
+  border-collapse: collapse;
+  background: #331c1a;
+  display: grid;
+  margin: auto;
+  grid-template-columns: repeat(10, 48px);
+  grid-template-rows: repeat(10, 48px);
+  column-gap: 0;
+  row-gap: 0;
+}
+
+#gameTable > div {
+  border: 1px solid rgba(254, 235, 201, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+#gameTable > div.solid {
+  --sw: 64px;
+  --sh: 160px;
+  background-image: url("./images/sprites.png");
+  background-color: #331c1a;
+  border-color: #331c1a;
+  background-size: calc(var(--sw) * 3) calc(var(--sh) * 3);
+  background-position: 0 -240px;
+}
+
+#gameTable > div.solid.v1 {
+  background-position: -48px -240px;
+}
+
+#gameTable > div.solid.v2 {
+  background-position: 0 -288px;
+}
+
+#gameTable > div.solid.v3 {
+  background-position: -48px -288px;
+}
+
+#itemToDropCanvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}

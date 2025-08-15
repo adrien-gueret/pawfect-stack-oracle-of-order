@@ -4,7 +4,7 @@ import initUI from "./ui.js";
 import initState, { areSoundMuted } from "./state.js";
 import initSounds from "./sounds.js";
 
-import specificGame from "./specificGame.js";
+import specificGame from "./specificGame/index.js";
 
 (async () => {
   specificGame();
