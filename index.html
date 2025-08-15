@@ -17,11 +17,21 @@
         </div>
 
         <p class="p">
-          <a href="#game">Click to start</a>
+          <a href="#scenarioSection">Click to start</a>
         </p>
       </section>
 
-      <section id="game">
+      <section id="scenarioSection" class="scenario">
+        <div id="scenarioScene" class="scenarioScene">
+          <div class="scenarioMaster"></div>
+          <div class="scenarioMelusine"></div>
+          <div class="scenarioCat"></div>
+        </div>
+        <div class="scenarioDialog"></div>
+        <a class="skip" href="#mainGame">Skip</a>
+      </section>
+
+      <section id="mainGame">
         <div id="walls">
           <canvas id="wallsCanvas" width="576" height="576"></canvas>
           <div id="gameTable"></div>

@@ -1,5 +1,26 @@
-function renderFavicon() {
-  const pixels = [
+const scenarioScenes = [
+  {
+    msg: "Miaou...",
+  },
+  {
+    msg: `Mon humain de compagnie a demandé à son apprentie de ranger la cave.`,
+  },
+  {
+    msg: `La cave, c'est mon territoire ! Et je ne peux laisser personne y mettre les pattes !`,
+  },
+  {
+    msg: `La petite sorcière n'a pas l'air très douée, mais elle est de bonne volonté...`,
+  },
+  {
+    msg: "A nous deux, Mélusine !",
+  },
+  {
+    msg: "Miaou !",
+  },
+];
+
+export default {
+  favicon: [
     [],
     [],
     [0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
@@ -16,25 +37,5 @@ function renderFavicon() {
     [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
-  ];
-
-  const c = document.createElement("canvas");
-  c.width = 16;
-  c.height = 16;
-  const ctx = c.getContext("2d");
-
-  const colors = ["transparent", "#331c1a", "#FEEBC9"];
-
-  pixels.forEach((row, rowIndex) => {
-    row.forEach((pixelValue, columnIndex) => {
-      ctx.fillStyle = colors[pixelValue];
-      ctx.fillRect(columnIndex + 2, rowIndex, 1, 1);
-    });
-  });
-
-  favIcon.href = c.toDataURL();
-}
-
-export default {
-  renderFavicon,
+  ],
 };

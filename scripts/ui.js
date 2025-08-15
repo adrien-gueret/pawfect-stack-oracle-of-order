@@ -179,10 +179,37 @@ function prepareItemToDrop(itemId) {
   };
 }
 
-export default async function init(renderFavicon) {
+function renderFavicon(pixels) {
+  const c = document.createElement("canvas");
+  c.width = 16;
+  c.height = 16;
+  const ctx = c.getContext("2d");
+
+  const colors = ["transparent", "#331c1a", "#FEEBC9"];
+
+  pixels.forEach((row, rowIndex) => {
+    row.forEach((pixelValue, columnIndex) => {
+      ctx.fillStyle = colors[pixelValue];
+      ctx.fillRect(columnIndex + 2, rowIndex, 1, 1);
+    });
+  });
+
+  favIcon.href = c.toDataURL();
+}
+
+export async function runScenario(specificGameScenario) {
+  const master = document.querySelector("#scenarioScene .scenarioMaster");
+  const melusine = document.querySelector("#scenarioScene .scenarioMelusine");
+  const cat = document.querySelector("#scenarioScene .scenarioCat");
+  const dialog = document.querySelector("#scenarioScene + .scenarioDialog");
+
+  await specificGameScenario(master, melusine, cat, dialog);
+}
+
+export default async function init(faviconPixels) {
   document.body.classList.add(process.env.GAME_TYPE);
 
-  renderFavicon();
+  renderFavicon(faviconPixels);
 
   const debugBoard = Array.from({ length: 10 }, () => Array(10).fill(0));
 

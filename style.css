@@ -11,6 +11,9 @@ body {
   --shadow: rgba(255, 255, 255, 0.3);
   --radius: 3px;
 
+  --sw: 64px;
+  --sh: 224px;
+
   font-family: monospace;
   background-color: var(--main-background);
   image-rendering: optimizeSpeed;
@@ -120,7 +123,7 @@ body:not([data-current-section]) #gameOptions,
   margin-top: 4px;
   transform: translateX(200%);
   animation: slideRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  animation-delay: 1s;
+  animation-delay: 0.5s;
 }
 
 @keyframes slideRight {
@@ -203,19 +206,112 @@ body.order[data-current-section="title"] main {
   background-color: #fff7f3;
 }
 
+.skip,
+.skip:visited {
+  font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+  font-size: 1rem;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.skip:hover {
+  text-decoration: underline;
+}
+
+/* ================= */
+/* ================= */
+/* Scenario */
+/* ================= */
+/* ================= */
+.scenario {
+  border: 16px solid #000;
+}
+
+.scenarioScene {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 64px;
+  justify-content: space-around;
+  background-color: #3a2520;
+  background-image: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05) 25%,
+      transparent 25%
+    ),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%);
+  background-size: 190px 192px;
+}
+
+.scenarioDialog {
+  background: #000;
+  color: #fff;
+  width: 100%;
+  flex: 1;
+  margin-top: auto;
+  border: 8px solid #fff;
+  box-sizing: border-box;
+  font-size: 3rem;
+  padding: 64px;
+  cursor: pointer;
+  position: relative;
+}
+
+.scenarioDialog::after {
+  content: "";
+  display: block;
+  position: absolute;
+  right: 16px;
+  bottom: 24px;
+  border: 24px solid transparent;
+  border-left-color: #fff;
+  pointer-events: none;
+}
+
+.scenarioMaster,
+.scenarioMelusine,
+.scenarioCat {
+  width: 128px;
+  height: 128px;
+  background-size: calc(var(--sw) * 8) calc(var(--sh) * 8);
+  background-image: url("./images/sprites.png");
+}
+
+.scenarioMaster.left,
+.scenarioMelusine.left,
+.scenarioCat.left {
+  transform: scaleX(-1);
+}
+
+.scenarioMaster {
+  background-position: 0 -1536px;
+}
+
+.scenarioMelusine {
+  background-position: 0 -1280px;
+}
+
+.scenarioCat {
+  background-position: -256px -1408px;
+}
+
 /* ================= */
 /* ================= */
 /* Game */
 /* ================= */
 /* ================= */
 
-/*
-border color #FEEBC9
-background #331C1A
-text #613531
-*/
+#mainGame,
+.scenarioScene {
+}
 
-#game {
+#mainGame,
+.scenario {
   background: #331c1a;
 }
 
@@ -250,8 +346,6 @@ text #613531
 }
 
 #gameTable > div.solid {
-  --sw: 64px;
-  --sh: 160px;
   background-image: url("./images/sprites.png");
   background-color: #331c1a;
   border-color: #331c1a;
