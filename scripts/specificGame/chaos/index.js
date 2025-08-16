@@ -1,21 +1,21 @@
 const scenarioScenes = [
   {
-    msg: "Miaou...",
+    msg: "Meow...",
   },
   {
-    msg: `Mon humain de compagnie a demandé à son apprentie de ranger la cave.`,
+    msg: `My pet human asked his apprentice to tidy up the cellar.`,
   },
   {
-    msg: `La cave, c'est mon territoire ! Et je ne peux laisser personne y mettre les pattes !`,
+    msg: `The cellar is MY territory! And I can't let anyone set foot in it!!!`,
   },
   {
-    msg: `La petite sorcière n'a pas l'air très douée, mais elle est de bonne volonté...`,
+    msg: `The little witch doesn't seem very skilled, but she's ambitious...`,
   },
   {
-    msg: "A nous deux, Mélusine !",
+    msg: "It's just you and me now, Mélusine!",
   },
   {
-    msg: "Miaou !",
+    msg: "Meow!",
   },
 ];
 
@@ -38,4 +38,91 @@ export default {
     [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
   ],
+
+  async runScenario(master, melusine, cat, dialog, speakTo) {
+    let currentScene = -1;
+
+    function zoomIn() {
+      scenarioScene.style.transform = "scale(1.5) translateX(-120px)";
+    }
+
+    function zoomOut() {
+      scenarioScene.style.removeProperty("transform");
+    }
+
+    return new Promise((resolve) => {
+      const showNextScene = () => {
+        currentScene++;
+
+        dialog.innerHTML = scenarioScenes[currentScene].msg;
+
+        switch (currentScene) {
+          case 0: {
+            melusine.classList.add("left");
+            cat.classList.add("left");
+
+            speakTo(master, melusine);
+
+            master.style.display = "none";
+
+            break;
+          }
+
+          case 1: {
+            melusine.classList.remove("left", "stop");
+
+            melusine.animate(
+              [
+                { transform: "translateX(0)" },
+                { transform: "translateX(500%)" },
+              ],
+              {
+                duration: 3000,
+                easing: "linear",
+                fill: "forwards",
+              }
+            );
+            break;
+          }
+
+          case 2:
+          case 4:
+            zoomIn();
+            break;
+
+          case 3:
+            zoomOut();
+            break;
+
+          case 5:
+            zoomOut();
+            cat.classList.add("walk");
+            cat
+              .animate(
+                [
+                  { transform: "translateX(0)" },
+                  { transform: "translateX(400%)" },
+                ],
+                {
+                  duration: 3000,
+                  easing: "linear",
+                  fill: "forwards",
+                }
+              )
+              .finished.then(resolve);
+            break;
+        }
+
+        const lastScene = currentScene === scenarioScenes.length - 1;
+
+        dialog.onclick = lastScene ? resolve : showNextScene;
+
+        if (lastScene) {
+          dialog.classList.add("end");
+        }
+      };
+
+      showNextScene();
+    });
+  },
 };
