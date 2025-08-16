@@ -256,7 +256,7 @@ body.order[data-current-section="title"] main {
   margin-top: auto;
   border: 8px solid #fff;
   box-sizing: border-box;
-  font-size: 3rem;
+  font-size: 2.3rem;
   padding: 64px;
   cursor: pointer;
   position: relative;
@@ -271,6 +271,37 @@ body.order[data-current-section="title"] main {
   border: 24px solid transparent;
   border-left-color: #fff;
   pointer-events: none;
+  animation: blinkArrow 1s steps(1) infinite;
+}
+
+.scenarioDialog.end::after {
+  border-color: #fff;
+  right: 40px;
+}
+
+@keyframes blinkArrow {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  61%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.c {
+  animation: spriteAnimation 1s steps(2) infinite;
+}
+
+@keyframes spriteAnimation {
+  from {
+    background-position: var(--x) var(--y);
+  }
+
+  to {
+    background-position: var(--target-x) var(--target-y);
+  }
 }
 
 .scenarioMaster,
@@ -288,16 +319,52 @@ body.order[data-current-section="title"] main {
   transform: scaleX(-1);
 }
 
-.scenarioMaster {
-  background-position: 0 -1536px;
+.scenarioMelusine {
+  --x: -0;
+  --y: -1280px;
+  --target-x: -256px;
+  --target-y: -1280px;
 }
 
-.scenarioMelusine {
-  background-position: 0 -1280px;
+.scenarioMaster {
+  --x: -0;
+  --y: -1536px;
+  --target-x: -256px;
+  --target-y: -1536px;
 }
 
 .scenarioCat {
-  background-position: -256px -1408px;
+  --x: -256px;
+  --y: -1408px;
+  --target-x: -512px;
+  --target-y: -1408px;
+}
+
+.scenarioCat.walk {
+  --x: -256px;
+  --y: -1536px;
+  --target-x: -512px;
+  --target-y: -1536px;
+}
+
+.c.speaking {
+  --target-x: var(--x);
+  --target-y: calc(var(--y) - 256px);
+}
+
+.c.stop {
+  --target-x: var(--x);
+  --target-y: var(--y);
+}
+
+.scenarioMelusine {
+  --x: 0;
+  --y: -1280px;
+}
+
+.scenarioCat {
+  --x: -256px;
+  --y: -1408px;
 }
 
 /* ================= */
@@ -305,10 +372,6 @@ body.order[data-current-section="title"] main {
 /* Game */
 /* ================= */
 /* ================= */
-
-#mainGame,
-.scenarioScene {
-}
 
 #mainGame,
 .scenario {

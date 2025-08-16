@@ -1,24 +1,24 @@
 const scenarioScenes = [
   {
-    msg: "Ma petite Mélusine, je te confie une mission de la plus haute importance !",
+    msg: "My little Mélusine, I entrust you with a mission of the utmost importance!",
   },
   {
-    msg: `Oh, quoi donc, Maître ? Des ingrédients à chercher ? Une potion à concocter ? Un sort à fabriquer ?`,
+    msg: `Oh, what is it, Master? Ingredients to find? A potion to brew? A spell to craft?`,
   },
   {
-    msg: `La cave a bien besoin d'être rangée !`,
+    msg: `The cellar really needs to be tidied up!`,
   },
   {
-    msg: "Oh... je vois. Je m'en occupe tout de suite.",
+    msg: "Oh... I see. I'll take care of it right away.",
   },
   {
-    msg: "Et veille à ce que la concentration en magie soit optimale !",
+    msg: "And make sure the concentration of magic is optimal!",
   },
   {
-    msg: "Très bien, maître.",
+    msg: "Very well, Master.",
   },
   {
-    msg: "Miaou...",
+    msg: "Meow...",
   },
 ];
 
@@ -41,24 +41,133 @@ export default {
     [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
   ],
-  async runScenario(master, melusine, cat, dialog) {
-    let currentScene = 0;
+  async runScenario(master, melusine, cat, dialog, speakTo) {
+    let currentScene = -1;
 
-    melusine.classList.add("left");
-    cat.style.display = "none";
-    console.log(dialog);
-    dialog.innerHTML = scenarioScenes[currentScene].msg;
-
-    return;
-
-    const showNextScene = () => {
-      if (currentScene < scenarioScenes.length) {
-        const scene = scenarioScenes[currentScene];
-        document.getElementById("scenarioDialog").innerText = scene.msg;
+    return new Promise((resolve) => {
+      const showNextScene = () => {
         currentScene++;
-      }
-    };
 
-    showNextScene();
+        dialog.innerHTML = scenarioScenes[currentScene].msg;
+
+        switch (currentScene) {
+          case 0: {
+            melusine.classList.add("left");
+
+            speakTo(master, melusine);
+
+            cat.style.display = "none";
+            master.animate(
+              [
+                { transform: "translateX(-100%)" },
+                { transform: "translateX(0)" },
+              ],
+              {
+                duration: 1500,
+                easing: "linear",
+                fill: "forwards",
+              }
+            );
+            break;
+          }
+
+          case 1:
+          case 3: {
+            master.getAnimations().forEach((anim) => {
+              if (anim instanceof CSSAnimation) {
+                return;
+              }
+              anim.finish();
+            });
+
+            speakTo(melusine, master);
+
+            break;
+          }
+
+          case 2:
+          case 4: {
+            speakTo(master, melusine);
+            break;
+          }
+
+          case 5: {
+            speakTo(melusine, master);
+            master.classList.remove("stop");
+
+            const masterAnimation = master.animate(
+              [
+                { transform: "translateX(0) scaleX(-1)" },
+                { transform: "translateX(-205%) scaleX(-1)" },
+              ],
+              {
+                duration: 3000,
+                easing: "linear",
+                fill: "forwards",
+              }
+            );
+
+            masterAnimation.finished.then(() => {
+              master.style.opacity = 0;
+            });
+
+            window.setTimeout(() => {
+              melusine.classList.remove("left", "speaking");
+              melusine.animate(
+                [
+                  { transform: "translateX(0)" },
+                  { transform: "translateX(205%)" },
+                ],
+                {
+                  duration: 3000,
+                  easing: "linear",
+                  fill: "forwards",
+                }
+              );
+            }, 750);
+            break;
+          }
+
+          case 6: {
+            master.remove();
+            melusine.remove();
+            cat.style.removeProperty("display");
+            cat.animate([{ opacity: 0 }, { opacity: 1 }], {
+              duration: 2000,
+              easing: "ease-in",
+              fill: "forwards",
+            });
+
+            window.setTimeout(() => {
+              cat.classList.add("walk");
+              cat
+                .animate(
+                  [
+                    { transform: "translateX(0)" },
+                    { transform: "translateX(400%)" },
+                  ],
+                  {
+                    duration: 3000,
+                    easing: "linear",
+                    fill: "forwards",
+                  }
+                )
+                .finished.then(resolve);
+            }, 2500);
+            break;
+          }
+        }
+
+        const lastScene = currentScene === scenarioScenes.length - 1;
+
+        dialog.onclick = lastScene ? resolve : showNextScene;
+
+        if (lastScene) {
+          dialog.classList.add("end");
+        }
+      };
+
+      showNextScene();
+    });
   },
 };

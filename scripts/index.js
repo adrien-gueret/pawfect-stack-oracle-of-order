@@ -1,4 +1,4 @@
-import initSections from "./sections.js";
+import initSections, { goToSection } from "./sections.js";
 import initUI, { runScenario } from "./ui.js";
 
 import initState, { areSoundMuted } from "./state.js";
@@ -20,6 +20,7 @@ import specificGame from "./specificGame/index.js";
 
     if (nextSection === "scenarioSection") {
       await runScenario(specificGame.runScenario);
+      goToSection("mainGame");
     }
   });
 })();

@@ -197,13 +197,20 @@ function renderFavicon(pixels) {
   favIcon.href = c.toDataURL();
 }
 
+function speakTo(c1, c2) {
+  c1.classList.add("speaking");
+  c1.classList.remove("stop");
+  c2.classList.add("stop");
+  c2.classList.remove("speaking");
+}
+
 export async function runScenario(specificGameScenario) {
   const master = document.querySelector("#scenarioScene .scenarioMaster");
   const melusine = document.querySelector("#scenarioScene .scenarioMelusine");
   const cat = document.querySelector("#scenarioScene .scenarioCat");
   const dialog = document.querySelector("#scenarioScene + .scenarioDialog");
 
-  await specificGameScenario(master, melusine, cat, dialog);
+  await specificGameScenario(master, melusine, cat, dialog, speakTo);
 }
 
 export default async function init(faviconPixels) {
