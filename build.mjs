@@ -18,9 +18,10 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
   console.log(`Building game: ${gameName}`);
 
   const zipPathname = `./entry-${gameName}.zip`;
+  const entryPathname = `./entry-${gameName}`;
 
   console.log("Remove previous entry files...");
-  fs.rmSync("./entry", { recursive: true, force: true });
+  fs.rmSync(entryPathname, { recursive: true, force: true });
   fs.rmSync(zipPathname, { force: true });
 
   console.log("Get project files content...");
@@ -92,17 +93,18 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
 
   console.log("Write entry files...");
 
-  fs.mkdirSync("./entry");
+  fs.mkdirSync(entryPathname);
 
   fs.writeFileSync(
-    "./entry/index.html",
-    //minifiedHTML,
+    `${entryPathname}/index.html`,
     `<script>${packedCode.firstLine + packedCode.secondLine}</script>`,
     { encoding: "utf8" }
   );
 
   console.log("Zip entry folder...");
-  await zip("./entry", zipPathname, { compression: COMPRESSION_LEVEL.high });
+  await zip(entryPathname, zipPathname, {
+    compression: COMPRESSION_LEVEL.high,
+  });
 
   console.log("Compress zip...");
   try {
