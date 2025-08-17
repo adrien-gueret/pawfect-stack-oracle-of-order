@@ -64,7 +64,7 @@ function addItemInPool() {
 
   drawItem(item, 2);
 
-  items.append(item.canvas);
+  shop.append(item.canvas);
 
   item.canvas.onmouseenter = () => {
     const prev = help.innerHTML;
@@ -79,7 +79,7 @@ function addItemInPool() {
 
     item.canvas.onclick = async () => {
       item.canvas.onmouseleave = null;
-      items.inert = true;
+      shop.inert = true;
       window.dispatchEvent(new CustomEvent("item:selected", { detail: item }));
 
       await item.canvas.animate(
@@ -332,7 +332,7 @@ function prepareItemToDrop(item) {
 
     window.dispatchEvent(new CustomEvent("item:dropped", { detail: item }));
     addItemInPool();
-    items.inert = false;
+    shop.inert = false;
 
     if (process.env.GAME_TYPE === "order") {
       await moveCat();

@@ -397,7 +397,7 @@ body.order[data-current-section="title"] main {
   align-items: center;
 }
 
-#items {
+#shop {
   flex: 1;
   padding-left: 8px;
   display: flex;
@@ -405,13 +405,13 @@ body.order[data-current-section="title"] main {
   align-items: center;
 }
 
-#items canvas {
+#shop canvas {
   cursor: pointer;
   padding: 2px;
   border: 1px dashed transparent;
 }
 
-#items canvas:hover {
+#shop canvas:hover {
   border-color: #fff;
 }
 
