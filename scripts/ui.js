@@ -1,5 +1,11 @@
-import { drawItem, getRandomWizardItem } from "./items/index.js";
-import { checkApplyItemToBoard, startGame } from "./board/index.js";
+import { drawItem, getRandomWizardItem, getCat } from "./items/index.js";
+import {
+  checkApplyItemToBoard,
+  applyItemToBoard,
+  removeItemToBoard,
+  startGame,
+  getRandomCoordinatesOfEmptySpaceAboveFloor,
+} from "./board/index.js";
 import { convert1DIndexInto2DIndex, getRandom } from "./utils.js";
 import { getCurrentBoard } from "./state.js";
 import { dispatch } from "./store.js";
@@ -72,8 +78,7 @@ function addItemInPool() {
     item.canvas.onclick = async () => {
       item.canvas.onmouseleave = null;
       items.inert = true;
-      const event = new CustomEvent("item:selected", { detail: item });
-      window.dispatchEvent(event);
+      window.dispatchEvent(new CustomEvent("item:selected", { detail: item }));
 
       await item.canvas.animate(
         [{ transform: "translateY(0)" }, { transform: "translateY(-300px)" }],
@@ -104,7 +109,7 @@ export function initGameTable(levelIndex, initTuto) {
   });
 
   dispatch({
-    type: "setGame",
+    type: "setBoard",
     payload: baseBoard,
   });
 
@@ -112,8 +117,50 @@ export function initGameTable(levelIndex, initTuto) {
   addItemInPool();
   addItemInPool();
 
-  initTuto?.();
+  initTuto?.(levelIndex);
 }
+
+const cat = (() => {
+  const c = getCat();
+
+  window.setInterval(() => {
+    c.x = c.x === 32 ? 48 : 32;
+
+    drawItem(c, 3, "#331c1a");
+  }, 1000);
+
+  return c;
+})();
+
+const moveCat = () => {
+  walls.append(cat.canvas);
+
+  dispatch({
+    type: "setBoard",
+    payload: removeItemToBoard(cat.uniqId, getCurrentBoard()),
+  });
+
+  const coordinates = getRandomCoordinatesOfEmptySpaceAboveFloor(
+    getCurrentBoard()
+  );
+
+  if (!coordinates) {
+    return;
+  }
+
+  cat.canvas.style.left = `${coordinates.col * 48 + 48}px`;
+  cat.canvas.style.top = `${coordinates.row * 48 + 48}px`;
+
+  dispatch({
+    type: "setBoard",
+    payload: applyItemToBoard(
+      cat,
+      getCurrentBoard(),
+      coordinates.col,
+      coordinates.row
+    ),
+  });
+};
 
 function prepareItemToDrop(item) {
   drawItem(item, 3);
@@ -207,6 +254,21 @@ function prepareItemToDrop(item) {
 
     const delta = rowToCheck - row - 1;
 
+    const triggerDrop = () => {
+      window.dispatchEvent(new CustomEvent("item:dropped", { detail: item }));
+      addItemInPool();
+      items.inert = false;
+
+      dispatch({
+        type: "setBoard",
+        payload: applyItemToBoard(item, getCurrentBoard(), column, row + delta),
+      });
+
+      if (process.env.GAME_TYPE === "order") {
+        moveCat();
+      }
+    };
+
     if (delta) {
       let currentFallingStep = 0;
 
@@ -219,9 +281,13 @@ function prepareItemToDrop(item) {
 
         if (currentFallingStep < delta) {
           setTimeout(animateDrop, 300);
+        } else {
+          triggerDrop();
         }
       };
       animateDrop();
+    } else {
+      triggerDrop();
     }
 
     drawItem(item, 3, "#331c1a");

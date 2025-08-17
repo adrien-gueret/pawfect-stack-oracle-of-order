@@ -24,10 +24,7 @@ import specificGame from "./specificGame/index.js";
       goToSection("mainGame");
     } else if (nextSection === "mainGame") {
       const levelIndex = vars.l ?? 0;
-      initGameTable(
-        levelIndex,
-        levelIndex === 0 ? specificGame.initTuto : void 0
-      );
+      initGameTable(levelIndex, specificGame.initTuto);
     }
   });
 })();

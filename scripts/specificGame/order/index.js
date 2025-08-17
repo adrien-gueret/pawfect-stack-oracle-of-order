@@ -170,18 +170,29 @@ export default {
       showNextScene();
     });
   },
-  initTuto() {
-    help.innerHTML =
-      "Here is the cellar! The objects to tidy up are just on the right. Click one to select it.";
+  initTuto(level) {
+    if (level === 0) {
+      help.innerHTML =
+        "Here is the cellar! The objects to tidy up are just on the right. Click one to select it.";
 
-    window.addEventListener(
-      "item:selected",
-      (e) => {
-        const selectedItem = e.detail;
+      window.addEventListener(
+        "item:selected",
+        (e) => {
+          const selectedItem = e.detail;
 
-        help.innerHTML = `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`;
-      },
-      { once: false }
-    );
+          help.innerHTML = `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`;
+
+          window.addEventListener(
+            "item:dropped",
+            () => {
+              help.innerHTML =
+                "Oh, the master's cat is here. He's cute, but he will refuse to move...";
+            },
+            { once: true }
+          );
+        },
+        { once: true }
+      );
+    }
   },
 };

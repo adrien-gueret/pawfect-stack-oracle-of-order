@@ -27,15 +27,41 @@ export function checkApplyItemToBoard(item, board, x, y) {
   return overlaps;
 }
 
+export function getRandomCoordinatesOfEmptySpaceAboveFloor(board) {
+  const emptySpaces = [];
+  for (let col = 0; col < board[0].length; col++) {
+    for (let row = 0; row < board.length; row++) {
+      const hasSomethingBelow =
+        board[row + 1] === void 0 || board[row + 1][col] !== 0;
+      if (board[row][col] === 0 && hasSomethingBelow) {
+        emptySpaces.push({ col, row });
+      }
+    }
+  }
+  if (emptySpaces.length === 0) return null;
+  return emptySpaces[Math.floor(Math.random() * emptySpaces.length)];
+}
+
 export function applyItemToBoard(item, board, x, y) {
   const itemShape = item.shape;
-  const itemId = id(item.name);
 
   const newBoard = board.map((row) => [...row]);
   for (let i = 0; i < itemShape.length; i++) {
     for (let j = 0; j < itemShape[i].length; j++) {
       if (itemShape[i][j]) {
-        newBoard[y + i][x + j] = itemId;
+        newBoard[y + i][x + j] = item.uniqId;
+      }
+    }
+  }
+  return newBoard;
+}
+
+export function removeItemToBoard(itemUniqId, board) {
+  const newBoard = board.map((row) => [...row]);
+  for (let i = 0; i < newBoard.length; i++) {
+    for (let j = 0; j < newBoard[i].length; j++) {
+      if (newBoard[i][j] === itemUniqId) {
+        newBoard[i][j] = 0;
       }
     }
   }
@@ -96,8 +122,6 @@ const levels = (() => {
 
 export const startGame = (levelIndex = 0) => {
   const board = levels[levelIndex];
-
-  // TODO: store game data in "redux"
 
   return board;
 };

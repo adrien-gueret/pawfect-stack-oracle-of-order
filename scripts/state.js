@@ -8,7 +8,7 @@ const defaultState = {
 
 export function reducer(state = defaultState, { type, payload }) {
   switch (type) {
-    case "setGame":
+    case "setBoard":
       return {
         ...state,
         currentBoard: payload,

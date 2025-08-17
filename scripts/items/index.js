@@ -120,6 +120,14 @@ const items = [
     x: 0,
     y: 144,
   },
+  {
+    name: "Master's Cat",
+    shape: [[1]],
+    base: false,
+    isCat: true,
+    x: 32,
+    y: 176,
+  },
 ];
 
 let lastUniqId = 0;
@@ -170,15 +178,16 @@ export function id(n) {
   return items.findIndex((item) => item.name === n);
 }
 
-export function getItem(i) {
-  const item = items[i];
-  return {
-    ...item,
-    desc:
-      !item.desc && item.fromCat
-        ? "A gift from the cat... More cumbersome than useful..."
-        : item.desc,
-  };
+export function getCat() {
+  const cat = items.find((item) => item.isCat);
+  cat.uniqId = ++lastUniqId;
+  cat.desc =
+    process.env.GAME_TYPE === "order"
+      ? "Le chat du maître. Il est mignon, mais il nous embête un peu là..."
+      : "C'est moi ! Mélusine ne peut pas placer d'objets où je suis !";
+  cat.canvas = document.createElement("canvas");
+  cat.canvas.className = "draggedItem";
+  return cat;
 }
 
 function getRandomItem(fromItems) {
