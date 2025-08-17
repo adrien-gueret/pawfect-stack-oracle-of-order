@@ -41,3 +41,63 @@ export function applyItemToBoard(item, board, x, y) {
   }
   return newBoard;
 }
+
+const newEmptyBoard = () => Array.from({ length: 10 }, () => Array(10).fill(0));
+
+const levels = (() => {
+  const firstLevel = newEmptyBoard();
+  firstLevel[0][9] = -1;
+  firstLevel[0][0] = -1;
+  firstLevel[8][4] = -1;
+  firstLevel[8][5] = -1;
+  firstLevel[9][3] = -1;
+  firstLevel[9][4] = -1;
+  firstLevel[9][5] = -1;
+  firstLevel[9][6] = -1;
+
+  const secondLevel = newEmptyBoard();
+  secondLevel[0][4] = -1;
+  secondLevel[0][5] = -1;
+  secondLevel[1][4] = -1;
+  secondLevel[1][5] = -1;
+  secondLevel[2][4] = -1;
+  secondLevel[2][5] = -1;
+  secondLevel[4][0] = -1;
+  secondLevel[4][9] = -1;
+  secondLevel[5][0] = -1;
+  secondLevel[5][9] = -1;
+  secondLevel[7][4] = -1;
+  secondLevel[7][5] = -1;
+  secondLevel[8][4] = -1;
+  secondLevel[8][5] = -1;
+  secondLevel[9][4] = -1;
+  secondLevel[9][5] = -1;
+
+  const thirdLevel = newEmptyBoard();
+  thirdLevel[0][9] = -1;
+  thirdLevel[0][0] = -1;
+  thirdLevel[2][1] = -1;
+  thirdLevel[2][2] = -1;
+  thirdLevel[2][7] = -1;
+  thirdLevel[2][8] = -1;
+  thirdLevel[4][4] = -1;
+  thirdLevel[4][5] = -1;
+  thirdLevel[5][4] = -1;
+  thirdLevel[5][5] = -1;
+  thirdLevel[7][1] = -1;
+  thirdLevel[7][2] = -1;
+  thirdLevel[7][7] = -1;
+  thirdLevel[7][8] = -1;
+  thirdLevel[9][9] = -1;
+  thirdLevel[9][0] = -1;
+
+  return [firstLevel, secondLevel, thirdLevel];
+})();
+
+export const startGame = (levelIndex = 0) => {
+  const board = levels[levelIndex];
+
+  // TODO: store game data in "redux"
+
+  return board;
+};

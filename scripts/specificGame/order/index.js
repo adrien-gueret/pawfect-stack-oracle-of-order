@@ -170,4 +170,18 @@ export default {
       showNextScene();
     });
   },
+  initTuto() {
+    help.innerHTML =
+      "Here is the cellar! The objects to tidy up are just on the right. Click one to select it.";
+
+    window.addEventListener(
+      "item:selected",
+      (e) => {
+        const selectedItem = e.detail;
+
+        help.innerHTML = `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`;
+      },
+      { once: false }
+    );
+  },
 };

@@ -1,11 +1,12 @@
-import { getItem, drawItem } from "./items/index.js";
-import { checkApplyItemToBoard } from "./board/index.js";
+import { drawItem, getRandomWizardItem } from "./items/index.js";
+import { checkApplyItemToBoard, startGame } from "./board/index.js";
 import { convert1DIndexInto2DIndex, getRandom } from "./utils.js";
+import { getCurrentBoard } from "./state.js";
+import { dispatch } from "./store.js";
 
 const soundsCheckbox = document.getElementById("soundsCheckbox");
 const gameTable = document.getElementById("gameTable");
 const wallsCanvas = document.getElementById("wallsCanvas");
-const itemToDropCanvas = document.getElementById("itemToDropCanvas");
 
 export function toggleSoundsCheckbox(isChecked) {
   soundsCheckbox.checked = isChecked;
@@ -48,12 +49,52 @@ function renderWallsCanvas() {
   };
 }
 
-// TODO: temp for easy dev, should be removed
-let BOARD_FROM_STATE = [];
+function addItemInPool() {
+  const item = getRandomWizardItem();
 
-function initGameTable(baseBoard) {
+  item.canvas = document.createElement("canvas");
+
+  drawItem(item, 2);
+
+  items.append(item.canvas);
+
+  item.canvas.onmouseenter = () => {
+    const prev = help.innerHTML;
+
+    help.innerHTML = `<span><b>${item.name}</b>: ${item.desc} <i>(magic: <b>${
+      item.value ?? 0
+    }</b>)</i></span>`;
+
+    item.canvas.onmouseleave = () => {
+      help.innerHTML = prev;
+    };
+
+    item.canvas.onclick = async () => {
+      item.canvas.onmouseleave = null;
+      items.inert = true;
+      const event = new CustomEvent("item:selected", { detail: item });
+      window.dispatchEvent(event);
+
+      await item.canvas.animate(
+        [{ transform: "translateY(0)" }, { transform: "translateY(-300px)" }],
+        {
+          duration: 333,
+          easing: "ease-in",
+        }
+      ).finished;
+
+      prepareItemToDrop(item);
+    };
+  };
+}
+
+export function initGameTable(levelIndex, initTuto) {
   const row = `<div></div>`;
   gameTable.innerHTML = row.repeat(100);
+
+  renderWallsCanvas();
+
+  const baseBoard = startGame(levelIndex);
 
   baseBoard.flat().forEach((val, index) => {
     if (val === -1) {
@@ -62,17 +103,26 @@ function initGameTable(baseBoard) {
     }
   });
 
-  BOARD_FROM_STATE = baseBoard;
+  dispatch({
+    type: "setGame",
+    payload: baseBoard,
+  });
 
-  renderWallsCanvas();
+  addItemInPool();
+  addItemInPool();
+  addItemInPool();
+
+  initTuto?.();
 }
 
-function prepareItemToDrop(itemId) {
-  const item = getItem(itemId);
-  itemToDropCanvas.width = item.shape[0].length * 48;
-  itemToDropCanvas.height = item.shape.length * 48;
-  itemToDropCanvas.style.backgroundColor = "transparent";
-  drawItem(itemToDropCanvas.getContext("2d"), item);
+function prepareItemToDrop(item) {
+  drawItem(item, 3);
+  const itemToDropCanvas = item.canvas;
+  itemToDropCanvas.className = "draggedItem";
+  item.canvas.style.left = "240px";
+  item.canvas.style.top = "240px";
+  walls.append(itemToDropCanvas);
+  itemToDropCanvas.style.removeProperty("transform");
 
   let isAllowToDrop = false;
 
@@ -99,12 +149,15 @@ function prepareItemToDrop(itemId) {
 
     const { row, column } = convert1DIndexInto2DIndex(cellIndex, 10);
 
-    const item = getItem(itemId);
-
     const ctx = itemToDropCanvas.getContext("2d");
     ctx.clearRect(0, 0, itemToDropCanvas.width, itemToDropCanvas.height);
 
-    const overlaps = checkApplyItemToBoard(item, BOARD_FROM_STATE, column, row);
+    const overlaps = checkApplyItemToBoard(
+      item,
+      getCurrentBoard(),
+      column,
+      row
+    );
 
     isAllowToDrop = overlaps.length === 0;
 
@@ -118,17 +171,16 @@ function prepareItemToDrop(itemId) {
       });
     }
 
-    drawItem(ctx, item, "rgba(255, 255, 255, 0.2)");
+    drawItem(item, 3, "rgba(255, 255, 255, 0.2)");
   };
 
   gameTable.onclick = (e) => {
     if (!isAllowToDrop) {
-      console.log("nope");
       return;
     }
 
-    gameTable.onclick = void 0;
-    gameTable.onmousemove = void 0;
+    gameTable.onclick = null;
+    gameTable.onmousemove = null;
     gameTable.style.cursor = "default";
 
     const cellIndex = Array.prototype.indexOf.call(
@@ -145,7 +197,7 @@ function prepareItemToDrop(itemId) {
       rowToCheck++;
       const overlaps = checkApplyItemToBoard(
         item,
-        BOARD_FROM_STATE,
+        getCurrentBoard(),
         column,
         rowToCheck
       );
@@ -172,10 +224,7 @@ function prepareItemToDrop(itemId) {
       animateDrop();
     }
 
-    const ctx = itemToDropCanvas.getContext("2d");
-    drawItem(ctx, item, "#331c1a");
-
-    console.log("OK");
+    drawItem(item, 3, "#331c1a");
   };
 }
 
@@ -217,18 +266,4 @@ export default async function init(faviconPixels) {
   document.body.classList.add(process.env.GAME_TYPE);
 
   renderFavicon(faviconPixels);
-
-  const debugBoard = Array.from({ length: 10 }, () => Array(10).fill(0));
-
-  debugBoard[0][9] = -1;
-  debugBoard[0][0] = -1;
-  debugBoard[8][4] = -1;
-  debugBoard[8][5] = -1;
-  debugBoard[9][3] = -1;
-  debugBoard[9][4] = -1;
-  debugBoard[9][5] = -1;
-  debugBoard[9][6] = -1;
-
-  initGameTable(debugBoard);
-  prepareItemToDrop(6);
 }

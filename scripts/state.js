@@ -1,25 +1,24 @@
 import { getKey } from "./save.js";
 import initStore, { dispatch, getState } from "./store.js";
 
-function initBoard() {
-  return Array.from({ length: 10 }, () => Array(10).fill(0));
-}
-
 const defaultState = {
   muted: true,
-  currentGame: {
-    board: initBoard(),
-  },
+  currentBoard: null,
 };
 
 export function reducer(state = defaultState, { type, payload }) {
   switch (type) {
-    // TODO: update state according to action type
-
+    case "setGame":
+      return {
+        ...state,
+        currentBoard: payload,
+      };
     default:
       return state;
   }
 }
+
+export const getCurrentBoard = () => getState().currentBoard;
 
 export const areSoundMuted = () => getState().muted;
 

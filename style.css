@@ -226,6 +226,7 @@ body.order[data-current-section="title"] main {
 /* Scenario */
 /* ================= */
 /* ================= */
+
 .scenario {
   border: 16px solid #000;
 }
@@ -378,8 +379,48 @@ body.order[data-current-section="title"] main {
   background: #331c1a;
 }
 
+#mainGame .scenarioDialog {
+  font-size: 1rem;
+  padding: 0 24px;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+#help {
+  width: 50%;
+  border-right: 8px solid #fff;
+  padding-right: 8px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#items {
+  flex: 1;
+  padding-left: 8px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#items canvas {
+  cursor: pointer;
+  padding: 2px;
+  border: 1px dashed transparent;
+}
+
+#items canvas:hover {
+  border-color: #fff;
+}
+
+#mainGame .scenarioDialog::after {
+  display: none;
+}
+
 #walls {
-  margin: 24px auto 0 auto;
+  margin: 0 auto 0 auto;
   padding: 48px;
   position: relative;
 }
@@ -428,7 +469,7 @@ body.order[data-current-section="title"] main {
   background-position: -48px -288px;
 }
 
-#itemToDropCanvas {
+.draggedItem {
   position: absolute;
   left: 0;
   top: 0;
