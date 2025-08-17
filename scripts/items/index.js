@@ -175,7 +175,7 @@ export function drawItem(item, mult = 3, bg = null) {
 }
 
 export function id(n) {
-  return items.findIndex((item) => item.name === n);
+  return items.findIndex((item) => item.name === n.name);
 }
 
 export function getCat() {

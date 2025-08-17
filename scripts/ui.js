@@ -1,4 +1,4 @@
-import { drawItem, getRandomWizardItem, getCat } from "./items/index.js";
+import { drawItem, getRandomWizardItem, getCat, id } from "./items/index.js";
 import {
   checkApplyItemToBoard,
   applyItemToBoard,
@@ -98,9 +98,9 @@ function addItemInPool() {
 async function applyGravity() {
   let atLeastOneItemHasMoved = false;
 
-  const itemUniqIds = getItemUniqIds();
-
   do {
+    const itemUniqIds = getItemUniqIds();
+
     atLeastOneItemHasMoved = false;
     await Promise.all(
       itemUniqIds.map((itemUniqId) => {
@@ -152,7 +152,22 @@ async function applyGravity() {
             if (currentFallingStep < delta) {
               setTimeout(animateDrop, 300);
             } else {
-              resolve();
+              if (id(item) === 0) {
+                item.y = 112;
+                canvas.width = canvas.width;
+                drawItem(item);
+
+                window.setTimeout(() => {
+                  canvas.remove();
+                  dispatch({
+                    type: "setBoard",
+                    payload: removeItemToBoard(item.uniqId, getCurrentBoard()),
+                  });
+                  resolve();
+                }, 333);
+              } else {
+                resolve();
+              }
             }
           };
           setTimeout(animateDrop, 300);
