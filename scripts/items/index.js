@@ -186,6 +186,8 @@ export function getCat() {
       ? "Le chat du maître. Il est mignon, mais il nous embête un peu là..."
       : "C'est moi ! Mélusine ne peut pas placer d'objets où je suis !";
   cat.canvas = document.createElement("canvas");
+  cat.canvas.id = "i" + cat.uniqId;
+  cat.canvas.gameItem = cat;
   cat.canvas.className = "draggedItem";
   return cat;
 }

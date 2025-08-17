@@ -1,5 +1,3 @@
-import { id } from "../items/index.js";
-
 export function checkApplyItemToBoard(item, board, x, y) {
   const itemShape = item.shape;
 

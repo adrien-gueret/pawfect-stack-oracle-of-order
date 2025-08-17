@@ -7,7 +7,7 @@ import {
   getRandomCoordinatesOfEmptySpaceAboveFloor,
 } from "./board/index.js";
 import { convert1DIndexInto2DIndex, getRandom } from "./utils.js";
-import { getCurrentBoard } from "./state.js";
+import { getCurrentBoard, getItemUniqIds } from "./state.js";
 import { dispatch } from "./store.js";
 
 const soundsCheckbox = document.getElementById("soundsCheckbox");
@@ -59,6 +59,8 @@ function addItemInPool() {
   const item = getRandomWizardItem();
 
   item.canvas = document.createElement("canvas");
+  item.canvas.id = "i" + item.uniqId;
+  item.canvas.gameItem = item;
 
   drawItem(item, 2);
 
@@ -91,6 +93,73 @@ function addItemInPool() {
       prepareItemToDrop(item);
     };
   };
+}
+
+async function applyGravity() {
+  let atLeastOneItemHasMoved = false;
+
+  const itemUniqIds = getItemUniqIds();
+
+  do {
+    atLeastOneItemHasMoved = false;
+    await Promise.all(
+      itemUniqIds.map((itemUniqId) => {
+        const canvas = document.getElementById("i" + itemUniqId);
+        const { row, col } = canvas.coor;
+        const item = canvas.gameItem;
+
+        let isOnFloor = false;
+        let rowToCheck = row;
+
+        let newBoard = removeItemToBoard(item.uniqId, getCurrentBoard());
+
+        while (!isOnFloor) {
+          rowToCheck++;
+          const overlaps = checkApplyItemToBoard(
+            item,
+            newBoard,
+            col,
+            rowToCheck
+          );
+
+          isOnFloor = overlaps.length > 0;
+        }
+
+        const delta = rowToCheck - row - 1;
+        atLeastOneItemHasMoved = atLeastOneItemHasMoved || delta > 0;
+
+        const newRow = row + delta;
+        canvas.coor = { col, row: newRow };
+
+        dispatch({
+          type: "setBoard",
+          payload: applyItemToBoard(item, newBoard, col, newRow),
+        });
+
+        if (!delta) {
+          return;
+        }
+
+        return new Promise((resolve) => {
+          let currentFallingStep = 0;
+
+          const animateDrop = () => {
+            currentFallingStep++;
+
+            canvas.style.top =
+              Number(canvas.style.top.replace("px", "")) + 48 + "px";
+
+            if (currentFallingStep < delta) {
+              setTimeout(animateDrop, 300);
+            } else {
+              resolve();
+            }
+          };
+          setTimeout(animateDrop, 300);
+        });
+      })
+    );
+  } while (atLeastOneItemHasMoved);
 }
 
 export function initGameTable(levelIndex, initTuto) {
@@ -150,6 +219,7 @@ const moveCat = () => {
 
   cat.canvas.style.left = `${coordinates.col * 48 + 48}px`;
   cat.canvas.style.top = `${coordinates.row * 48 + 48}px`;
+  cat.canvas.coor = coordinates;
 
   dispatch({
     type: "setBoard",
@@ -160,6 +230,8 @@ const moveCat = () => {
       coordinates.row
     ),
   });
+
+  return applyGravity();
 };
 
 function prepareItemToDrop(item) {
@@ -194,17 +266,14 @@ function prepareItemToDrop(item) {
       return;
     }
 
-    const { row, column } = convert1DIndexInto2DIndex(cellIndex, 10);
+    const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
+
+    itemToDropCanvas.coor = { row, col };
 
     const ctx = itemToDropCanvas.getContext("2d");
     ctx.clearRect(0, 0, itemToDropCanvas.width, itemToDropCanvas.height);
 
-    const overlaps = checkApplyItemToBoard(
-      item,
-      getCurrentBoard(),
-      column,
-      row
-    );
+    const overlaps = checkApplyItemToBoard(item, getCurrentBoard(), col, row);
 
     isAllowToDrop = overlaps.length === 0;
 
@@ -221,7 +290,7 @@ function prepareItemToDrop(item) {
     drawItem(item, 3, "rgba(255, 255, 255, 0.2)");
   };
 
-  gameTable.onclick = (e) => {
+  gameTable.onclick = async (e) => {
     if (!isAllowToDrop) {
       return;
     }
@@ -235,62 +304,24 @@ function prepareItemToDrop(item) {
       e.target
     );
 
-    const { row, column } = convert1DIndexInto2DIndex(cellIndex, 10);
-
-    let isOnFloor = false;
-    let rowToCheck = row - 1;
-
-    while (!isOnFloor) {
-      rowToCheck++;
-      const overlaps = checkApplyItemToBoard(
-        item,
-        getCurrentBoard(),
-        column,
-        rowToCheck
-      );
-
-      isOnFloor = overlaps.length > 0;
-    }
-
-    const delta = rowToCheck - row - 1;
-
-    const triggerDrop = () => {
-      window.dispatchEvent(new CustomEvent("item:dropped", { detail: item }));
-      addItemInPool();
-      items.inert = false;
-
-      dispatch({
-        type: "setBoard",
-        payload: applyItemToBoard(item, getCurrentBoard(), column, row + delta),
-      });
-
-      if (process.env.GAME_TYPE === "order") {
-        moveCat();
-      }
-    };
-
-    if (delta) {
-      let currentFallingStep = 0;
-
-      const animateDrop = () => {
-        currentFallingStep++;
-
-        itemToDropCanvas.style.transform = `translateY(${
-          currentFallingStep * 48
-        }px)`;
-
-        if (currentFallingStep < delta) {
-          setTimeout(animateDrop, 300);
-        } else {
-          triggerDrop();
-        }
-      };
-      animateDrop();
-    } else {
-      triggerDrop();
-    }
+    const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
 
     drawItem(item, 3, "#331c1a");
+
+    dispatch({
+      type: "setBoard",
+      payload: applyItemToBoard(item, getCurrentBoard(), col, row),
+    });
+
+    await applyGravity();
+
+    window.dispatchEvent(new CustomEvent("item:dropped", { detail: item }));
+    addItemInPool();
+    items.inert = false;
+
+    if (process.env.GAME_TYPE === "order") {
+      await moveCat();
+    }
   };
 }
 

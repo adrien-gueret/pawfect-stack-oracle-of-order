@@ -5,6 +5,6 @@ export function getRandom(x) {
 export function convert1DIndexInto2DIndex(index, nbrColumnsIn2DArray) {
   return {
     row: Math.floor(index / nbrColumnsIn2DArray),
-    column: index % nbrColumnsIn2DArray,
+    col: index % nbrColumnsIn2DArray,
   };
 }

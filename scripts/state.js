@@ -20,6 +20,21 @@ export function reducer(state = defaultState, { type, payload }) {
 
 export const getCurrentBoard = () => getState().currentBoard;
 
+export const getItemUniqIds = () => {
+  const board = getCurrentBoard();
+  const uniqIds = new Set();
+
+  board.forEach((row) => {
+    row.forEach((cell) => {
+      if (cell > 0) {
+        uniqIds.add(cell);
+      }
+    });
+  });
+
+  return Array.from(uniqIds);
+};
+
 export const areSoundMuted = () => getState().muted;
 
 export const toggleMuteSounds = (isMuted) =>
@@ -31,3 +46,11 @@ export const toggleMuteSounds = (isMuted) =>
 export default function init() {
   initStore(reducer, getKey("state") || defaultState);
 }
+
+/*
+DEBUG
+getCurrentBoard().forEach((row, index) => {
+          console.log(index, JSON.stringify(row));
+        });
+
+*/
