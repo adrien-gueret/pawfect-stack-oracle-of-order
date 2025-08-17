@@ -5,6 +5,7 @@ import {
   removeItemToBoard,
   startGame,
   getRandomCoordinatesOfEmptySpaceAboveFloor,
+  getItemUniqIdBelowItem,
 } from "./board/index.js";
 import { convert1DIndexInto2DIndex, getRandom } from "./utils.js";
 import { getCurrentBoard, getItemUniqIds } from "./state.js";
@@ -103,7 +104,7 @@ async function applyGravity() {
 
     atLeastOneItemHasMoved = false;
     await Promise.all(
-      itemUniqIds.map((itemUniqId) => {
+      itemUniqIds.map(async (itemUniqId) => {
         const canvas = document.getElementById("i" + itemUniqId);
         const { row, col } = canvas.coor;
         const item = canvas.gameItem;
@@ -115,18 +116,13 @@ async function applyGravity() {
 
         while (!isOnFloor) {
           rowToCheck++;
-          const overlaps = checkApplyItemToBoard(
-            item,
-            newBoard,
-            col,
-            rowToCheck
-          );
-
-          isOnFloor = overlaps.length > 0;
+          isOnFloor =
+            checkApplyItemToBoard(item, newBoard, col, rowToCheck).length > 0;
         }
 
         const delta = rowToCheck - row - 1;
-        atLeastOneItemHasMoved = atLeastOneItemHasMoved || delta > 0;
+        const hasCurrentItemMoved = delta > 0;
+        atLeastOneItemHasMoved = atLeastOneItemHasMoved || hasCurrentItemMoved;
 
         const newRow = row + delta;
         canvas.coor = { col, row: newRow };
@@ -140,17 +136,17 @@ async function applyGravity() {
           return;
         }
 
-        return new Promise((resolve) => {
+        await new Promise((resolve) => {
           let currentFallingStep = 0;
 
-          const animateDrop = () => {
+          const animateFall = () => {
             currentFallingStep++;
 
             canvas.style.top =
               Number(canvas.style.top.replace("px", "")) + 48 + "px";
 
             if (currentFallingStep < delta) {
-              setTimeout(animateDrop, 300);
+              setTimeout(animateFall, 300);
             } else {
               if (id(item) === 0) {
                 item.y = 112;
@@ -170,8 +166,43 @@ async function applyGravity() {
               }
             }
           };
-          setTimeout(animateDrop, 300);
+          setTimeout(animateFall, 300);
         });
+
+        if (hasCurrentItemMoved) {
+          await Promise.all(
+            getItemUniqIdBelowItem(item.uniqId, getCurrentBoard()).map(
+              (belowItemUniqId) => {
+                const canvas = document.getElementById("i" + belowItemUniqId);
+                const item = canvas.gameItem;
+
+                return new Promise((resolve) => {
+                  if (id(item) === 0) {
+                    item.y = 112;
+                    canvas.width = canvas.width;
+                    drawItem(item);
+
+                    atLeastOneItemHasMoved = true;
+
+                    window.setTimeout(() => {
+                      canvas.remove();
+                      dispatch({
+                        type: "setBoard",
+                        payload: removeItemToBoard(
+                          item.uniqId,
+                          getCurrentBoard()
+                        ),
+                      });
+                      resolve();
+                    }, 333);
+                  } else {
+                    resolve();
+                  }
+                });
+              }
+            )
+          );
+        }
       })
     );
   } while (atLeastOneItemHasMoved);

@@ -66,6 +66,32 @@ export function removeItemToBoard(itemUniqId, board) {
   return newBoard;
 }
 
+export function getItemUniqIdBelowItem(itemUniqId, board) {
+  const result = new Set();
+  for (let row = 0; row < board.length; row++) {
+    for (let col = 0; col < board[row].length; col++) {
+      if (board[row][col] === itemUniqId) {
+        for (let belowRow = row + 1; belowRow < board.length; belowRow++) {
+          const belowItem = board[belowRow][col];
+
+          if (belowItem === itemUniqId) {
+            continue;
+          }
+
+          if (!belowItem || belowItem < 1) {
+            break;
+          }
+
+          result.add(belowItem);
+
+          break;
+        }
+      }
+    }
+  }
+  return Array.from(result);
+}
+
 const newEmptyBoard = () => Array.from({ length: 10 }, () => Array(10).fill(0));
 
 const levels = (() => {
