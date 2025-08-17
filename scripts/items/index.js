@@ -183,8 +183,8 @@ export function getCat() {
   cat.uniqId = ++lastUniqId;
   cat.desc =
     process.env.GAME_TYPE === "order"
-      ? "Le chat du maître. Il est mignon, mais il nous embête un peu là..."
-      : "C'est moi ! Mélusine ne peut pas placer d'objets où je suis !";
+      ? "The master's cat. It's cute, but it's getting in our way a bit here..."
+      : "That's me! Mélusine can't place items where I am!";
   cat.canvas = document.createElement("canvas");
   cat.canvas.id = "i" + cat.uniqId;
   cat.canvas.gameItem = cat;
