@@ -3,7 +3,8 @@ import initStore, { dispatch, getState } from "./store.js";
 
 const defaultState = {
   muted: true,
-  currentBoard: null,
+  board: null,
+  spentMagic: 0,
 };
 
 export function reducer(state = defaultState, { type, payload }) {
@@ -11,14 +12,19 @@ export function reducer(state = defaultState, { type, payload }) {
     case "setBoard":
       return {
         ...state,
-        currentBoard: payload,
+        board: payload,
+      };
+    case "spendMagic":
+      return {
+        ...state,
+        spentMagic: state.spentMagic + payload,
       };
     default:
       return state;
   }
 }
 
-export const getCurrentBoard = () => getState().currentBoard;
+export const getCurrentBoard = () => getState().board;
 
 export const getItemUniqIds = () => {
   const board = getCurrentBoard();
@@ -42,6 +48,15 @@ export const toggleMuteSounds = (isMuted) =>
     type: "toggleMuteSounds",
     payload: { isMuted },
   });
+
+export function getMagic() {
+  return (
+    getItemUniqIds().reduce((acc, uniqId) => {
+      const canvas = document.getElementById("i" + uniqId);
+      return acc + (canvas?.gameItem?.value ?? 0);
+    }, 0) - getState().spentMagic
+  );
+}
 
 export default function init() {
   initStore(reducer, getKey("state") || defaultState);

@@ -71,7 +71,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
   const ids = [...indexHTML.matchAll(/id="([^"]*?)"/g)];
 
   ids.forEach((id, i) => {
-    if (id[1].length > 4 && id[1] !== "title" && id[1]) {
+    if (id[1] && id[1].length > 4) {
       indexHTML = indexHTML.replaceAll(id[1], "_" + i);
     }
   });

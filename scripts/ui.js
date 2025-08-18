@@ -56,6 +56,25 @@ function renderWallsCanvas() {
   };
 }
 
+function setInteractive(item, valueLabel, onClick) {
+  item.canvas.onmouseenter = () => {
+    const prev = help.innerHTML;
+
+    help.innerHTML = `<span><b>${item.name}</b>: ${
+      item.desc
+    } <i>(${valueLabel}: <b>${item.value ?? 0}</b>)</i></span>`;
+
+    item.canvas.onmouseleave = () => {
+      help.innerHTML = prev;
+    };
+
+    item.canvas.onclick = async () => {
+      item.canvas.onmouseleave = null;
+      onClick();
+    };
+  };
+}
+
 function addItemInPool() {
   const item = getRandomWizardItem();
 
@@ -67,33 +86,42 @@ function addItemInPool() {
 
   shop.append(item.canvas);
 
-  item.canvas.onmouseenter = () => {
-    const prev = help.innerHTML;
+  setInteractive(item, "magic", async () => {
+    item.canvas.onmouseleave = null;
+    shop.inert = true;
+    window.dispatchEvent(new CustomEvent("item:selected", { detail: item }));
 
-    help.innerHTML = `<span><b>${item.name}</b>: ${item.desc} <i>(magic: <b>${
-      item.value ?? 0
-    }</b>)</i></span>`;
+    await item.canvas.animate(
+      [{ transform: "translateY(0)" }, { transform: "translateY(-300px)" }],
+      {
+        duration: 333,
+        easing: "ease-in",
+      }
+    ).finished;
 
-    item.canvas.onmouseleave = () => {
-      help.innerHTML = prev;
-    };
+    prepareItemToDrop(item);
+  });
+}
 
-    item.canvas.onclick = async () => {
-      item.canvas.onmouseleave = null;
-      shop.inert = true;
-      window.dispatchEvent(new CustomEvent("item:selected", { detail: item }));
+async function goBackItemToShop(item) {
+  gameTable.onclick = null;
+  gameTable.onmousemove = null;
+  gameTable.style.cursor = "default";
 
-      await item.canvas.animate(
-        [{ transform: "translateY(0)" }, { transform: "translateY(-300px)" }],
-        {
-          duration: 333,
-          easing: "ease-in",
-        }
-      ).finished;
+  await item.canvas.animate(
+    [{ transform: "translateY(0)" }, { transform: "translateY(300px)" }],
+    {
+      duration: 333,
+      easing: "ease-in",
+    }
+  ).finished;
 
-      prepareItemToDrop(item);
-    };
-  };
+  drawItem(item, 2);
+
+  item.canvas.style.removeProperty("left");
+  item.canvas.style.removeProperty("top");
+  item.canvas.classList.remove("draggedItem");
+  shop.append(item.canvas);
 }
 
 function destroyItem(item) {
@@ -101,11 +129,9 @@ function destroyItem(item) {
     const canvas = item.canvas;
     canvas.width = canvas.width;
 
-    if (id(item) === 0) {
-      item.y = 112;
-      drawItem(item);
-    } else {
-    }
+    item.x = 32;
+    item.y = 112;
+    drawItem(item, 3, null, true);
 
     window.setTimeout(() => {
       canvas.remove();
@@ -158,6 +184,11 @@ async function applyGravity() {
           return;
         }
 
+        const itemUniqIdsBelowMovedItem = getItemUniqIdBelowItem(
+          item.uniqId,
+          getCurrentBoard()
+        );
+
         await new Promise((resolve) => {
           let currentFallingStep = 0;
 
@@ -182,21 +213,18 @@ async function applyGravity() {
 
         if (hasCurrentItemMoved) {
           await Promise.all(
-            getItemUniqIdBelowItem(item.uniqId, getCurrentBoard()).map(
-              (belowItemUniqId) => {
-                const canvas = document.getElementById("i" + belowItemUniqId);
-                const item = canvas.gameItem;
+            itemUniqIdsBelowMovedItem.map((belowItemUniqId) => {
+              const canvas = document.getElementById("i" + belowItemUniqId);
+              const item = canvas.gameItem;
 
-                return new Promise((resolve) => {
-                  if (id(item) === 0) {
-                    atLeastOneItemHasMoved = true;
-                    destroyItem(item).then(resolve);
-                  } else {
-                    resolve();
-                  }
-                });
-              }
-            )
+              return new Promise((resolve) => {
+                if (id(item) === 0) {
+                  destroyItem(item).then(resolve);
+                } else {
+                  resolve();
+                }
+              });
+            })
           );
         }
       })
@@ -288,6 +316,8 @@ function prepareItemToDrop(item) {
   let isAllowToDrop = false;
 
   gameTable.onmousemove = (e) => {
+    shop.inert = false;
+
     const cellIndex = Array.prototype.indexOf.call(
       e.target.parentNode.children,
       e.target
@@ -337,6 +367,7 @@ function prepareItemToDrop(item) {
       return;
     }
 
+    shop.onmouseenter = null;
     gameTable.onclick = null;
     gameTable.onmousemove = null;
     gameTable.style.cursor = "default";
@@ -359,11 +390,15 @@ function prepareItemToDrop(item) {
 
     window.dispatchEvent(new CustomEvent("item:dropped", { detail: item }));
     addItemInPool();
-    shop.inert = false;
 
     if (process.env.GAME_TYPE === "order") {
       await moveCat();
     }
+  };
+
+  shop.onmouseenter = () => {
+    shop.onmouseenter = null;
+    goBackItemToShop(item);
   };
 }
 

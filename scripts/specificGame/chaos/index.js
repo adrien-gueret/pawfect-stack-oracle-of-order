@@ -1,25 +1,5 @@
-const scenarioScenes = [
-  {
-    msg: "Meow...",
-  },
-  {
-    msg: `My pet human asked his apprentice to tidy up the cellar.`,
-  },
-  {
-    msg: `The cellar is MY territory! And I can't let anyone set foot in it!!!`,
-  },
-  {
-    msg: `The little witch doesn't seem very skilled, but she's ambitious...`,
-  },
-  {
-    msg: "It's just you and me now, Mélusine!",
-  },
-  {
-    msg: "Meow!",
-  },
-];
-
 export default {
+  catDesc: "That's me! Mélusine can't place items where I am!",
   favicon: [
     [],
     [],
@@ -38,8 +18,28 @@ export default {
     [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
   ],
-
   async runScenario(master, melusine, cat, dialog, speakTo) {
+    const scenarioScenes = [
+      {
+        msg: "Meow...",
+      },
+      {
+        msg: `My pet human asked his apprentice to tidy up the cellar.`,
+      },
+      {
+        msg: `The cellar is MY territory! And I can't let anyone set foot in it!!!`,
+      },
+      {
+        msg: `The little witch doesn't seem very skilled, but she's ambitious...`,
+      },
+      {
+        msg: "It's just you and me now, Mélusine!",
+      },
+      {
+        msg: "Meow!",
+      },
+    ];
+
     let currentScene = -1;
 
     function zoomIn() {

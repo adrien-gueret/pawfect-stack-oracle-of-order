@@ -210,7 +210,7 @@ body.order[data-current-section="title"] main {
 .skip:visited {
   font-weight: bold;
   text-decoration: none;
-  color: #fff;
+  color: #feebc9;
   font-size: 1rem;
   position: absolute;
   top: 8px;
@@ -251,11 +251,11 @@ body.order[data-current-section="title"] main {
 
 .scenarioDialog {
   background: #000;
-  color: #fff;
+  color: #feebc9;
   width: 100%;
   flex: 1;
   margin-top: auto;
-  border: 8px solid #fff;
+  border: 8px solid #feebc9;
   box-sizing: border-box;
   font-size: 2.3rem;
   padding: 64px;
@@ -270,13 +270,13 @@ body.order[data-current-section="title"] main {
   right: 16px;
   bottom: 24px;
   border: 24px solid transparent;
-  border-left-color: #fff;
+  border-left-color: #feebc9;
   pointer-events: none;
   animation: blinkArrow 1s steps(1) infinite;
 }
 
 .scenarioDialog.end::after {
-  border-color: #fff;
+  border-color: #feebc9;
   right: 40px;
 }
 
@@ -390,7 +390,7 @@ body.order[data-current-section="title"] main {
 
 #help {
   width: 50%;
-  border-right: 8px solid #fff;
+  border-right: 8px solid #feebc9;
   padding-right: 8px;
   height: 100%;
   display: flex;
@@ -412,7 +412,7 @@ body.order[data-current-section="title"] main {
 }
 
 #shop canvas:hover {
-  border-color: #fff;
+  border-color: #feebc9;
 }
 
 #mainGame .scenarioDialog::after {
@@ -449,24 +449,89 @@ body.order[data-current-section="title"] main {
   overflow: hidden;
 }
 
-#gameTable > div.solid {
+#gameTable > div.solid,
+#actions > div {
   background-image: url("./images/sprites.png");
   background-color: #331c1a;
   border-color: #331c1a;
   background-size: calc(var(--sw) * 3) calc(var(--sh) * 3);
-  background-position: 0 -240px;
+  background-position: var(--bx, 0) var(--by, -240px);
 }
 
-#gameTable > div.solid.v1 {
-  background-position: -48px -240px;
+div.solid.v1 {
+  --bx: -48px;
+  --by: -240px;
 }
 
-#gameTable > div.solid.v2 {
-  background-position: 0 -288px;
+div.solid.v2 {
+  --bx: 0;
+  --by: -288px;
 }
 
-#gameTable > div.solid.v3 {
-  background-position: -48px -288px;
+div.solid.v3 {
+  --bx: -48px;
+  --by: -288px;
+}
+
+div.Rotarigus,
+div.Rotaleftus {
+  --bx: -144px;
+  --by: -480px;
+}
+div.Rotaleftus {
+  transform: scaleX(-1);
+}
+
+div.Hydravo {
+  --bx: 0;
+  --by: -96px;
+}
+
+div.Ejectum {
+  --bx: -48px;
+  --by: -432px;
+}
+
+#actions {
+  position: absolute;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  top: 16px;
+  color: #feebc9;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+#actions > div {
+  width: 48px;
+  height: 48px;
+  border: 1px dashed #feebc9;
+  cursor: pointer;
+}
+
+#actions > div:hover {
+  border-style: solid;
+}
+
+#actions > div:after {
+  content: "1";
+  width: 16px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  right: -16px;
+  text-align: center;
+  line-height: 16px;
+  padding: 1px;
+}
+
+div.Rotaleftus:after {
+  transform: scaleX(-1);
+  right: 52px !important;
 }
 
 .draggedItem {

@@ -1,3 +1,5 @@
+import specificGame from "../specificGame/index.js";
+
 const items = [
   {
     name: "Potion",
@@ -132,7 +134,7 @@ const items = [
 
 let lastUniqId = 0;
 
-export function drawItem(item, mult = 3, bg = null) {
+export function drawItem(item, mult = 3, bg = null, justFirstTile = false) {
   const { canvas } = item;
   const ctx = canvas.getContext("2d");
   const img = new Image();
@@ -159,8 +161,8 @@ export function drawItem(item, mult = 3, bg = null) {
           }
           ctx.drawImage(
             img,
-            item.x + col * 16,
-            item.y + row * 16,
+            item.x + (justFirstTile ? 0 : col * 16),
+            item.y + (justFirstTile ? 0 : row * 16),
             16,
             16,
             col * baseMult,
@@ -181,10 +183,7 @@ export function id(n) {
 export function getCat() {
   const cat = items.find((item) => item.isCat);
   cat.uniqId = ++lastUniqId;
-  cat.desc =
-    process.env.GAME_TYPE === "order"
-      ? "The master's cat. It's cute, but it's getting in our way a bit here..."
-      : "That's me! Mélusine can't place items where I am!";
+  cat.desc = specificGame.catDesc;
   cat.canvas = document.createElement("canvas");
   cat.canvas.id = "i" + cat.uniqId;
   cat.canvas.gameItem = cat;

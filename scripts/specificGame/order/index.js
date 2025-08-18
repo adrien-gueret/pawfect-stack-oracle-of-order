@@ -1,28 +1,6 @@
-const scenarioScenes = [
-  {
-    msg: "My little Mélusine, I entrust you with a mission of the utmost importance!",
-  },
-  {
-    msg: `Oh, what is it, Master? Ingredients to find? A potion to brew? A spell to craft?`,
-  },
-  {
-    msg: `The cellar really needs to be tidied up!`,
-  },
-  {
-    msg: "Oh... I see. I'll take care of it right away.",
-  },
-  {
-    msg: "And make sure the concentration of magic is optimal!",
-  },
-  {
-    msg: "Very well, Master.",
-  },
-  {
-    msg: "Meow...",
-  },
-];
-
 export default {
+  catDesc:
+    "The master's cat. It's cute, but it's getting in our way a bit here...",
   favicon: [
     [0, 0, 0, 0, 1, 1, 1, 1],
     [0, 0, 0, 1, 1, 1, 1, 1, 1],
@@ -42,6 +20,30 @@ export default {
     [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
   ],
   async runScenario(master, melusine, cat, dialog, speakTo) {
+    const scenarioScenes = [
+      {
+        msg: "My little Mélusine, I entrust you with a mission of the utmost importance!",
+      },
+      {
+        msg: `Oh, what is it, Master? Ingredients to find? A potion to brew? A spell to craft?`,
+      },
+      {
+        msg: `The cellar really needs to be tidied up!`,
+      },
+      {
+        msg: "Oh... I see. I'll take care of it right away.",
+      },
+      {
+        msg: "And make sure the concentration of magic is optimal!",
+      },
+      {
+        msg: "Very well, Master.",
+      },
+      {
+        msg: "Meow...",
+      },
+    ];
+
     let currentScene = -1;
 
     return new Promise((resolve) => {
@@ -175,24 +177,31 @@ export default {
       help.innerHTML =
         "Here is the cellar! The objects to tidy up are just on the right. Click one to select it.";
 
-      window.addEventListener(
-        "item:selected",
-        (e) => {
-          const selectedItem = e.detail;
+      window.addEventListener("item:selected", function onItemSelected(e) {
+        const selectedItem = e.detail;
 
-          help.innerHTML = `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`;
+        help.innerHTML = `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`;
 
-          window.addEventListener(
-            "item:dropped",
-            () => {
-              help.innerHTML =
-                "Oh, here is the master's cat. He's cute, but he might bother us a little...";
-            },
-            { once: true }
-          );
-        },
-        { once: true }
-      );
+        window.addEventListener(
+          "item:dropped",
+          () => {
+            window.removeEventListener("item:selected", onItemSelected);
+
+            help.innerHTML =
+              "Oh, here is the master's cat. He's cute, but he might bother us a little...";
+
+            window.addEventListener(
+              "item:dropped",
+              () => {
+                help.innerHTML =
+                  "Each item you place increases the magical concentration of the cellar. Your goal is to get the highest score possible, but you can also spend some to cast spells!";
+              },
+              { once: true }
+            );
+          },
+          { once: true }
+        );
+      });
     }
   },
 };
