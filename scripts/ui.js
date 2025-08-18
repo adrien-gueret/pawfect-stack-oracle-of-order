@@ -96,6 +96,28 @@ function addItemInPool() {
   };
 }
 
+function destroyItem(item) {
+  return new Promise((resolve) => {
+    const canvas = item.canvas;
+    canvas.width = canvas.width;
+
+    if (id(item) === 0) {
+      item.y = 112;
+      drawItem(item);
+    } else {
+    }
+
+    window.setTimeout(() => {
+      canvas.remove();
+      dispatch({
+        type: "setBoard",
+        payload: removeItemToBoard(item.uniqId, getCurrentBoard()),
+      });
+      resolve();
+    }, 333);
+  });
+}
+
 async function applyGravity() {
   let atLeastOneItemHasMoved = false;
 
@@ -149,18 +171,7 @@ async function applyGravity() {
               setTimeout(animateFall, 300);
             } else {
               if (id(item) === 0) {
-                item.y = 112;
-                canvas.width = canvas.width;
-                drawItem(item);
-
-                window.setTimeout(() => {
-                  canvas.remove();
-                  dispatch({
-                    type: "setBoard",
-                    payload: removeItemToBoard(item.uniqId, getCurrentBoard()),
-                  });
-                  resolve();
-                }, 333);
+                destroyItem(item).then(resolve);
               } else {
                 resolve();
               }
@@ -178,23 +189,8 @@ async function applyGravity() {
 
                 return new Promise((resolve) => {
                   if (id(item) === 0) {
-                    item.y = 112;
-                    canvas.width = canvas.width;
-                    drawItem(item);
-
                     atLeastOneItemHasMoved = true;
-
-                    window.setTimeout(() => {
-                      canvas.remove();
-                      dispatch({
-                        type: "setBoard",
-                        payload: removeItemToBoard(
-                          item.uniqId,
-                          getCurrentBoard()
-                        ),
-                      });
-                      resolve();
-                    }, 333);
+                    destroyItem(item).then(resolve);
                   } else {
                     resolve();
                   }

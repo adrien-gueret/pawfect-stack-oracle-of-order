@@ -185,7 +185,8 @@ export default {
           window.addEventListener(
             "item:dropped",
             () => {
-              help.innerHTML = "He's cute, but he might bother us a little...";
+              help.innerHTML =
+                "Oh, here is the master's cat. He's cute, but he might bother us a little...";
             },
             { once: true }
           );
