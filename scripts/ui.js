@@ -364,13 +364,9 @@ function prepareItemToDrop(item) {
       gameTable.style.cursor = "grabbing";
     } else {
       gameTable.style.cursor = "not-allowed";
-      overlaps.forEach(({ row, col }) => {
-        ctx.fillStyle = "rgba(255, 0, 0, 0.6)";
-        ctx.fillRect(col * 48, row * 48, 48, 48);
-      });
     }
 
-    drawItem(item, 3, "rgba(255, 255, 255, 0.2)");
+    drawItem(item, 3, "rgba(255, 255, 255, 0.2)", false, overlaps);
   };
 
   gameTable.onclick = async (e) => {

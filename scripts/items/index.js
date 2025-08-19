@@ -134,7 +134,13 @@ const items = [
 
 let lastUniqId = 0;
 
-export function drawItem(item, mult = 3, bg = null, justFirstTile = false) {
+export function drawItem(
+  item,
+  mult = 3,
+  bg = null,
+  justFirstTile = false,
+  overlaps = []
+) {
   const { canvas } = item;
   const ctx = canvas.getContext("2d");
   const img = new Image();
@@ -152,12 +158,21 @@ export function drawItem(item, mult = 3, bg = null, justFirstTile = false) {
 
   img.onload = () => {
     ctx.imageSmoothingEnabled = false;
+
     for (let row = 0; row < item.shape.length; row++) {
       for (let col = 0; col < item.shape[row].length; col++) {
         if (item.shape[row][col] === 1) {
           ctx.clearRect(col * baseMult, row * baseMult, baseMult, baseMult);
 
-          if (bg) {
+          if (
+            overlaps.find(
+              (overlapCoor) =>
+                overlapCoor.col === col && overlapCoor.row === row
+            )
+          ) {
+            ctx.fillStyle = "rgba(255, 0, 0, 0.6)";
+            ctx.fillRect(col * baseMult, row * baseMult, baseMult, baseMult);
+          } else if (bg) {
             ctx.fillStyle = bg;
             ctx.fillRect(col * baseMult, row * baseMult, baseMult, baseMult);
           }
