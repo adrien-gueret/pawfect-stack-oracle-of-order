@@ -425,12 +425,6 @@ body.order[data-current-section="title"] main {
   position: relative;
 }
 
-#wallsCanvas {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
 #gameTable {
   position: relative;
   border-collapse: collapse;
@@ -441,6 +435,16 @@ body.order[data-current-section="title"] main {
   grid-template-rows: repeat(10, 48px);
   column-gap: 0;
   row-gap: 0;
+}
+
+#walls > canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#walls.dragging > canvas {
+  pointer-events: none;
 }
 
 #gameTable > div {
@@ -532,11 +536,4 @@ div.Ejectum {
 div.Rotaleftus:after {
   transform: scaleX(-1);
   right: 52px !important;
-}
-
-.draggedItem {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
 }

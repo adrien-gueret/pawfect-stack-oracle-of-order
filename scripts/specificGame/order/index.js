@@ -1,6 +1,6 @@
 export default {
   catDesc:
-    "The master's cat. It's cute, but it's getting in our way a bit here...",
+    "The master's cat. He's cute, but it's getting in our way a bit here...",
   favicon: [
     [0, 0, 0, 0, 1, 1, 1, 1],
     [0, 0, 0, 1, 1, 1, 1, 1, 1],
@@ -188,7 +188,7 @@ export default {
             window.removeEventListener("item:selected", onItemSelected);
 
             help.innerHTML =
-              "Oh, here is the master's cat. He's cute, but he might bother us a little...";
+              "Oh, here is Grimalkin, the master's cat. He's cute, but he might bother us a little...";
 
             window.addEventListener(
               "item:dropped",

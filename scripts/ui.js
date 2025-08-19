@@ -13,7 +13,6 @@ import { dispatch } from "./store.js";
 
 const soundsCheckbox = document.getElementById("soundsCheckbox");
 const gameTable = document.getElementById("gameTable");
-const wallsCanvas = document.getElementById("wallsCanvas");
 
 export function toggleSoundsCheckbox(isChecked) {
   soundsCheckbox.checked = isChecked;
@@ -56,6 +55,18 @@ function renderWallsCanvas() {
   };
 }
 
+function setInteractiveBg(item) {
+  item.canvas.addEventListener("mouseenter", () => {
+    item.hover = true;
+    drawItem(item, 3, "rgba(255, 255, 255, 0.2)");
+  });
+
+  item.canvas.addEventListener("mouseleave", () => {
+    item.hover = false;
+    drawItem(item, 3, "#331c1a");
+  });
+}
+
 function setInteractive(item, valueLabel, onClick) {
   item.canvas.onmouseenter = () => {
     const prev = help.innerHTML;
@@ -67,12 +78,9 @@ function setInteractive(item, valueLabel, onClick) {
     item.canvas.onmouseleave = () => {
       help.innerHTML = prev;
     };
-
-    item.canvas.onclick = async () => {
-      item.canvas.onmouseleave = null;
-      onClick();
-    };
   };
+
+  item.canvas.onclick = onClick;
 }
 
 function addItemInPool() {
@@ -87,8 +95,8 @@ function addItemInPool() {
   shop.append(item.canvas);
 
   setInteractive(item, "magic", async () => {
-    item.canvas.onmouseleave = null;
     shop.inert = true;
+
     window.dispatchEvent(new CustomEvent("item:selected", { detail: item }));
 
     await item.canvas.animate(
@@ -104,6 +112,7 @@ function addItemInPool() {
 }
 
 async function goBackItemToShop(item) {
+  walls.classList.remove("dragging");
   gameTable.onclick = null;
   gameTable.onmousemove = null;
   gameTable.style.cursor = "default";
@@ -120,14 +129,12 @@ async function goBackItemToShop(item) {
 
   item.canvas.style.removeProperty("left");
   item.canvas.style.removeProperty("top");
-  item.canvas.classList.remove("draggedItem");
   shop.append(item.canvas);
 }
 
 function destroyItem(item) {
   return new Promise((resolve) => {
     const canvas = item.canvas;
-    canvas.width = canvas.width;
 
     item.x = 32;
     item.y = 112;
@@ -262,10 +269,13 @@ export function initGameTable(levelIndex, initTuto) {
 const cat = (() => {
   const c = getCat();
 
+  setInteractive(c, "magic");
+  setInteractiveBg(c);
+
   window.setInterval(() => {
     c.x = c.x === 32 ? 48 : 32;
 
-    drawItem(c, 3, "#331c1a");
+    drawItem(c, 3, c.hover ? "rgba(255, 255, 255, 0.2)" : "#331c1a");
   }, 1000);
 
   return c;
@@ -307,13 +317,14 @@ const moveCat = () => {
 function prepareItemToDrop(item) {
   drawItem(item, 3);
   const itemToDropCanvas = item.canvas;
-  itemToDropCanvas.className = "draggedItem";
   item.canvas.style.left = "240px";
   item.canvas.style.top = "240px";
   walls.append(itemToDropCanvas);
   itemToDropCanvas.style.removeProperty("transform");
 
   let isAllowToDrop = false;
+
+  walls.classList.add("dragging");
 
   gameTable.onmousemove = (e) => {
     shop.inert = false;
@@ -367,6 +378,7 @@ function prepareItemToDrop(item) {
       return;
     }
 
+    walls.classList.remove("dragging");
     shop.onmouseenter = null;
     gameTable.onclick = null;
     gameTable.onmousemove = null;
@@ -380,6 +392,10 @@ function prepareItemToDrop(item) {
     const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
 
     drawItem(item, 3, "#331c1a");
+
+    item.canvas.onclick = null;
+
+    setInteractiveBg(item);
 
     dispatch({
       type: "setBoard",

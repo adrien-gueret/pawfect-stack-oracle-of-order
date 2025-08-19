@@ -123,7 +123,7 @@ const items = [
     y: 144,
   },
   {
-    name: "Master's Cat",
+    name: "Grimalkin",
     shape: [[1]],
     base: false,
     isCat: true,
@@ -155,6 +155,8 @@ export function drawItem(item, mult = 3, bg = null, justFirstTile = false) {
     for (let row = 0; row < item.shape.length; row++) {
       for (let col = 0; col < item.shape[row].length; col++) {
         if (item.shape[row][col] === 1) {
+          ctx.clearRect(col * baseMult, row * baseMult, baseMult, baseMult);
+
           if (bg) {
             ctx.fillStyle = bg;
             ctx.fillRect(col * baseMult, row * baseMult, baseMult, baseMult);
@@ -187,7 +189,6 @@ export function getCat() {
   cat.canvas = document.createElement("canvas");
   cat.canvas.id = "i" + cat.uniqId;
   cat.canvas.gameItem = cat;
-  cat.canvas.className = "draggedItem";
   return cat;
 }
 
