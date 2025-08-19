@@ -327,6 +327,12 @@ body.order[data-current-section="title"] main {
   --target-y: -1280px;
 }
 
+#gameStats .scenarioMelusine {
+  transform: scale(0.75);
+  position: absolute;
+  bottom: 0;
+}
+
 .scenarioMaster {
   --x: -0;
   --y: -1536px;
@@ -397,12 +403,23 @@ body.order[data-current-section="title"] main {
   align-items: center;
 }
 
+#help.noshop {
+  width: 100%;
+  border-right: none;
+}
+
+#help.noshop + #shop {
+  display: none;
+}
+
 #shop {
   flex: 1;
   padding-left: 8px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  position: relative;
+  align-self: stretch;
 }
 
 #shop canvas {
@@ -413,6 +430,13 @@ body.order[data-current-section="title"] main {
 
 #shop canvas:hover {
   border-color: #feebc9;
+}
+
+#shop span {
+  position: absolute;
+  left: 2px;
+  top: 0px;
+  background: #000;
 }
 
 #mainGame .scenarioDialog::after {
@@ -454,7 +478,7 @@ body.order[data-current-section="title"] main {
 }
 
 #gameTable > div.solid,
-#actions > div {
+#actionsMenu > div {
   background-image: url("./images/sprites.png");
   background-color: #331c1a;
   border-color: #331c1a;
@@ -496,7 +520,8 @@ div.Ejectum {
   --by: -432px;
 }
 
-#actions {
+#actionsMenu,
+#gameStats {
   position: absolute;
   right: 16px;
   display: flex;
@@ -510,18 +535,39 @@ div.Ejectum {
   font-weight: bold;
 }
 
-#actions > div {
+#gameStats {
+  right: auto;
+  left: 16px;
+  justify-content: flex-start;
+  height: 560px;
+}
+
+dl {
+  font-size: 0.9rem;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  font-weight: normal;
+  margin-left: 16px;
+  margin-bottom: 24px;
+}
+
+#actionsMenu > div {
   width: 48px;
   height: 48px;
   border: 1px dashed #feebc9;
   cursor: pointer;
 }
 
-#actions > div:hover {
+#actionsMenu > div:hover {
   border-style: solid;
 }
 
-#actions > div:after {
+#actionsMenu > div:after {
   content: "1";
   width: 16px;
   height: 16px;

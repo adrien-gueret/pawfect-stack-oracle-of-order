@@ -8,7 +8,7 @@ import {
   getItemUniqIdBelowItem,
 } from "./board/index.js";
 import { convert1DIndexInto2DIndex, getRandom } from "./utils.js";
-import { getCurrentBoard, getItemUniqIds } from "./state.js";
+import { getCurrentBoard, getItemUniqIds, getMagic } from "./state.js";
 import { dispatch } from "./store.js";
 
 const soundsCheckbox = document.getElementById("soundsCheckbox");
@@ -97,8 +97,6 @@ function addItemInPool() {
   setInteractive(item, "magic", async () => {
     shop.inert = true;
 
-    window.dispatchEvent(new CustomEvent("item:selected", { detail: item }));
-
     await item.canvas.animate(
       [{ transform: "translateY(0)" }, { transform: "translateY(-300px)" }],
       {
@@ -108,6 +106,8 @@ function addItemInPool() {
     ).finished;
 
     prepareItemToDrop(item);
+
+    window.dispatchEvent(new CustomEvent("item:selected", { detail: item }));
   });
 }
 
@@ -237,6 +237,8 @@ async function applyGravity() {
       })
     );
   } while (atLeastOneItemHasMoved);
+
+  magicScore.innerHTML = getMagic();
 }
 
 export function initGameTable(levelIndex, initTuto) {
@@ -263,7 +265,23 @@ export function initGameTable(levelIndex, initTuto) {
   addItemInPool();
   addItemInPool();
 
-  initTuto?.(levelIndex);
+  let actionInit = false;
+  initTuto?.(levelIndex, (label, actions, showOnlyName) => {
+    if (actionInit) {
+      return;
+    }
+    actionInit = true;
+    actionsMenu.append(document.createTextNode(label));
+    actions.forEach((action) => {
+      const d = document.createElement("div");
+      d.className = action.name;
+      actionsMenu.append(d);
+      action.canvas = d;
+      d.style.display = action.name === showOnlyName ? "block" : "none";
+
+      setInteractive(action, "cost");
+    });
+  });
 }
 
 const cat = (() => {
@@ -401,6 +419,7 @@ function prepareItemToDrop(item) {
     await applyGravity();
 
     window.dispatchEvent(new CustomEvent("item:dropped", { detail: item }));
+
     addItemInPool();
 
     if (process.env.GAME_TYPE === "order") {

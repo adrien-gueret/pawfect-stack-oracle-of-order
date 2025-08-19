@@ -32,26 +32,27 @@
       </section>
 
       <section id="mainGame">
+        <div id="gameStats">
+          <span>Goals</span>
+          <dl>
+            <dt>Items</dt>
+            <dd>0/10</dd>
+            <dt>Magic</dt>
+            <dd><span id="magicScore">0</span>/100</dd>
+          </dl>
+          <div class="c scenarioMelusine"></div>
+        </div>
         <div id="walls">
           <canvas id="wallsCanvas" width="576" height="576"></canvas>
           <div id="gameTable"></div>
         </div>
-        <div id="actions">
-          <span>Spells</span>
-          <!--
-          <div class="rotate-r"></div>
-          <div class="rotate-l"></div>
-          <div class="water"></div>
-          <div class="destroy"></div>-->
-        </div>
+        <div id="actionsMenu"></div>
         <div class="scenarioDialog">
           <div id="help"></div>
-          <div id="shop"></div>
+          <div id="shop">
+            <span>Reserve</span>
+          </div>
         </div>
-      </section>
-
-      <section id="newGame">
-        <h2 class="sectionTitle">TODO: start game!</h2>
       </section>
     </main>
 

@@ -12,12 +12,12 @@ const actions = [
   {
     name: "Hydravo",
     desc: "Throws water on a cell in the cellar. Apparently, cats don't like water...",
-    value: 2,
+    value: 1,
   },
   {
     name: "Ejectum",
-    desc: "Destroys an object in the cellar.",
-    value: 2,
+    desc: "Destroys an item in the cellar.",
+    value: 1,
   },
 ];
 

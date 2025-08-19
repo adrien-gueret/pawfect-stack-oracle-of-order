@@ -1,6 +1,8 @@
+import actions from "./actions.js";
+
 export default {
   catDesc:
-    "The master's cat. He's cute, but it's getting in our way a bit here...",
+    "The master's cat. He's cute, but he's getting in our way a bit here...",
   favicon: [
     [0, 0, 0, 0, 1, 1, 1, 1],
     [0, 0, 0, 1, 1, 1, 1, 1, 1],
@@ -172,10 +174,10 @@ export default {
       showNextScene();
     });
   },
-  initTuto(level) {
+  initTuto(level, onActionInit) {
     if (level === 0) {
       help.innerHTML =
-        "Here is the cellar! The objects to tidy up are just on the right. Click one to select it.";
+        "Here is the cellar! The objects to tidy up are in the reserve, just on the right. Click one to select it.";
 
       window.addEventListener("item:selected", function onItemSelected(e) {
         const selectedItem = e.detail;
@@ -194,7 +196,23 @@ export default {
               "item:dropped",
               () => {
                 help.innerHTML =
-                  "Each item you place increases the magical concentration of the cellar. Your goal is to get the highest score possible, but you can also spend some to cast spells!";
+                  "To win, we have two objectives: successfully place the required minimum number of items AND reach a certain amount of magic.";
+
+                window.addEventListener(
+                  "item:dropped",
+                  () => {
+                    help.innerHTML =
+                      "Each item you place increases the magical concentration of the cellar. This magic score is one of our goals, but you can also spend some magic points to cast spells: try it now!";
+
+                    onActionInit("Spells", actions, "Hydravo");
+                    shop.inert = true;
+                    help.classList.add("noshop");
+                  },
+                  { once: true }
+                );
+                //onActionInit("Spells", actions, "Hydravo");
+                //shop.inert = true;
+                //help.classList.add("noshop");
               },
               { once: true }
             );

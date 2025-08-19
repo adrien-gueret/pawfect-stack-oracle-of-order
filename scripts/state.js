@@ -54,7 +54,7 @@ export function getMagic() {
     getItemUniqIds().reduce((acc, uniqId) => {
       const canvas = document.getElementById("i" + uniqId);
       return acc + (canvas?.gameItem?.value ?? 0);
-    }, 0) - getState().spentMagic
+    }, 0) - (getState().spentMagic ?? 0)
   );
 }
 
