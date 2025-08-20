@@ -17,7 +17,7 @@ const actions = [
   {
     name: "Ejectum",
     desc: "Destroys an item in the cellar.",
-    value: 1,
+    value: 0,
   },
 ];
 

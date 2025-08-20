@@ -349,6 +349,7 @@ const moveCat = () => {
 
   return applyGravity();
 };
+let tricksNbr = 0;
 
 function prepareItemToDrop(item) {
   drawItem(item, 3);
@@ -440,7 +441,10 @@ function prepareItemToDrop(item) {
 
     item.justDrop = true;
 
-    window.dispatchEvent(new CustomEvent("item:dropped", { detail: item }));
+    const ce = new CustomEvent("item:dropped", {
+      detail: item,
+    });
+    window.dispatchEvent(ce);
 
     let hasAddedItem = false;
 
@@ -449,14 +453,14 @@ function prepareItemToDrop(item) {
         await moveCat();
       } else {
         const catActions = [moveCat, addCatItem];
-        const catAction = catActions[getRandom(catActions.length - 1)];
+        const catAction = catActions[ce.ci ?? getRandom(catActions.length - 1)];
         await catAction();
         hasAddedItem = catAction === addCatItem;
       }
-    }
 
-    if (!hasAddedItem) {
-      addItemInPool();
+      if (!hasAddedItem) {
+        addItemInPool();
+      }
     }
 
     shop.inert = false;

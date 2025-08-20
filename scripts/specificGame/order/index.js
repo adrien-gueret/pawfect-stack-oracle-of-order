@@ -8,10 +8,17 @@ const waitForClick = () => {
   });
 };
 
-const waitFor = (eventName) => {
+const waitFor = (eventName, callback) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      window.addEventListener(eventName, resolve, { once: true });
+      window.addEventListener(
+        eventName,
+        (e) => {
+          callback?.(e);
+          resolve(e);
+        },
+        { once: true }
+      );
     }, 1);
   });
 };
@@ -239,12 +246,29 @@ export default {
         ["noshop"]
       );
 
+      await waitFor("item:dropped", (e) => {
+        e.ci = 1;
+      });
+
+      updateHelp(
+        "Oh! Grimalkin gave us a little gift! Click to see it in the reserve!",
+        ["noshop"]
+      );
+
+      await waitForClick();
+
+      updateHelp(
+        "The gifts from this cat are a bit lame... But we shouldn't upset him, right?",
+        [],
+        ["noshop"]
+      );
+
       await waitFor("item:dropped");
 
       goals.style.removeProperty("display");
 
       updateHelp(
-        "To win, we have two objectives: place at least the required number of items AND reach the required amount of magic.",
+        "To win, we have two goals: place at least the required number of master's items AND reach the required amount of magic. These numbers are on the top left of the screen.",
         ["noshop"]
       );
 
@@ -254,15 +278,12 @@ export default {
 
       await waitFor("item:dropped");
 
-      /*
-
       updateHelp(
         "Each item you place increases the magical concentration of the cellar. This magic score is one of our goals, but you can also spend some magic points to cast spells: try it now!",
         ["noshop", "nocursor"]
       );
 
       actionsMenu.style.removeProperty("display");
-      */
     }
   },
 };
