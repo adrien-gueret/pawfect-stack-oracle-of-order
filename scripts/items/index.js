@@ -203,6 +203,7 @@ export function getCat() {
   cat.desc = specificGame.catDesc;
   cat.canvas = document.createElement("canvas");
   cat.canvas.id = "i" + cat.uniqId;
+  cat.canvas.style.zIndex = 1;
   cat.canvas.gameItem = cat;
   return cat;
 }
@@ -219,7 +220,10 @@ export function getRandomWizardItem() {
 }
 
 export function getRandomCatItem() {
-  return getRandomItem(items.filter((item) => item.fromCat));
+  return {
+    ...getRandomItem(items.filter((item) => item.fromCat)),
+    desc: "A gift from the cat. It's useless...",
+  };
 }
 
 export default items;

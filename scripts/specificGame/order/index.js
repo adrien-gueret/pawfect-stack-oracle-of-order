@@ -1,5 +1,27 @@
 import actions from "./actions.js";
 
+const waitForClick = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      document.addEventListener("click", resolve, { once: true });
+    }, 1);
+  });
+};
+
+const waitFor = (eventName) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      window.addEventListener(eventName, resolve, { once: true });
+    }, 1);
+  });
+};
+
+const updateHelp = (text, classesToAdd = [], classesToRemove = []) => {
+  help.innerHTML = text;
+  help.parentNode.classList.add(...classesToAdd);
+  help.parentNode.classList.remove(...classesToRemove);
+};
+
 export default {
   catDesc:
     "The master's cat. He's cute, but he's getting in our way a bit here...",
@@ -174,52 +196,73 @@ export default {
       showNextScene();
     });
   },
-  initTuto(level, onActionInit) {
+  async initTuto(level, onActionInit) {
+    onActionInit("Spells", actions);
+
     if (level === 0) {
-      help.innerHTML =
-        "Here is the cellar! The objects to tidy up are in the reserve, just on the right. Click one to select it.";
+      actionsMenu.style.display = "none";
+      goals.style.display = "none";
 
-      window.addEventListener("item:selected", function onItemSelected(e) {
-        const selectedItem = e.detail;
+      updateHelp(
+        "Here is the cellar! The objects to tidy up are in the reserve. Click to see them.",
+        ["noshop"]
+      );
 
-        help.innerHTML = `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`;
+      await waitForClick();
 
-        window.addEventListener(
-          "item:dropped",
-          () => {
-            window.removeEventListener("item:selected", onItemSelected);
+      updateHelp(
+        "The reserve is just on the right. Click on an item to select it. It'll be sent to the cellar.",
+        [],
+        ["noshop"]
+      );
 
-            help.innerHTML =
-              "Oh, here is Grimalkin, the master's cat. He's cute, but he might bother us a little...";
+      const { detail: selectedItem } = await waitFor("item:selected");
 
-            window.addEventListener(
-              "item:dropped",
-              () => {
-                help.innerHTML =
-                  "To win, we have two objectives: successfully place the required minimum number of items AND reach a certain amount of magic.";
+      updateHelp(
+        `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`,
+        ["noshop", "nocursor"]
+      );
 
-                window.addEventListener(
-                  "item:dropped",
-                  () => {
-                    help.innerHTML =
-                      "Each item you place increases the magical concentration of the cellar. This magic score is one of our goals, but you can also spend some magic points to cast spells: try it now!";
+      await waitFor("item:dropped");
 
-                    onActionInit("Spells", actions, "Hydravo");
-                    shop.inert = true;
-                    help.classList.add("noshop");
-                  },
-                  { once: true }
-                );
-                //onActionInit("Spells", actions, "Hydravo");
-                //shop.inert = true;
-                //help.classList.add("noshop");
-              },
-              { once: true }
-            );
-          },
-          { once: true }
-        );
-      });
+      updateHelp(
+        "Oh, here is Grimalkin, the master's cat. He's cute, but he might bother us a little...",
+        [],
+        ["nocursor"]
+      );
+
+      await waitForClick();
+
+      updateHelp(
+        "Place a new item in the cellar! Of course, it's impossible to place an item where Grimalkin is standing...",
+        [],
+        ["noshop"]
+      );
+
+      await waitFor("item:dropped");
+
+      goals.style.removeProperty("display");
+
+      updateHelp(
+        "To win, we have two objectives: place at least the required number of items AND reach the required amount of magic.",
+        ["noshop"]
+      );
+
+      await waitForClick();
+
+      updateHelp("Place another item!", [], ["noshop"]);
+
+      await waitFor("item:dropped");
+
+      /*
+
+      updateHelp(
+        "Each item you place increases the magical concentration of the cellar. This magic score is one of our goals, but you can also spend some magic points to cast spells: try it now!",
+        ["noshop", "nocursor"]
+      );
+
+      actionsMenu.style.removeProperty("display");
+      */
     }
   },
 };

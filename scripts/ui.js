@@ -1,4 +1,10 @@
-import { drawItem, getRandomWizardItem, getCat, id } from "./items/index.js";
+import {
+  drawItem,
+  getRandomWizardItem,
+  getRandomCatItem,
+  getCat,
+  id,
+} from "./items/index.js";
 import {
   checkApplyItemToBoard,
   applyItemToBoard,
@@ -69,6 +75,9 @@ function setInteractiveBg(item) {
 
 function setInteractive(item, valueLabel, onClick) {
   item.canvas.onmouseenter = () => {
+    if (item.justDrop) {
+      return;
+    }
     const prev = help.innerHTML;
 
     help.innerHTML = `<span><b>${item.name}</b>: ${
@@ -76,6 +85,11 @@ function setInteractive(item, valueLabel, onClick) {
     } <i>(${valueLabel}: <b>${item.value ?? 0}</b>)</i></span>`;
 
     item.canvas.onmouseleave = () => {
+      if (item.justDrop) {
+        delete item.justDrop;
+        return;
+      }
+
       help.innerHTML = prev;
     };
   };
@@ -83,8 +97,8 @@ function setInteractive(item, valueLabel, onClick) {
   item.canvas.onclick = onClick;
 }
 
-function addItemInPool() {
-  const item = getRandomWizardItem();
+function addItemInPool(forcedItem) {
+  const item = forcedItem || getRandomWizardItem();
 
   item.canvas = document.createElement("canvas");
   item.canvas.id = "i" + item.uniqId;
@@ -266,7 +280,7 @@ export function initGameTable(levelIndex, initTuto) {
   addItemInPool();
 
   let actionInit = false;
-  initTuto?.(levelIndex, (label, actions, showOnlyName) => {
+  initTuto?.(levelIndex, (label, actions) => {
     if (actionInit) {
       return;
     }
@@ -277,7 +291,6 @@ export function initGameTable(levelIndex, initTuto) {
       d.className = action.name;
       actionsMenu.append(d);
       action.canvas = d;
-      d.style.display = action.name === showOnlyName ? "block" : "none";
 
       setInteractive(action, "cost");
     });
@@ -299,8 +312,13 @@ const cat = (() => {
   return c;
 })();
 
+const addCatItem = () => {
+  const item = getRandomCatItem();
+  addItemInPool(item);
+};
+
 const moveCat = () => {
-  walls.append(cat.canvas);
+  walls.prepend(cat.canvas);
 
   dispatch({
     type: "setBoard",
@@ -392,6 +410,8 @@ function prepareItemToDrop(item) {
       return;
     }
 
+    shop.inert = true;
+
     walls.classList.remove("dragging");
     shop.onmouseenter = null;
     gameTable.onclick = null;
@@ -418,13 +438,28 @@ function prepareItemToDrop(item) {
 
     await applyGravity();
 
+    item.justDrop = true;
+
     window.dispatchEvent(new CustomEvent("item:dropped", { detail: item }));
 
-    addItemInPool();
+    let hasAddedItem = false;
 
     if (process.env.GAME_TYPE === "order") {
-      await moveCat();
+      if (!cat.canvas.parentNode) {
+        await moveCat();
+      } else {
+        const catActions = [moveCat, addCatItem];
+        const catAction = catActions[getRandom(catActions.length - 1)];
+        await catAction();
+        hasAddedItem = catAction === addCatItem;
+      }
     }
+
+    if (!hasAddedItem) {
+      addItemInPool();
+    }
+
+    shop.inert = false;
   };
 
   shop.onmouseenter = () => {

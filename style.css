@@ -392,6 +392,8 @@ body.order[data-current-section="title"] main {
   display: flex;
   align-items: center;
   overflow: hidden;
+  position: relative;
+  z-index: 5;
 }
 
 #help {
@@ -403,12 +405,19 @@ body.order[data-current-section="title"] main {
   align-items: center;
 }
 
-#help.noshop {
+.noshop #help {
   width: 100%;
   border-right: none;
 }
 
-#help.noshop + #shop {
+#mainGame .scenarioDialog.noshop:not(.nocursor)::after {
+  display: block;
+  right: 8px;
+  bottom: 12px;
+  border-width: 12px;
+}
+
+.noshop #help + #shop {
   display: none;
 }
 
@@ -465,6 +474,11 @@ body.order[data-current-section="title"] main {
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 2;
+}
+
+#wallsCanvas {
+  z-index: 0 !important;
 }
 
 #walls.dragging > canvas {
@@ -540,6 +554,7 @@ div.Ejectum {
   left: 16px;
   justify-content: flex-start;
   height: 560px;
+  min-width: 63px;
 }
 
 dl {
