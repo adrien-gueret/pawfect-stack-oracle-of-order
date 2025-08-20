@@ -288,6 +288,7 @@ export function initGameTable(levelIndex, initTuto) {
     actionsMenu.append(document.createTextNode(label));
     actions.forEach((action) => {
       const d = document.createElement("div");
+      d.style.setProperty("--c", `"${action.value}"`);
       d.className = action.name;
       actionsMenu.append(d);
       action.canvas = d;
@@ -507,7 +508,5 @@ export async function runScenario(specificGameScenario) {
 }
 
 export default async function init(faviconPixels) {
-  document.body.classList.add(process.env.GAME_TYPE);
-
   renderFavicon(faviconPixels);
 }

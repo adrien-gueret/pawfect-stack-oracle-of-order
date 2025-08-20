@@ -8,7 +8,7 @@ function isValidSection(sectionName) {
 let onSectionChange = () => {};
 
 function renderSection(sectionName) {
-  const newSection = isValidSection(sectionName) ? sectionName : "title";
+  const newSection = isValidSection(sectionName) ? sectionName : "home";
 
   if (newSection === document.body.dataset.currentSection) {
     return;
@@ -68,7 +68,7 @@ export default function init(onSectionChangeCallback) {
     nextSectionVars = JSON.parse(JSON.stringify(e.target.dataset));
   });
 
-  goToSection("title");
+  goToSection("home");
 
   onHashChange();
 }
