@@ -106,8 +106,8 @@ body:not([data-current-section]) #gameOptions,
 #home h2 {
   color: transparent;
   user-select: none;
-  width: 399px;
-  height: 252px;
+  width: 335px;
+  height: 210px;
   overflow: hidden;
   background-image: url("./images/logo.png");
   background-size: contain;
@@ -118,7 +118,7 @@ body:not([data-current-section]) #gameOptions,
   width: 360px;
   height: 75px;
   background-image: url("./images/logo-order.png");
-  background-size: 360px 75px;
+  background-size: contain;
   background-repeat: no-repeat;
   margin-top: 4px;
   transform: translateX(200%);
