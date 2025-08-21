@@ -4,6 +4,8 @@ import {
   getRandomCatItem,
   getCat,
   id,
+  rotateItemToRight,
+  rotateItemToLeft
 } from "./items/index.js";
 import {
   checkApplyItemToBoard,
@@ -254,6 +256,19 @@ async function applyGravity() {
   magicScore.innerHTML = getMagic();
 }
 
+const actionCallbacks = {
+  Rotarigus() {
+    shop.querySelectorAll('canvas').forEach(canvas => {
+      rotateItemToRight(canvas.gameItem);
+    });
+  },
+  Rotaleftus() {
+    shop.querySelectorAll('canvas').forEach(canvas => {
+      rotateItemToLeft(canvas.gameItem);
+    });
+  }
+};
+
 export function initGameTable(levelIndex, initTuto) {
   const row = `<div></div>`;
   gameTable.innerHTML = row.repeat(100);
@@ -297,7 +312,9 @@ export function initGameTable(levelIndex, initTuto) {
       actionsMenu.append(d);
       action.canvas = d;
 
-      setInteractive(action, "cost");
+      setInteractive(action, "cost", () => {
+        actionCallbacks[action.name]();
+      });
     });
   });
 }
@@ -354,7 +371,6 @@ const moveCat = () => {
 
   return applyGravity();
 };
-let tricksNbr = 0;
 
 function prepareItemToDrop(item) {
   drawItem(item, 3);
@@ -362,7 +378,6 @@ function prepareItemToDrop(item) {
   item.canvas.style.left = "240px";
   item.canvas.style.top = "240px";
   walls.append(itemToDropCanvas);
-  itemToDropCanvas.style.removeProperty("transform");
 
   let isAllowToDrop = false;
 

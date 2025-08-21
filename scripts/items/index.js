@@ -159,10 +159,29 @@ export function drawItem(
   img.onload = () => {
     ctx.imageSmoothingEnabled = false;
 
-    for (let row = 0; row < item.shape.length; row++) {
-      for (let col = 0; col < item.shape[row].length; col++) {
-        if (item.shape[row][col] === 1) {
-          ctx.clearRect(col * baseMult, row * baseMult, baseMult, baseMult);
+    const rot = (item.rot ?? 0) % 360;
+    const shape = item.shape;
+    const h = shape.length;
+    const w = shape[0].length;
+
+    function getSourceCoords(row, col, rot) {
+      if (rot === 90) {
+        return [ w - 1 - col,  row ];
+      } 
+      if (rot === 180) {
+        return [ h - 1 - row, w - 1 - col ];
+      } 
+      if (rot === 270) {
+        return [ col, h - 1 - row ];
+      }
+      return [ row, col ];
+    }
+    for (let row = 0; row < h; row++) {
+      for (let col = 0; col < w; col++) {
+        if (shape[row][col] === 1) {
+          const destX = col * baseMult;
+          const destY = row * baseMult;
+          ctx.clearRect(destX, destY, baseMult, baseMult);
 
           if (
             overlaps.find(
@@ -171,26 +190,69 @@ export function drawItem(
             )
           ) {
             ctx.fillStyle = "rgba(255, 0, 0, 0.6)";
-            ctx.fillRect(col * baseMult, row * baseMult, baseMult, baseMult);
+            ctx.fillRect(destX, destY, baseMult, baseMult);
           } else if (bg) {
             ctx.fillStyle = bg;
-            ctx.fillRect(col * baseMult, row * baseMult, baseMult, baseMult);
+            ctx.fillRect(destX, destY, baseMult, baseMult);
           }
+
+          const [ srcRow, srcCol ] = getSourceCoords(row, col, rot);
+
+          ctx.save();
+        
+          ctx.translate(destX + baseMult / 2, destY + baseMult / 2);
+          ctx.rotate((rot * Math.PI) / 180);
           ctx.drawImage(
             img,
-            item.x + (justFirstTile ? 0 : col * 16),
-            item.y + (justFirstTile ? 0 : row * 16),
+            item.x + (justFirstTile ? 0 : srcCol * 16),
+            item.y + (justFirstTile ? 0 : srcRow * 16),
             16,
             16,
-            col * baseMult,
-            row * baseMult,
+            -baseMult / 2,
+            -baseMult / 2,
             baseMult,
             baseMult
           );
+          ctx.restore();
         }
       }
     }
   };
+}
+
+function rotate(item, angle) {
+  const currentRotate = item.rot ?? 0;
+  item.rot = (currentRotate + angle) % 360;
+
+  let newShape = item.shape;
+  const times = angle / 90;
+  for (let t = 0; t < times; t++) {
+    const numRows = newShape.length;
+    const numCols = newShape[0].length;
+    const rotated = [];
+    for (let col = 0; col < numCols; col++) {
+      const newRow = [];
+      for (let row = numRows - 1; row >= 0; row--) {
+        newRow.push(newShape[row][col]);
+      }
+      rotated.push(newRow);
+    }
+    newShape = rotated;
+  }
+  item.shape = newShape;
+
+  item.canvas.width = item.canvas.width;
+  drawItem(item, 2);
+
+  return item;
+}
+
+export function rotateItemToRight(item) {
+  return rotate(item, 90);
+}
+
+export function rotateItemToLeft(item) {
+  return rotate(item, 270);
 }
 
 export function id(n) {
@@ -222,7 +284,7 @@ export function getRandomWizardItem() {
 export function getRandomCatItem() {
   return {
     ...getRandomItem(items.filter((item) => item.fromCat)),
-    desc: "A gift from the cat. It's useless...",
+    desc: specificGame.catItemDesc,
   };
 }
 

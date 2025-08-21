@@ -32,6 +32,7 @@ const updateHelp = (text, classesToAdd = [], classesToRemove = []) => {
 export default {
   catDesc:
     "The master's cat. He's cute, but he's getting in our way a bit here...",
+  catItemDesc: "A gift from the cat. It's useless...",
   favicon: [
     [0, 0, 0, 0, 1, 1, 1, 1],
     [0, 0, 0, 1, 1, 1, 1, 1, 1],
@@ -207,7 +208,7 @@ export default {
     onActionInit("Spells", actions);
 
     if (level === 0) {
-      actionsMenu.style.display = "none";
+      // TODO: uncomment actionsMenu.style.display = "none";
       goals.style.display = "none";
 
       updateHelp(
@@ -268,7 +269,7 @@ export default {
       goals.style.removeProperty("display");
 
       updateHelp(
-        "The game ends when we place the required number of master's items; we win if we've reached the minimum required amount of magic. Check the top left of the screen!",
+        "The game ends when we place the required number of items; we win if we've reached the minimum required amount of magic. Check the top left of the screen!",
         ["noshop"]
       );
 
@@ -280,7 +281,7 @@ export default {
       await waitFor("item:dropped");
 
       updateHelp(
-        "Each item you place increases the magical concentration of the cellar. This magic score is one of our goals, but you can also spend some magic points to cast spells: try it now!",
+        "Each item you place increases the magical concentration of the cellar. This magic score is our main goal, but you can also spend some magic points to cast spells: try it now!",
         ["noshop", "nocursor"]
       );
 
