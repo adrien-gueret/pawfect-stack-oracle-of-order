@@ -144,8 +144,10 @@ const levels = (() => {
   return [firstLevel, secondLevel, thirdLevel];
 })();
 
-export const startGame = (levelIndex = 0) => {
-  const board = levels[levelIndex];
+const itemGoals = [15, 15, 15];
 
-  return board;
+const magicGoals = [60, 80, 100];
+
+export const getLevel = (levelIndex = 0) => {
+  return [levels[levelIndex], itemGoals[levelIndex], magicGoals[levelIndex]];
 };

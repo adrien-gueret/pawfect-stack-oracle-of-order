@@ -268,9 +268,10 @@ export default {
       goals.style.removeProperty("display");
 
       updateHelp(
-        "To win, we have two goals: place at least the required number of master's items AND reach the required amount of magic. These numbers are on the top left of the screen.",
+        "The game ends when we place the required number of master's items; we win if we've reached the minimum required amount of magic. Check the top left of the screen!",
         ["noshop"]
       );
+
 
       await waitForClick();
 

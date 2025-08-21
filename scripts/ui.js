@@ -9,7 +9,7 @@ import {
   checkApplyItemToBoard,
   applyItemToBoard,
   removeItemToBoard,
-  startGame,
+  getLevel,
   getRandomCoordinatesOfEmptySpaceAboveFloor,
   getItemUniqIdBelowItem,
 } from "./board/index.js";
@@ -53,11 +53,9 @@ function renderWallsCanvas() {
 
     const pattern = ctx.createPattern(patternCanvas, "repeat");
     ctx.clearRect(0, 0, wallsCanvas.width, wallsCanvas.height);
-    ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = pattern;
     ctx.fillRect(0, 0, wallsCanvas.width, wallsCanvas.height);
-    ctx.restore();
   };
 }
 
@@ -252,6 +250,7 @@ async function applyGravity() {
     );
   } while (atLeastOneItemHasMoved);
 
+  itemScore.innerHTML = getItemUniqIds().length - 1; //-1 'cause we don't count the cat
   magicScore.innerHTML = getMagic();
 }
 
@@ -261,7 +260,12 @@ export function initGameTable(levelIndex, initTuto) {
 
   renderWallsCanvas();
 
-  const baseBoard = startGame(levelIndex);
+  const [baseBoard, items, magic] = getLevel(levelIndex);
+
+  itemScore.innerHTML = 0;
+  magicScore.innerHTML = 0;
+  itemGoal.innerHTML = items;
+  magicGoal.innerHTML = magic;
 
   baseBoard.flat().forEach((val, index) => {
     if (val === -1) {
