@@ -7,6 +7,7 @@ import {
   rotateItemToRight,
   rotateItemToLeft,
   SPRITES_SRC,
+  setZIndex,
 } from "./items/index.js";
 import {
   checkApplyItemToBoard,
@@ -64,11 +65,13 @@ function renderWallsCanvas() {
 
 function setInteractiveBg(item) {
   item.canvas.addEventListener("mouseenter", () => {
+    if (item.deleted) return;
     item.hover = true;
     drawItem(item, 3, "rgba(255, 255, 255, 0.2)");
   });
 
   item.canvas.addEventListener("mouseleave", () => {
+    if (item.deleted) return;
     item.hover = false;
     drawItem(item, 3, "#331c1a");
   });
@@ -153,7 +156,11 @@ function destroyItem(item) {
 
     item.x = 32;
     item.y = 112;
+
+    item.deleted = true;
+
     drawItem(item, 3, null, true);
+    canvas.inert = true;
 
     window.setTimeout(() => {
       canvas.remove();
@@ -268,6 +275,9 @@ const actionCallbacks = {
       rotateItemToLeft(canvas.gameItem);
     });
   },
+  Ejectum(action) {
+    prepareSpellToCast(action);
+  },
 };
 
 export function initGameTable(levelIndex, initTuto) {
@@ -309,12 +319,12 @@ export function initGameTable(levelIndex, initTuto) {
     actions.forEach((action) => {
       const d = document.createElement("div");
       d.style.setProperty("--c", `"${action.value}"`);
-      d.className = action.name;
+      d.className = action.name + " s";
       actionsMenu.append(d);
       action.canvas = d;
 
       setInteractive(action, "cost", () => {
-        actionCallbacks[action.name]();
+        actionCallbacks[action.name](action);
       });
     });
   });
@@ -373,11 +383,48 @@ const moveCat = () => {
   return applyGravity();
 };
 
+function prepareSpellToCast(spell) {
+  const domElement = spell.canvas.cloneNode();
+  walls.append(domElement);
+
+  function followMouse({ clientX, clientY }) {
+    domElement.style.transform = `translate(${clientX + 8}px, ${
+      clientY + 8
+    }px)`;
+  }
+
+  async function cast(e) {
+    const { classList, tagName } = e.target;
+    const isOK = tagName === "CANVAS" && !classList.contains("cat");
+
+    if (isOK) {
+      document.body.classList.remove("r");
+      document.body.removeEventListener("mousemove", followMouse);
+      document.body.removeEventListener("click", cast);
+      domElement.remove();
+
+      await destroyItem(e.target.gameItem);
+      await applyGravity();
+
+      shop.inert = false;
+      actionsMenu.inert = false;
+    }
+  }
+
+  document.body.classList.add("r");
+  document.body.addEventListener("mousemove", followMouse);
+  document.body.addEventListener("click", cast);
+
+  shop.inert = true;
+  actionsMenu.inert = true;
+}
+
 function prepareItemToDrop(item) {
   drawItem(item, 3);
   const itemToDropCanvas = item.canvas;
   item.canvas.style.left = "240px";
   item.canvas.style.top = "240px";
+  item.canvas.style.zIndex = 100;
   walls.append(itemToDropCanvas);
 
   let isAllowToDrop = false;
@@ -450,6 +497,7 @@ function prepareItemToDrop(item) {
     drawItem(item, 3, "#331c1a");
 
     item.canvas.onclick = null;
+    setZIndex(item);
 
     setInteractiveBg(item);
 

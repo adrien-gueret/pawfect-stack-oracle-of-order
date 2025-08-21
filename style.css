@@ -275,7 +275,7 @@ a:hover {
 .scenarioMelusine,
 .scenarioCat,
 #gameTable > div.solid,
-#actionsMenu > div {
+div.s {
   background-image: url("./images/sprites.png");
 }
 
@@ -435,6 +435,11 @@ a:hover {
   row-gap: 0;
 }
 
+.r #gameTable ~ canvas:hover {
+  opacity: 0.3;
+  cursor: pointer;
+}
+
 #walls > canvas {
   position: absolute;
   left: 0;
@@ -457,7 +462,7 @@ a:hover {
 }
 
 #gameTable > div.solid,
-#actionsMenu > div {
+div.s {
   background-color: #331c1a;
   border-color: #331c1a;
   background-size: calc(var(--sw) * 3) calc(var(--sh) * 3);
@@ -535,11 +540,20 @@ dd {
   margin-bottom: 24px;
 }
 
-#actionsMenu > div {
+div.s {
   width: 48px;
   height: 48px;
   border: 1px dashed #feebc9;
   cursor: pointer;
+}
+
+#walls div.s {
+  position: fixed;
+  left: 0;
+  top: 0;
+  border-style: solid;
+  pointer-events: none;
+  z-index: 100;
 }
 
 #actionsMenu > div:hover {

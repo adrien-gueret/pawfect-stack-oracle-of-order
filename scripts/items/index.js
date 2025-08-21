@@ -204,6 +204,7 @@ export function drawItem(
 
           ctx.translate(destX + baseMult / 2, destY + baseMult / 2);
           ctx.rotate((rot * Math.PI) / 180);
+
           ctx.drawImage(
             img,
             item.x + (justFirstTile ? 0 : srcCol * 16),
@@ -261,14 +262,24 @@ export function id(n) {
   return items.findIndex((item) => item.name === n.name);
 }
 
+export function setZIndex(item) {
+  const area = item.shape.reduce(
+    (acc, row) => acc + row.reduce((rAcc, col) => rAcc + col, 0),
+    0
+  );
+  item.canvas.style.zIndex = Math.max(1, 10 - area);
+}
+
 export function getCat() {
   const cat = items.find((item) => item.isCat);
   cat.uniqId = ++lastUniqId;
   cat.desc = specificGame.catDesc;
   cat.canvas = document.createElement("canvas");
   cat.canvas.id = "i" + cat.uniqId;
+  cat.canvas.className = "cat";
   cat.canvas.style.zIndex = 1;
   cat.canvas.gameItem = cat;
+  setZIndex(cat);
   return cat;
 }
 
