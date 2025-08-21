@@ -132,6 +132,8 @@ const items = [
   },
 ];
 
+export const SPRITES_SRC = "./images/sprites.png";
+
 let lastUniqId = 0;
 
 export function drawItem(
@@ -144,7 +146,7 @@ export function drawItem(
   const { canvas } = item;
   const ctx = canvas.getContext("2d");
   const img = new Image();
-  img.src = "./images/sprites.png";
+  img.src = SPRITES_SRC;
 
   const baseMult = mult * 16;
 
@@ -166,15 +168,15 @@ export function drawItem(
 
     function getSourceCoords(row, col, rot) {
       if (rot === 90) {
-        return [ w - 1 - col,  row ];
-      } 
-      if (rot === 180) {
-        return [ h - 1 - row, w - 1 - col ];
-      } 
-      if (rot === 270) {
-        return [ col, h - 1 - row ];
+        return [w - 1 - col, row];
       }
-      return [ row, col ];
+      if (rot === 180) {
+        return [h - 1 - row, w - 1 - col];
+      }
+      if (rot === 270) {
+        return [col, h - 1 - row];
+      }
+      return [row, col];
     }
     for (let row = 0; row < h; row++) {
       for (let col = 0; col < w; col++) {
@@ -196,10 +198,10 @@ export function drawItem(
             ctx.fillRect(destX, destY, baseMult, baseMult);
           }
 
-          const [ srcRow, srcCol ] = getSourceCoords(row, col, rot);
+          const [srcRow, srcCol] = getSourceCoords(row, col, rot);
 
           ctx.save();
-        
+
           ctx.translate(destX + baseMult / 2, destY + baseMult / 2);
           ctx.rotate((rot * Math.PI) / 180);
           ctx.drawImage(

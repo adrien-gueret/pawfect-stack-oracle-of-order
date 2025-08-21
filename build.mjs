@@ -22,6 +22,8 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
 
   console.log("Remove previous entry files...");
   fs.rmSync(entryPathname, { recursive: true, force: true });
+  fs.mkdirSync(entryPathname);
+
   fs.rmSync(zipPathname, { force: true });
 
   console.log("Get project files content...");
@@ -99,7 +101,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
       () => `<style>${minifiedCSS}</style>`
     )
     .replaceAll('"use strict";', "")
-    .replaceAll("./images/sprites.png", toBase64Url("./images/sprites.png"))
+    .replaceAll("./images/sprites.png", "./s.png")
     .replaceAll("./images/logo.png", toBase64Url("./images/logo.png"))
     .replaceAll(
       "./images/logo-order.png",
@@ -109,6 +111,9 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
           : "./images/logo-chaos.png"
       )
     );
+
+  fs.copyFileSync("./images/sprites.png", `${entryPathname}/s.png`);
+
   //.replaceAll("--primary-light", "--pl");
 
   const ids = [...indexHTML.matchAll(/id="([^"]*?)"/g)];
@@ -123,6 +128,9 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     '<script>window.process={env:{GAME_TYPE:"order"}}</script>',
     ""
   );
+
+  fs.writeFileSync(`${gameName}-min.html`, minifiedHTML, { encoding: "utf8" });
+
   console.log("Pack project...");
   const inputToPack = [
     {
@@ -138,8 +146,6 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
   const packedCode = packer.makeDecoder();
 
   console.log("Write entry files...");
-
-  fs.mkdirSync(entryPathname);
 
   fs.writeFileSync(
     `${entryPathname}/index.html`,

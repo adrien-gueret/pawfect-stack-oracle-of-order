@@ -5,7 +5,8 @@ import {
   getCat,
   id,
   rotateItemToRight,
-  rotateItemToLeft
+  rotateItemToLeft,
+  SPRITES_SRC,
 } from "./items/index.js";
 import {
   checkApplyItemToBoard,
@@ -36,7 +37,7 @@ function renderWallsCanvas() {
 
   const ctx = wallsCanvas.getContext("2d");
   const img = new window.Image();
-  img.src = "./images/sprites.png";
+  img.src = SPRITES_SRC;
   img.onload = () => {
     const sx = 0,
       sy = 80,
@@ -258,15 +259,15 @@ async function applyGravity() {
 
 const actionCallbacks = {
   Rotarigus() {
-    shop.querySelectorAll('canvas').forEach(canvas => {
+    shop.querySelectorAll("canvas").forEach((canvas) => {
       rotateItemToRight(canvas.gameItem);
     });
   },
   Rotaleftus() {
-    shop.querySelectorAll('canvas').forEach(canvas => {
+    shop.querySelectorAll("canvas").forEach((canvas) => {
       rotateItemToLeft(canvas.gameItem);
     });
-  }
+  },
 };
 
 export function initGameTable(levelIndex, initTuto) {

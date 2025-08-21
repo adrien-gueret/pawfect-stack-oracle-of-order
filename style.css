@@ -269,6 +269,13 @@ a:hover {
   width: 128px;
   height: 128px;
   background-size: calc(var(--sw) * 8) calc(var(--sh) * 8);
+}
+
+.scenarioMaster,
+.scenarioMelusine,
+.scenarioCat,
+#gameTable > div.solid,
+#actionsMenu > div {
   background-image: url("./images/sprites.png");
 }
 
@@ -451,7 +458,6 @@ a:hover {
 
 #gameTable > div.solid,
 #actionsMenu > div {
-  background-image: url("./images/sprites.png");
   background-color: #331c1a;
   border-color: #331c1a;
   background-size: calc(var(--sw) * 3) calc(var(--sh) * 3);
