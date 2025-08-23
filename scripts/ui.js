@@ -385,27 +385,27 @@ const moveCat = () => {
   return applyGravity();
 };
 
+let spellCloneElement;
+function followMouse({ clientX, clientY }) {
+  spellCloneElement.style.transform = `translate(${clientX + 8}px, ${
+    clientY + 8
+  }px)`;
+}
+
 function prepareSpellToCast(spell) {
-  const domElement = spell.canvas.cloneNode();
-  const { left, top } = spell.canvas.getBoundingClientRect();
-  walls.append(domElement);
-
-  function followMouse({ clientX, clientY }) {
-    domElement.style.transform = `translate(${clientX + 8}px, ${
-      clientY + 8
-    }px)`;
-  }
-
-  followMouse({ clientX: left, clientY: top });
-
   function cancel() {
     document.body.classList.remove("r");
     document.body.removeEventListener("mousemove", followMouse);
     document.body.removeEventListener("click", cast);
-    domElement.remove();
+    spell.canvas.classList.remove("casting");
+    spellCloneElement?.remove();
   }
 
   async function cast(e) {
+    if (!document.body.classList.contains("r")) {
+      return;
+    }
+
     const { classList, tagName, gameItem } = e.target;
     const isOK = gameItem && tagName === "CANVAS" && !classList.contains("cat");
 
@@ -416,16 +416,26 @@ function prepareSpellToCast(spell) {
       await applyGravity();
 
       shop.inert = false;
-      actionsMenu.inert = false;
     }
   }
+
+  if (document.body.classList.contains("r")) {
+    cancel();
+    shop.inert = false;
+    return;
+  }
+  spellCloneElement = spell.canvas.cloneNode();
+  const { left, top } = spell.canvas.getBoundingClientRect();
+  walls.append(spellCloneElement);
+
+  followMouse({ clientX: left, clientY: top });
 
   document.body.classList.add("r");
   document.body.addEventListener("mousemove", followMouse);
   document.body.addEventListener("click", cast);
+  spell.canvas.classList.add("casting");
 
   shop.inert = true;
-  actionsMenu.inert = true;
 }
 
 function prepareItemToDrop(item) {

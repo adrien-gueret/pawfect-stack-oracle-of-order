@@ -560,6 +560,7 @@ div.s {
   height: 48px;
   border: 1px dashed #feebc9;
   cursor: pointer;
+  position: relative;
 }
 
 #walls div.s {
@@ -571,8 +572,32 @@ div.s {
   z-index: 100;
 }
 
-#actionsMenu > div:hover {
+#actionsMenu > div:hover,
+#actionsMenu > div.casting {
   border-style: solid;
+}
+
+#actionsMenu > div.casting {
+  background-image: none;
+}
+
+#actionsMenu > div.casting:before {
+  content: "X";
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 2rem;
+  top: 3px;
+}
+
+.r #actionsMenu > div:after {
+  display: none;
+}
+
+.r #actionsMenu > div.s:not(.casting) {
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 #actionsMenu > div:after {
