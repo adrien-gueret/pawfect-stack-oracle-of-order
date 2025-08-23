@@ -273,7 +273,6 @@ export default {
         ["noshop"]
       );
 
-
       await waitForClick();
 
       updateHelp("Place another item!", [], ["noshop"]);
@@ -281,7 +280,7 @@ export default {
       await waitFor("item:dropped");
 
       updateHelp(
-        "Each item you place increases the magical concentration of the cellar. This magic score is our main goal, but you can also spend some magic points to cast spells: try it now!",
+        "As long as an object is in the cellar, it gives its magic value to the cellar. This magic score is our main goal, but you can also spend some magic points to cast spells: try it now!",
         ["noshop", "nocursor"]
       );
 

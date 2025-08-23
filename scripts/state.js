@@ -9,6 +9,12 @@ const defaultState = {
 
 export function reducer(state = defaultState, { type, payload }) {
   switch (type) {
+    case "initGame":
+      return {
+        ...state,
+        board: payload,
+        spentMagic: 0,
+      };
     case "setBoard":
       return {
         ...state,

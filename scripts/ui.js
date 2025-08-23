@@ -305,7 +305,7 @@ export function initGameTable(levelIndex, initTuto) {
   });
 
   dispatch({
-    type: "setBoard",
+    type: "initGame",
     payload: baseBoard,
   });
 
@@ -335,7 +335,12 @@ export function initGameTable(levelIndex, initTuto) {
 }
 
 const increaseActionCost = (action) => {
-  action.canvas.dataset.cost = ++action.value;
+  dispatch({
+    type: "spendMagic",
+    payload: action.value++,
+  });
+  action.canvas.dataset.cost = action.value;
+  magicScore.innerHTML = getMagic();
 };
 
 const cat = (() => {
