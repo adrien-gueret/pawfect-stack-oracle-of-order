@@ -5,17 +5,11 @@
 /* ================= */
 
 body {
-  --main-background: #feebc9;
-  --game-background: #f0e4d7;
-  --border: #331c1a;
-  --shadow: rgba(255, 255, 255, 0.3);
-  --radius: 3px;
-
   --sw: 64px;
   --sh: 224px;
 
   font-family: monospace;
-  background-color: var(--main-background);
+  background-color: #feebc9;
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
@@ -37,14 +31,14 @@ main {
   width: 768px;
   height: 700px;
   box-sizing: border-box;
-  border: 4px solid var(--border);
-  background-color: var(--game-background);
+  border: 4px solid #331c1a;
+  background-color: #f0e4d7;
   display: flex;
   flex-shrink: 0;
   align-items: stretch;
   justify-content: stretch;
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: 3px;
   -ms-user-select: none;
   -webkit-user-select: none;
   user-select: none;
@@ -154,8 +148,8 @@ body:not([data-current-section]) #gameOptions,
   text-transform: uppercase;
   padding: 4px 8px;
   background-color: #f2f2f2;
-  border: 3px solid var(--border);
-  border-radius: var(--radius);
+  border: 3px solid #331c1a;
+  border-radius: 3px;
   transition: transform 0.2s ease;
   box-shadow: inset 3px 3px 0 #c2c2c2;
 }
@@ -601,18 +595,17 @@ div.s {
 }
 
 #actionsMenu > div:after {
-  content: var(--c);
+  content: attr(data-cost);
   width: 16px;
   height: 16px;
   display: block;
   position: absolute;
-  right: -16px;
-  text-align: center;
+  right: -20px;
   line-height: 16px;
   padding: 1px;
 }
 
 div.Rotaleftus:after {
   transform: scaleX(-1);
-  right: 52px !important;
+  right: 50px !important;
 }

@@ -265,15 +265,17 @@ async function applyGravity() {
 }
 
 const actionCallbacks = {
-  Rotarigus() {
+  Rotarigus(action) {
     shop.querySelectorAll("canvas").forEach((canvas) => {
       rotateItemToRight(canvas.gameItem);
     });
+    increaseActionCost(action);
   },
-  Rotaleftus() {
+  Rotaleftus(action) {
     shop.querySelectorAll("canvas").forEach((canvas) => {
       rotateItemToLeft(canvas.gameItem);
     });
+    increaseActionCost(action);
   },
   Ejectum(action) {
     prepareSpellToCast(action);
@@ -320,7 +322,7 @@ export function initGameTable(levelIndex, initTuto) {
     actionsMenu.append(document.createTextNode(label));
     actions.forEach((action) => {
       const d = document.createElement("div");
-      d.style.setProperty("--c", `"${action.value}"`);
+      d.dataset.cost = action.value;
       d.className = action.name + " s";
       actionsMenu.append(d);
       action.canvas = d;
@@ -331,6 +333,10 @@ export function initGameTable(levelIndex, initTuto) {
     });
   });
 }
+
+const increaseActionCost = (action) => {
+  action.canvas.dataset.cost = ++action.value;
+};
 
 const cat = (() => {
   const c = getCat();
@@ -411,6 +417,8 @@ function prepareSpellToCast(spell) {
 
     if (isOK) {
       cancel();
+
+      increaseActionCost(spell);
 
       await destroyItem(gameItem);
       await applyGravity();
