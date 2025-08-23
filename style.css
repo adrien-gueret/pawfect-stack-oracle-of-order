@@ -219,6 +219,7 @@ a:hover {
   padding: 64px;
   cursor: pointer;
   position: relative;
+  z-index: 101;
 }
 
 .scenarioDialog::after {
@@ -358,7 +359,6 @@ div.s {
   align-items: center;
   overflow: hidden;
   position: relative;
-  z-index: 5;
 }
 
 #help {
