@@ -440,6 +440,21 @@ div.s {
   cursor: pointer;
 }
 
+#levelDisplay {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  z-index: 10;
+  right: 0;
+  text-align: center;
+  font-size: 1rem;
+}
+
+#levelDisplay b {
+  background-color: #613531;
+  color: #feebc9;
+}
+
 #walls > canvas {
   position: absolute;
   left: 0;

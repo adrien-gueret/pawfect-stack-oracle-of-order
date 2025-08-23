@@ -286,6 +286,8 @@ export function initGameTable(levelIndex, initTuto) {
 
   renderWallsCanvas();
 
+  levelDisplayIndex.innerHTML = levelIndex + 1;
+
   const [baseBoard, items, magic] = getLevel(levelIndex);
 
   itemScore.innerHTML = 0;
@@ -385,6 +387,7 @@ const moveCat = () => {
 
 function prepareSpellToCast(spell) {
   const domElement = spell.canvas.cloneNode();
+  const { left, top } = spell.canvas.getBoundingClientRect();
   walls.append(domElement);
 
   function followMouse({ clientX, clientY }) {
@@ -393,17 +396,23 @@ function prepareSpellToCast(spell) {
     }px)`;
   }
 
+  followMouse({ clientX: left, clientY: top });
+
+  function cancel() {
+    document.body.classList.remove("r");
+    document.body.removeEventListener("mousemove", followMouse);
+    document.body.removeEventListener("click", cast);
+    domElement.remove();
+  }
+
   async function cast(e) {
-    const { classList, tagName } = e.target;
-    const isOK = tagName === "CANVAS" && !classList.contains("cat");
+    const { classList, tagName, gameItem } = e.target;
+    const isOK = gameItem && tagName === "CANVAS" && !classList.contains("cat");
 
     if (isOK) {
-      document.body.classList.remove("r");
-      document.body.removeEventListener("mousemove", followMouse);
-      document.body.removeEventListener("click", cast);
-      domElement.remove();
+      cancel();
 
-      await destroyItem(e.target.gameItem);
+      await destroyItem(gameItem);
       await applyGravity();
 
       shop.inert = false;
