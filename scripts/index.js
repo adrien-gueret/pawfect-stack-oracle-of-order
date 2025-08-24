@@ -1,5 +1,5 @@
 import initSections, { goToSection } from "./sections.js";
-import initUI, { runScenario, initGameTable } from "./ui.js";
+import initUI, { startGame, runScenario } from "./ui.js";
 
 import initState, { areSoundMuted } from "./state.js";
 import initSounds from "./sounds.js";
@@ -24,7 +24,7 @@ import specificGame from "./specificGame/index.js";
       goToSection("mainGame");
     } else if (nextSection === "mainGame") {
       const levelIndex = vars.l ?? 0;
-      initGameTable(levelIndex, specificGame.initTuto);
+      startGame(levelIndex, specificGame.start);
     }
   });
 })();

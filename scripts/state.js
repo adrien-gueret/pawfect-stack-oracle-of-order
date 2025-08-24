@@ -2,9 +2,9 @@ import { getKey } from "./save.js";
 import initStore, { dispatch, getState } from "./store.js";
 
 const defaultState = {
-  muted: true,
-  board: null,
-  spentMagic: 0,
+  m: true,
+  b: null,
+  s: 0,
 };
 
 export function reducer(state = defaultState, { type, payload }) {
@@ -12,25 +12,25 @@ export function reducer(state = defaultState, { type, payload }) {
     case "initGame":
       return {
         ...state,
-        board: payload,
-        spentMagic: 0,
+        b: payload,
+        s: 0,
       };
     case "setBoard":
       return {
         ...state,
-        board: payload,
+        b: payload,
       };
     case "spendMagic":
       return {
         ...state,
-        spentMagic: state.spentMagic + payload,
+        s: state.s + payload,
       };
     default:
       return state;
   }
 }
 
-export const getCurrentBoard = () => getState().board;
+export const getCurrentBoard = () => getState().b;
 
 export const getItemUniqIds = () => {
   const board = getCurrentBoard();
@@ -47,7 +47,7 @@ export const getItemUniqIds = () => {
   return Array.from(uniqIds);
 };
 
-export const areSoundMuted = () => getState().muted;
+export const areSoundMuted = () => getState().m;
 
 export const toggleMuteSounds = (isMuted) =>
   dispatch({
@@ -60,7 +60,7 @@ export function getMagic() {
     getItemUniqIds().reduce((acc, uniqId) => {
       const canvas = document.getElementById("i" + uniqId);
       return acc + (canvas?.gameItem?.value ?? 0);
-    }, 0) - (getState().spentMagic ?? 0)
+    }, 0) - (getState().s ?? 0)
   );
 }
 

@@ -114,14 +114,29 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
 
   fs.copyFileSync("./images/sprites.png", `${entryPathname}/s.png`);
 
-  //.replaceAll("--primary-light", "--pl");
-
   const ids = [...indexHTML.matchAll(/id="([^"]*?)"/g)];
 
   ids.forEach((id, i) => {
     if (id[1] && id[1].length >= 4) {
       indexHTML = indexHTML.replaceAll(id[1], "_" + i);
     }
+  });
+
+  const classNamesToMangle = [
+    "logos",
+    "scenarioDialog",
+    "scenarioMaster",
+    "scenarioMelusine",
+    "scenarioCat",
+    "scenario",
+    "skip",
+    "brick",
+    "actionDisabled",
+  ];
+
+  classNamesToMangle.forEach((className, i) => {
+    const re = new RegExp(`\\b${className}\\b`, "g");
+    indexHTML = indexHTML.replaceAll(re, "_" + i);
   });
 
   const minifiedHTML = (await minify.html(indexHTML)).replaceAll(

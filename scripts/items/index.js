@@ -1,5 +1,3 @@
-import specificGame from "../specificGame/index.js";
-
 const items = [
   {
     name: "Potion",
@@ -270,10 +268,10 @@ export function setZIndex(item) {
   item.canvas.style.zIndex = Math.max(1, 10 - area);
 }
 
-export function getCat() {
+export function getCat(desc) {
   const cat = items.find((item) => item.isCat);
   cat.uniqId = ++lastUniqId;
-  cat.desc = specificGame.catDesc;
+  cat.desc = desc;
   cat.canvas = document.createElement("canvas");
   cat.canvas.id = "i" + cat.uniqId;
   cat.canvas.className = "cat";
@@ -297,7 +295,6 @@ export function getRandomWizardItem() {
 export function getRandomCatItem() {
   return {
     ...getRandomItem(items.filter((item) => item.fromCat)),
-    desc: specificGame.catItemDesc,
   };
 }
 
