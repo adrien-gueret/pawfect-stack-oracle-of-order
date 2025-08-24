@@ -264,6 +264,15 @@ async function applyGravity() {
   magicScore.innerHTML = getMagic();
 }
 
+function updateActionsState() {
+  const magic = getMagic();
+
+  actionsMenu.querySelectorAll("div").forEach((actionDiv) => {
+    const cost = +actionDiv.dataset.cost;
+    actionDiv.classList.toggle("actionDisabled", magic < cost);
+  });
+}
+
 const actionCallbacks = {
   Rotarigus(action) {
     shop.querySelectorAll("canvas").forEach((canvas) => {
@@ -323,7 +332,9 @@ export function initGameTable(levelIndex, initTuto) {
     actions.forEach((action) => {
       const d = document.createElement("div");
       d.dataset.cost = action.value;
-      d.className = action.name + " s";
+      d.className = `${action.name} s ${
+        action.value > 0 ? "actionDisabled" : ""
+      }`;
       actionsMenu.append(d);
       action.canvas = d;
 
@@ -424,8 +435,12 @@ function prepareSpellToCast(spell) {
       cancel();
 
       increaseActionCost(spell);
+      updateActionsState();
 
       await destroyItem(gameItem);
+
+      updateActionsState();
+
       await applyGravity();
 
       shop.inert = false;
@@ -539,6 +554,8 @@ function prepareItemToDrop(item) {
     });
 
     await applyGravity();
+
+    updateActionsState();
 
     item.justDrop = true;
 

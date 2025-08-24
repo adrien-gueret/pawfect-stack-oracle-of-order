@@ -557,6 +557,11 @@ div.s {
   position: relative;
 }
 
+div.s.actionDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 #walls div.s {
   position: fixed;
   left: 0;
