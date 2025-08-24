@@ -144,9 +144,9 @@ const levels = (() => {
   return [firstLevel, secondLevel, thirdLevel];
 })();
 
-const itemGoals = [15, 15, 15];
+const itemGoals = [15, 18, 20];
 
-const magicGoals = [60, 80, 100];
+const magicGoals = [40, 60, 80];
 
 export const getLevel = (levelIndex = 0) => {
   return [levels[levelIndex], itemGoals[levelIndex], magicGoals[levelIndex]];

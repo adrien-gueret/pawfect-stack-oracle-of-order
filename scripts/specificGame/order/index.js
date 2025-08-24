@@ -285,6 +285,26 @@ export default {
       );
 
       actionsMenu.style.removeProperty("display");
+
+      const { detail: spellCasted } = await waitFor("spell:casted");
+
+      updateHelp(
+        `${spellCasted.name.toUpperCase()}! You have cast your first spell! Its magic cost has increased by 1.`,
+        ["noshop"],
+        ["nocursor"]
+      );
+
+      actionsMenu.inert = true;
+
+      await waitForClick();
+
+      actionsMenu.inert = false;
+
+      updateHelp(
+        "You now know all you need to know to properly tidy up the cellar! Try to reach our goals!",
+        [],
+        ["noshop", "nocursor"]
+      );
     }
   },
 };

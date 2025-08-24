@@ -135,6 +135,7 @@ async function goBackItemToShop(item) {
   gameTable.onclick = null;
   gameTable.onmousemove = null;
   gameTable.style.cursor = "default";
+  actionsMenu.inert = false;
 
   await item.canvas.animate(
     [{ transform: "translateY(0)" }, { transform: "translateY(300px)" }],
@@ -275,30 +276,35 @@ function updateActionsState() {
 }
 
 const actionCallbacks = {
-  Rotarigus(action) {
+  Rotarigus(action, cb) {
     shop.querySelectorAll("canvas").forEach((canvas) => {
       rotateItemToRight(canvas.gameItem);
     });
     increaseActionCost(action);
+    cb();
   },
-  Rotaleftus(action) {
+  Rotaleftus(action, cb) {
     shop.querySelectorAll("canvas").forEach((canvas) => {
       rotateItemToLeft(canvas.gameItem);
     });
     increaseActionCost(action);
+    cb();
   },
-  Hydravo(action) {
-    prepareSpellToCast(action, "h", async () => {
-      await catRun();
+  Hydravo(action, cb) {
+    prepareSpellToCast(action, "h", async ({ gameItem }) => {
+      gameItem.isCat ? await catRun() : console.log("TODO: dried plant");
+
+      cb();
     });
   },
-  Ejectum(action) {
+  Ejectum(action, cb) {
     prepareSpellToCast(action, "r", async ({ gameItem }) => {
       await destroyItem(gameItem);
 
       updateActionsState();
 
       await applyGravity();
+      cb();
     });
   },
 };
@@ -351,7 +357,10 @@ export function initGameTable(levelIndex, initTuto) {
       action.canvas = d;
 
       setInteractive(action, "cost", () => {
-        actionCallbacks[action.name](action);
+        actionCallbacks[action.name](action, () => {
+          action.justDrop = true;
+          dispatchEvent(new CustomEvent("spell:casted", { detail: action }));
+        });
       });
     });
   });
@@ -404,6 +413,7 @@ const catRun = async () => {
   catRunSince = 1;
   cat.run = true;
   cat.animate();
+  cat.canvas.inert = true;
 
   dispatch({
     type: "setBoard",
@@ -431,6 +441,7 @@ const moveCat = () => {
   cat.run = false;
   catRunSince = 0;
   walls.prepend(cat.canvas);
+  cat.canvas.inert = false;
 
   dispatch({
     type: "setBoard",
@@ -524,6 +535,7 @@ function prepareItemToDrop(item) {
   item.canvas.style.top = "240px";
   item.canvas.style.zIndex = 100;
   walls.append(itemToDropCanvas);
+  actionsMenu.inert = true;
 
   let isAllowToDrop = false;
 
@@ -628,16 +640,17 @@ function prepareItemToDrop(item) {
           await catAction();
           hasAddedItem = catAction === addCatItem;
         }
-
-        if (!hasAddedItem) {
-          addItemInPool();
-        }
       } else {
         catRunSince++;
+      }
+
+      if (!hasAddedItem) {
+        addItemInPool();
       }
     }
 
     shop.inert = false;
+    actionsMenu.inert = false;
   };
 
   shop.onmouseenter = () => {

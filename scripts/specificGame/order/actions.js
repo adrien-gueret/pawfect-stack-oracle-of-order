@@ -11,7 +11,7 @@ const actions = [
   },
   {
     name: "Hydravo",
-    desc: "Throws water on a cell in the cellar. Apparently, cats don't like water...",
+    desc: "Throws water on a cell in the cellar. It's said cats don't like water...",
     value: 1,
   },
   {
