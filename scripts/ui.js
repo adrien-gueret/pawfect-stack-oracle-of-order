@@ -37,7 +37,7 @@ function renderWallsCanvas() {
   wallsCanvas.height = 576;
 
   const ctx = wallsCanvas.getContext("2d");
-  const img = new window.Image();
+  const img = new Image();
   img.src = SPRITES_SRC;
   img.onload = () => {
     const sx = 0,
@@ -105,6 +105,7 @@ function addItemInPool(forcedItem) {
   const item = forcedItem || getRandomWizardItem();
 
   item.canvas = document.createElement("canvas");
+  item.canvas.className = "c" + id(item);
   item.canvas.id = "i" + item.uniqId;
   item.canvas.gameItem = item;
 
@@ -125,7 +126,7 @@ function addItemInPool(forcedItem) {
 
     prepareItemToDrop(item);
 
-    window.dispatchEvent(new CustomEvent("item:selected", { detail: item }));
+    dispatchEvent(new CustomEvent("item:selected", { detail: item }));
   });
 }
 
@@ -162,7 +163,7 @@ function destroyItem(item) {
     drawItem(item, 3, null, true);
     canvas.inert = true;
 
-    window.setTimeout(() => {
+    setTimeout(() => {
       canvas.remove();
       dispatch({
         type: "setBoard",
@@ -286,8 +287,19 @@ const actionCallbacks = {
     });
     increaseActionCost(action);
   },
+  Hydravo(action) {
+    prepareSpellToCast(action, "h", async () => {
+      await catRun();
+    });
+  },
   Ejectum(action) {
-    prepareSpellToCast(action);
+    prepareSpellToCast(action, "r", async ({ gameItem }) => {
+      await destroyItem(gameItem);
+
+      updateActionsState();
+
+      await applyGravity();
+    });
   },
 };
 
@@ -356,15 +368,28 @@ const increaseActionCost = (action) => {
 
 const cat = (() => {
   const c = getCat();
+  let clock;
 
   setInteractive(c, "magic");
   setInteractiveBg(c);
 
-  window.setInterval(() => {
+  const animate = () => {
+    clearTimeout(clock);
     c.x = c.x === 32 ? 48 : 32;
+    c.y = c.run ? 192 : 176;
 
-    drawItem(c, 3, c.hover ? "rgba(255, 255, 255, 0.2)" : "#331c1a");
-  }, 1000);
+    drawItem(
+      c,
+      3,
+      c.run ? null : c.hover ? "rgba(255, 255, 255, 0.2)" : "#331c1a"
+    );
+
+    clock = setTimeout(animate, c.run ? 333 : 1000);
+  };
+
+  animate();
+
+  c.animate = animate;
 
   return c;
 })();
@@ -374,7 +399,37 @@ const addCatItem = () => {
   addItemInPool(item);
 };
 
+let catRunSince = 0;
+const catRun = async () => {
+  catRunSince = 1;
+  cat.run = true;
+  cat.animate();
+
+  dispatch({
+    type: "setBoard",
+    payload: removeItemToBoard(cat.uniqId, getCurrentBoard()),
+  });
+
+  await Promise.all([
+    applyGravity(),
+    cat.canvas.animate(
+      [
+        { transform: "translate(0, 0)" },
+        { transform: "translate(450px, -100px)" },
+      ],
+      {
+        duration: 1500,
+        easing: "ease-in",
+      }
+    ).finished,
+  ]);
+
+  cat.canvas.remove();
+};
+
 const moveCat = () => {
+  cat.run = false;
+  catRunSince = 0;
   walls.prepend(cat.canvas);
 
   dispatch({
@@ -414,22 +469,22 @@ function followMouse({ clientX, clientY }) {
   }px)`;
 }
 
-function prepareSpellToCast(spell) {
+function prepareSpellToCast(spell, className, cast) {
   function cancel() {
-    document.body.classList.remove("r");
+    document.body.classList.remove(className);
     document.body.removeEventListener("mousemove", followMouse);
-    document.body.removeEventListener("click", cast);
+    document.body.removeEventListener("click", run);
     spell.canvas.classList.remove("casting");
     spellCloneElement?.remove();
   }
 
-  async function cast(e) {
-    if (!document.body.classList.contains("r")) {
+  async function run(e) {
+    if (!document.body.classList.contains(className)) {
       return;
     }
 
-    const { classList, tagName, gameItem } = e.target;
-    const isOK = gameItem && tagName === "CANVAS" && !classList.contains("cat");
+    const { tagName, gameItem } = e.target;
+    const isOK = gameItem && tagName === "CANVAS";
 
     if (isOK) {
       cancel();
@@ -437,17 +492,13 @@ function prepareSpellToCast(spell) {
       increaseActionCost(spell);
       updateActionsState();
 
-      await destroyItem(gameItem);
-
-      updateActionsState();
-
-      await applyGravity();
+      await cast(e.target);
 
       shop.inert = false;
     }
   }
 
-  if (document.body.classList.contains("r")) {
+  if (document.body.classList.contains(className)) {
     cancel();
     shop.inert = false;
     return;
@@ -458,9 +509,9 @@ function prepareSpellToCast(spell) {
 
   followMouse({ clientX: left, clientY: top });
 
-  document.body.classList.add("r");
+  document.body.classList.add(className);
   document.body.addEventListener("mousemove", followMouse);
-  document.body.addEventListener("click", cast);
+  document.body.addEventListener("click", run);
   spell.canvas.classList.add("casting");
 
   shop.inert = true;
@@ -562,22 +613,27 @@ function prepareItemToDrop(item) {
     const ce = new CustomEvent("item:dropped", {
       detail: item,
     });
-    window.dispatchEvent(ce);
+    dispatchEvent(ce);
 
     let hasAddedItem = false;
 
     if (process.env.GAME_TYPE === "order") {
-      if (!cat.canvas.parentNode) {
-        await moveCat();
-      } else {
-        const catActions = [moveCat, addCatItem];
-        const catAction = catActions[ce.ci ?? getRandom(catActions.length - 1)];
-        await catAction();
-        hasAddedItem = catAction === addCatItem;
-      }
+      if (catRunSince === 0 || catRunSince >= 3) {
+        if (!cat.canvas.parentNode) {
+          await moveCat();
+        } else {
+          const catActions = [moveCat, addCatItem];
+          const catAction =
+            catActions[ce.ci ?? getRandom(catActions.length - 1)];
+          await catAction();
+          hasAddedItem = catAction === addCatItem;
+        }
 
-      if (!hasAddedItem) {
-        addItemInPool();
+        if (!hasAddedItem) {
+          addItemInPool();
+        }
+      } else {
+        catRunSince++;
       }
     }
 

@@ -415,6 +415,7 @@ div.s {
   margin: 0 auto 0 auto;
   padding: 48px;
   position: relative;
+  overflow: hidden;
 }
 
 #gameTable {
@@ -427,6 +428,20 @@ div.s {
   grid-template-rows: repeat(10, 48px);
   column-gap: 0;
   row-gap: 0;
+}
+
+#walls .cat {
+  z-index: 0;
+}
+
+.r #walls .cat,
+.h #gameTable ~ canvas:not(.c7) {
+  pointer-events: none;
+}
+
+.h #walls .c7,
+.h #walls .cat {
+  cursor: pointer;
 }
 
 .r #gameTable ~ canvas:hover {
@@ -590,11 +605,13 @@ div.s.actionDisabled {
   top: 3px;
 }
 
-.r #actionsMenu > div:after {
+.r #actionsMenu > div:after,
+.h #actionsMenu > div:after {
   display: none;
 }
 
-.r #actionsMenu > div.s:not(.casting) {
+.r #actionsMenu > div.s:not(.casting),
+.h #actionsMenu > div.s:not(.casting) {
   opacity: 0.3;
   pointer-events: none;
 }

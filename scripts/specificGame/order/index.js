@@ -208,7 +208,7 @@ export default {
     onActionInit("Spells", actions);
 
     if (level === 0) {
-      // TODO: uncomment actionsMenu.style.display = "none";
+      actionsMenu.style.display = "none";
       goals.style.display = "none";
 
       updateHelp(
