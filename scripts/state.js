@@ -47,6 +47,14 @@ export const getItemUniqIds = () => {
   return Array.from(uniqIds);
 };
 
+export const getTotalItems = () => {
+  const allItemUniqIds = getItemUniqIds();
+  return allItemUniqIds.filter((id) => {
+    const canvas = document.getElementById("i" + id);
+    return canvas && !canvas.gameItem?.isCat;
+  }).length;
+};
+
 export const areSoundMuted = () => getState().m;
 
 export const toggleMuteSounds = (isMuted) =>

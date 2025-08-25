@@ -7,7 +7,12 @@ import {
   getItemUniqIdBelowItem,
 } from "./board/index.js";
 import { getRandom } from "./utils.js";
-import { getCurrentBoard, getItemUniqIds, getMagic } from "./state.js";
+import {
+  getCurrentBoard,
+  getItemUniqIds,
+  getMagic,
+  getTotalItems,
+} from "./state.js";
 import { dispatch } from "./store.js";
 
 export function toggleSoundsCheckbox(isChecked) {
@@ -19,6 +24,12 @@ export function onSoundsCheckboxChange(callback) {
 }
 
 function renderWallsCanvas() {
+  [...walls.querySelectorAll("canvas")].forEach((c) => {
+    if (c !== wallsCanvas) {
+      c.remove();
+    }
+  });
+
   wallsCanvas.width = 576;
   wallsCanvas.height = 576;
 
@@ -197,7 +208,7 @@ export async function applyGravity() {
     );
   } while (atLeastOneItemHasMoved);
 
-  itemScore.innerHTML = getItemUniqIds().length - 1; //-1 'cause we don't count the cat
+  itemScore.innerHTML = getTotalItems();
   magicScore.innerHTML = getMagic();
 }
 
@@ -266,7 +277,42 @@ export default async function init(faviconPixels) {
   renderFavicon(faviconPixels);
 }
 
+let maxItems = 0;
+let minMagic = 0;
+
+export function checkEnd() {
+  return getTotalItems() >= maxItems;
+}
+
+export function isMagicGoalReached() {
+  return getMagic() >= minMagic;
+}
+
+let currentLevelIndex = null;
+let currentSpecificGameStart = null;
+
+export const endGame = (hasWon) => {
+  endTitle.innerHTML = hasWon ? "Congratulations!" : "Oops...";
+  endDescription.innerHTML = hasWon
+    ? "The cellar is tidy and has enough magic concentration!"
+    : "The maximum number of items has been reached, but the magic concentration is not sufficient...";
+  endButtonNext.innerHTML = hasWon ? "Next" : "Retry";
+
+  endButtonNext.onclick = () =>
+    startGame(
+      hasWon ? currentLevelIndex + 1 : currentLevelIndex,
+      currentSpecificGameStart
+    );
+
+  gameEnd.classList.add("v");
+};
+
 export function startGame(levelIndex, specificGameStart) {
+  currentLevelIndex = levelIndex;
+  currentSpecificGameStart = specificGameStart;
+
+  gameEnd.classList.remove("v");
+
   const row = `<div></div>`;
   gameTable.innerHTML = row.repeat(100);
 
@@ -280,6 +326,9 @@ export function startGame(levelIndex, specificGameStart) {
   magicScore.innerHTML = 0;
   itemGoal.innerHTML = items;
   magicGoal.innerHTML = magic;
+
+  maxItems = items;
+  minMagic = magic;
 
   baseBoard.flat().forEach((val, index) => {
     if (val === -1) {

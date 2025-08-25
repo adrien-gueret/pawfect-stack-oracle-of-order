@@ -20,12 +20,15 @@ import {
   destroyItem,
   setInteractive,
   setInteractiveBg,
+  checkEnd,
+  endGame,
+  isMagicGoalReached,
 } from "../../ui.js";
 import { convert1DIndexInto2DIndex, getRandom } from "../../utils.js";
 import { getCurrentBoard, getMagic } from "../../state.js";
 import { dispatch } from "../../store.js";
 
-import actions from "./actions.js";
+import getActions from "./actions.js";
 import startTuto from "./tutos.js";
 
 function addItemInPool(forcedItem) {
@@ -384,8 +387,12 @@ function prepareItemToDrop(item) {
       }
     }
 
-    shop.inert = false;
-    actionsMenu.inert = false;
+    if (checkEnd()) {
+      endGame(isMagicGoalReached());
+    } else {
+      shop.inert = false;
+      actionsMenu.inert = false;
+    }
   };
 
   shop.onmouseenter = () => {
@@ -395,6 +402,11 @@ function prepareItemToDrop(item) {
 }
 
 export function startGame(levelIndex) {
+  shop.inert = false;
+  actionsMenu.inert = false;
+
+  shop.innerHTML = "";
+
   addItemInPool();
   addItemInPool();
   addItemInPool();
@@ -402,7 +414,7 @@ export function startGame(levelIndex) {
   actionsMenu.innerHTML = "";
 
   actionsMenu.append(document.createTextNode("Spells"));
-  actions.forEach((action) => {
+  getActions().forEach((action) => {
     const d = document.createElement("div");
     d.dataset.cost = action.value;
     d.className = `${action.name} s ${
@@ -410,6 +422,8 @@ export function startGame(levelIndex) {
     }`;
     actionsMenu.append(d);
     action.canvas = d;
+
+    console.log("startGame order", action.value);
 
     setInteractive(action, "cost", () => {
       actionCallbacks[action.name](action, () => {

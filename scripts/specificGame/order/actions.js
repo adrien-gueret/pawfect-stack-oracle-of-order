@@ -1,4 +1,4 @@
-const actions = [
+export default () => [
   {
     name: "Rotarigus",
     desc: "Rotates ALL items in the reserve 90° to the right.",
@@ -12,7 +12,7 @@ const actions = [
   {
     name: "Hydravo",
     desc: "Throws water on a cell in the cellar. It's said cats don't like water...",
-    value: 1,
+    value: 2,
   },
   {
     name: "Ejectum",
@@ -20,5 +20,3 @@ const actions = [
     value: 0,
   },
 ];
-
-export default actions;
