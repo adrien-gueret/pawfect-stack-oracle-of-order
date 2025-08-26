@@ -100,7 +100,7 @@ export async function growPlant(driedPlantCanvas, board) {
     uniqId: driedPlantCanvas.gameItem.uniqId,
     name: "Carnivorous Plant",
     desc: descStart + " has fully grown and regained all its magic!",
-    value: 8,
+    value: 9,
     canvas: document.createElement("canvas"),
     shape: [
       [1, 1],
@@ -113,7 +113,7 @@ export async function growPlant(driedPlantCanvas, board) {
   let mediumPlant = {
     ...fullPlant,
     desc: descStart + " has grown a bit and regained some of its magic.",
-    value: 5,
+    value: 6,
     canvas: document.createElement("canvas"),
     shape: [[1], [1]],
     x: 16,
@@ -134,6 +134,8 @@ export async function growPlant(driedPlantCanvas, board) {
     driedPlantCanvas.gameItem.uniqId,
     board
   );
+
+  driedPlantCanvas.dispatchEvent(new MouseEvent("mouseleave"));
 
   let newPlant;
 

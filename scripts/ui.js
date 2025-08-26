@@ -111,6 +111,7 @@ export function destroyItem(item) {
     canvas.inert = true;
 
     setTimeout(() => {
+      canvas.dispatchEvent(new MouseEvent("mouseleave"));
       canvas.remove();
       dispatch({
         type: "setBoard",

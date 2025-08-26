@@ -26,7 +26,11 @@ import {
   isMagicGoalReached,
 } from "../../ui.js";
 import { convert1DIndexInto2DIndex, getRandom } from "../../utils.js";
-import { getCurrentBoard, getMagic } from "../../state.js";
+import {
+  getCurrentBoard,
+  getMagic,
+  getSpecificBookMagic,
+} from "../../state.js";
 import { dispatch } from "../../store.js";
 
 import getActions from "./actions.js";
@@ -146,7 +150,7 @@ const increaseActionCost = (action) => {
     type: "spendMagic",
     payload: action.value++,
   });
-  action.canvas.dataset.cost = action.value;
+  action.canvas.dataset.cost = Math.min(action.value, 5);
   magicScore.innerHTML = getMagic();
 };
 
@@ -174,9 +178,8 @@ const catRun = async () => {
     payload: removeItemToBoard(cat.uniqId, getCurrentBoard()),
   });
 
-  await Promise.all([
-    applyGravity(),
-    cat.canvas.animate(
+  cat.canvas
+    .animate(
       [
         { transform: "translate(0, 0)" },
         { transform: "translate(450px, -100px)" },
@@ -185,10 +188,12 @@ const catRun = async () => {
         duration: 1500,
         easing: "ease-in",
       }
-    ).finished,
-  ]);
+    )
+    .finished.then(() => {
+      cat.canvas.remove();
+    });
 
-  cat.canvas.remove();
+  await applyGravity();
 };
 
 const moveCat = () => {
@@ -383,6 +388,14 @@ function prepareItemToDrop(item) {
     updateActionsState();
 
     item.justDrop = true;
+
+    if (id(item) === 11) {
+      Object.defineProperty(item, "value", {
+        get() {
+          return getSpecificBookMagic(item.uniqId);
+        },
+      });
+    }
 
     const ce = new CustomEvent("item:dropped", {
       detail: item,

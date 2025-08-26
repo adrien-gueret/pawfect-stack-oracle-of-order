@@ -2,7 +2,7 @@ const items = [
   {
     name: "Potion",
     desc: "A small object highly concentrated in magic, but fragile.",
-    value: 3,
+    value: 4,
     shape: [[1]],
     x: 32,
     y: 0,
@@ -102,7 +102,7 @@ const items = [
   },
   {
     name: "Grimoires",
-    desc: "Magical books that take up little space.",
+    desc: "If you put them next to other grimoires, their magic increases.",
     value: 2,
     shape: [[1]],
     x: 0,
@@ -137,10 +137,6 @@ export function drawItem(
 
   const itemWidth = item.shape[0].length * baseMult;
   const itemHeight = item.shape.length * baseMult;
-
-  if (!item.isCat) {
-    console.log(item, itemWidth, itemHeight);
-  }
 
   if (itemWidth !== canvas.width && itemHeight !== canvas.height) {
     canvas.width = itemWidth;

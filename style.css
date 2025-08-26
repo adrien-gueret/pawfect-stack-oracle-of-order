@@ -11,12 +11,7 @@ body {
   font-family: monospace;
   background-color: #feebc9;
   image-rendering: optimizeSpeed;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -o-crisp-edges;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: pixelated;
   image-rendering: optimize-contrast;
-  -ms-interpolation-mode: nearest-neighbor;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,8 +34,6 @@ main {
   justify-content: stretch;
   overflow: hidden;
   border-radius: 3px;
-  -ms-user-select: none;
-  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -127,7 +120,8 @@ body:not([data-current-section]) #gameOptions,
 }
 
 #home a,
-#home a:hover {
+#home a:hover,
+#endButtonNext {
   color: inherit;
   text-decoration: none;
   font-weight: bold;
@@ -135,8 +129,18 @@ body:not([data-current-section]) #gameOptions,
   transition: transform 0.2s ease;
 }
 
-a:hover {
+a:hover,
+#endButtonNext:hover {
   transform: scale(1.05);
+}
+
+#endButtonNext {
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .skip,
@@ -626,15 +630,20 @@ div.Rotaleftus:after {
   z-index: 1000;
 }
 
-#gameEnd,
-#gameEnd > div {
+#gameEnd {
   display: none;
 }
 
-#gameEnd * {
+#gameEnd > div {
+  background-color: #331c1a;
+  border-style: solid;
+  border-width: 4px 0;
+  padding: 16px 0;
+}
+
+#gameEnd > div * {
   margin: 8px;
   padding: 0;
-  background-color: #331c1a;
 }
 
 #gameEnd.v {
