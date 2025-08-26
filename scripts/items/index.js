@@ -60,18 +60,6 @@ const items = [
     y: 80,
   },
   {
-    name: "Carnivorous Plant",
-    desc: "Oh? By watering the little plant, it grew and regained all its magic!",
-    value: 6,
-    base: false,
-    shape: [
-      [1, 1],
-      [0, 1],
-    ],
-    x: 0,
-    y: 112,
-  },
-  {
     name: "Dried Plant",
     desc: "This thirsty plant has lost much of its magic.",
     value: 1,
@@ -123,7 +111,6 @@ const items = [
   {
     name: "Grimalkin",
     shape: [[1]],
-    base: false,
     isCat: true,
     x: 32,
     y: 176,
@@ -150,6 +137,10 @@ export function drawItem(
 
   const itemWidth = item.shape[0].length * baseMult;
   const itemHeight = item.shape.length * baseMult;
+
+  if (!item.isCat) {
+    console.log(item, itemWidth, itemHeight);
+  }
 
   if (itemWidth !== canvas.width && itemHeight !== canvas.height) {
     canvas.width = itemWidth;
@@ -221,7 +212,7 @@ export function drawItem(
   };
 }
 
-function rotate(item, angle) {
+export function rotate(item, angle = 0, drawScale = 2) {
   const currentRotate = item.rot ?? 0;
   item.rot = (currentRotate + angle) % 360;
 
@@ -243,7 +234,7 @@ function rotate(item, angle) {
   item.shape = newShape;
 
   item.canvas.width = item.canvas.width;
-  drawItem(item, 2);
+  drawItem(item, drawScale);
 
   return item;
 }
@@ -287,9 +278,7 @@ function getRandomItem(fromItems) {
 }
 
 export function getRandomWizardItem() {
-  return getRandomItem(
-    items.filter((item) => !item.fromCat && item.base !== false)
-  );
+  return getRandomItem(items.filter((item) => !item.fromCat && !item.isCat));
 }
 
 export function getRandomCatItem() {

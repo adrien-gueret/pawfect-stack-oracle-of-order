@@ -2,17 +2,17 @@ export default () => [
   {
     name: "Rotarigus",
     desc: "Rotates ALL items in the reserve 90° to the right.",
-    value: 1,
+    value: 0,
   },
   {
     name: "Rotaleftus",
     desc: "Rotates ALL items in the reserve 90° to the left.",
-    value: 1,
+    value: 0,
   },
   {
     name: "Hydravo",
     desc: "Throws water on a cell in the cellar. It's said cats don't like water...",
-    value: 2,
+    value: 0,
   },
   {
     name: "Ejectum",

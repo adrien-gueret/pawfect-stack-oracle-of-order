@@ -416,11 +416,11 @@ div.s {
 }
 
 .r #walls .cat,
-.h #gameTable ~ canvas:not(.c7) {
+.h #gameTable ~ canvas:not(.c6) {
   pointer-events: none;
 }
 
-.h #walls .c7,
+.h #walls .c6,
 .h #walls .cat {
   cursor: pointer;
 }

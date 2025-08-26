@@ -13,6 +13,7 @@ import {
   applyItemToBoard,
   removeItemToBoard,
   getRandomCoordinatesOfEmptySpaceAboveFloor,
+  growPlant,
 } from "../../board/index.js";
 import {
   initCatAnimation,
@@ -107,8 +108,21 @@ const actionCallbacks = {
     cb();
   },
   Hydravo(action, cb) {
-    prepareSpellToCast(action, "h", async ({ gameItem }) => {
-      gameItem.isCat ? await catRun() : console.log("TODO: dried plant");
+    prepareSpellToCast(action, "h", async (domSpellTarget) => {
+      if (domSpellTarget.gameItem.isCat) {
+        await catRun();
+      } else {
+        const newBoard = await growPlant(domSpellTarget, getCurrentBoard());
+
+        if (!newBoard) {
+          return false;
+        }
+
+        dispatch({
+          type: "setBoard",
+          payload: newBoard,
+        });
+      }
 
       cb();
     });
@@ -219,6 +233,8 @@ function followMouse({ clientX, clientY }) {
 }
 
 function prepareSpellToCast(spell, className, cast) {
+  let hasBeenCast = false;
+
   function cancel() {
     document.body.classList.remove(className);
     document.body.removeEventListener("mousemove", followMouse);
@@ -228,23 +244,29 @@ function prepareSpellToCast(spell, className, cast) {
   }
 
   async function run(e) {
-    if (!document.body.classList.contains(className)) {
+    if (!document.body.classList.contains(className) || hasBeenCast) {
       return;
     }
+
+    hasBeenCast = true;
 
     const { tagName, gameItem } = e.target;
     const isOK = gameItem && tagName === "CANVAS";
 
     if (isOK) {
-      cancel();
+      const spellResult = await cast(e.target);
 
-      increaseActionCost(spell);
-      updateActionsState();
+      if (spellResult !== false) {
+        cancel();
+        increaseActionCost(spell);
+        updateActionsState();
 
-      await cast(e.target);
-
-      shop.inert = false;
+        shop.inert = false;
+        return;
+      }
     }
+
+    hasBeenCast = false;
   }
 
   if (document.body.classList.contains(className)) {
@@ -407,9 +429,34 @@ export function startGame(levelIndex) {
 
   shop.innerHTML = "";
 
-  addItemInPool();
-  addItemInPool();
-  addItemInPool();
+  // TODO: cancel forced items
+  addItemInPool({
+    name: "Dried Plant",
+    desc: "This thirsty plant has lost much of its magic.",
+    value: 1,
+    shape: [[1]],
+    x: 0,
+    y: 128,
+    uniqId: 9999,
+  });
+  addItemInPool({
+    name: "Dried Plant",
+    desc: "This thirsty plant has lost much of its magic.",
+    value: 1,
+    shape: [[1]],
+    x: 0,
+    y: 128,
+    uniqId: 9998,
+  });
+  addItemInPool({
+    name: "Dried Plant",
+    desc: "This thirsty plant has lost much of its magic.",
+    value: 1,
+    shape: [[1]],
+    x: 0,
+    y: 128,
+    uniqId: 9997,
+  });
 
   actionsMenu.innerHTML = "";
 
@@ -422,8 +469,6 @@ export function startGame(levelIndex) {
     }`;
     actionsMenu.append(d);
     action.canvas = d;
-
-    console.log("startGame order", action.value);
 
     setInteractive(action, "cost", () => {
       actionCallbacks[action.name](action, () => {

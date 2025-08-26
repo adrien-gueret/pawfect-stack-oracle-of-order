@@ -29,8 +29,9 @@ const updateHelp = (text, classesToAdd = [], classesToRemove = []) => {
 
 export default async function startTuto(levelIndex) {
   if (levelIndex === 0) {
-    actionsMenu.style.display = "none";
-    goals.style.display = "none";
+    // TODO: uncomment
+    // actionsMenu.style.display = "none";
+    // goals.style.display = "none";
 
     updateHelp(
       "Here is the cellar! The objects to tidy up are in the reserve. Click to see them.",
