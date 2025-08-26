@@ -182,8 +182,6 @@ export async function growPlant(driedPlantCanvas, board) {
       rotatedPlant.canvas.coor.row
     );
 
-    console.log({ driedPlantCanvas, rotatedPlant, overlaps });
-
     if (overlaps.length) {
       return false;
     }
@@ -200,15 +198,13 @@ export async function growPlant(driedPlantCanvas, board) {
     newPlant.canvas.coor.row
   );
 
-  console.log(newBoard);
-
   driedPlantCanvas.replaceWith(newPlant.canvas);
   newPlant.canvas.id = driedPlantCanvas.id;
 
   newPlant.canvas.style.left = `${(newPlant.canvas.coor.col + 1) * 48}px`;
   newPlant.canvas.style.top = `${(newPlant.canvas.coor.row + 1) * 48}px`;
 
-  return newBoard;
+  return [newBoard, newPlant];
 }
 
 const newEmptyBoard = () => Array.from({ length: 10 }, () => Array(10).fill(0));

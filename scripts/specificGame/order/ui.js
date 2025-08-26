@@ -112,11 +112,13 @@ const actionCallbacks = {
       if (domSpellTarget.gameItem.isCat) {
         await catRun();
       } else {
-        const newBoard = await growPlant(domSpellTarget, getCurrentBoard());
+        const [newBoard, newPlant] = await growPlant(
+          domSpellTarget,
+          getCurrentBoard()
+        );
 
-        if (!newBoard) {
-          return false;
-        }
+        setInteractiveBg(newPlant);
+        setInteractive(newPlant, "magic");
 
         dispatch({
           type: "setBoard",
@@ -429,34 +431,9 @@ export function startGame(levelIndex) {
 
   shop.innerHTML = "";
 
-  // TODO: cancel forced items
-  addItemInPool({
-    name: "Dried Plant",
-    desc: "This thirsty plant has lost much of its magic.",
-    value: 1,
-    shape: [[1]],
-    x: 0,
-    y: 128,
-    uniqId: 9999,
-  });
-  addItemInPool({
-    name: "Dried Plant",
-    desc: "This thirsty plant has lost much of its magic.",
-    value: 1,
-    shape: [[1]],
-    x: 0,
-    y: 128,
-    uniqId: 9998,
-  });
-  addItemInPool({
-    name: "Dried Plant",
-    desc: "This thirsty plant has lost much of its magic.",
-    value: 1,
-    shape: [[1]],
-    x: 0,
-    y: 128,
-    uniqId: 9997,
-  });
+  addItemInPool();
+  addItemInPool();
+  addItemInPool();
 
   actionsMenu.innerHTML = "";
 
