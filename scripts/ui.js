@@ -16,6 +16,7 @@ import {
 } from "./state.js";
 import { dispatch } from "./store.js";
 import { levelWin, levelLost, potionBroken, toggleSounds } from "./sounds.js";
+import { goToSection } from "./sections.js";
 
 function renderWallsCanvas() {
   [...walls.querySelectorAll("canvas")].forEach((c) => {
@@ -261,13 +262,16 @@ export function speakTo(c1, c2) {
   c2.classList.remove("speaking");
 }
 
-export async function runScenario(specificGameScenario) {
-  const master = document.querySelector("#scenarioScene .scenarioMaster");
-  const melusine = document.querySelector("#scenarioScene .scenarioMelusine");
-  const cat = document.querySelector("#scenarioScene .scenarioCat");
-  const dialog = document.querySelector("#scenarioScene + .scenarioDialog");
+export async function runScenario(specificGameScenario, end) {
+  if (end) {
+    skipLink.remove();
+  }
 
-  await specificGameScenario(master, melusine, cat, dialog, speakTo);
+  await specificGameScenario(
+    document.querySelector("#scenarioScene + .scenarioDialog"),
+    speakTo,
+    end
+  );
 }
 
 let maxItems = 0;
@@ -291,9 +295,18 @@ export const endGame = (hasWon) => {
     : "The maximum number of items has been reached, but the magic concentration is not sufficient...";
   endButtonNext.innerHTML = hasWon ? "Next" : "Retry";
 
+  const nextLevelIndex = currentLevelIndex + 1;
+
+  if (hasWon) {
+    dispatch({
+      type: "setFinishedLevelCount",
+      payload: nextLevelIndex,
+    });
+  }
+
   endButtonNext.onclick = () =>
     startGame(
-      hasWon ? currentLevelIndex + 1 : currentLevelIndex,
+      hasWon ? nextLevelIndex : currentLevelIndex,
       currentSpecificGameStart
     );
 
@@ -316,6 +329,11 @@ export function startGame(levelIndex, specificGameStart) {
   levelDisplayIndex.innerHTML = levelIndex + 1;
 
   const [baseBoard, items, magic] = getLevel(levelIndex);
+
+  if (!baseBoard) {
+    goToSection("scenarioSection", { end: true });
+    return;
+  }
 
   itemScore.innerHTML = 0;
   magicScore.innerHTML = 0;

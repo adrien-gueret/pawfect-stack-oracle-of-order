@@ -1,7 +1,7 @@
 import initSections, { goToSection } from "./sections.js";
 import initUI, { startGame, runScenario } from "./ui.js";
 
-import initState from "./state.js";
+import initState, { getThisGameFinishedLevelCount } from "./state.js";
 import playMainMusic from "./sounds.js";
 
 import specificGame from "./specificGame/index.js";
@@ -19,12 +19,11 @@ import specificGame from "./specificGame/index.js";
     }
 
     if (nextSection === "scenarioSection") {
-      await runScenario(specificGame.runScenario);
+      await runScenario(specificGame.runScenario, vars.end);
 
       goToSection("mainGame");
     } else if (nextSection === "mainGame") {
-      const levelIndex = vars.l ?? 0;
-      startGame(levelIndex, specificGame.start);
+      startGame(getThisGameFinishedLevelCount() ?? 0, specificGame.start);
     }
   });
 })();

@@ -1,4 +1,5 @@
 import { startGame } from "./ui.js";
+import { getOtherGameFinishedLevelCount } from "../../state.js";
 
 export default {
   favicon: [
@@ -19,7 +20,111 @@ export default {
     [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
   ],
-  async runScenario(master, melusine, cat, dialog, speakTo) {
+  async runScenario(dialog, speakTo, end) {
+    dialog.classList.remove("end");
+
+    scenarioScene.innerHTML =
+      '<div class="scenarioMaster c"></div><div class="scenarioMelusine c"></div><div class="scenarioCat c"></div>';
+    const master = scenarioScene.querySelector(".scenarioMaster");
+    const melusine = scenarioScene.querySelector(".scenarioMelusine");
+    const cat = scenarioScene.querySelector(".scenarioCat");
+
+    if (end) {
+      cat.style.opacity = 0;
+
+      const scenarioScenes = [
+        {
+          msg: "Master! I've completed the task you entrusted to me!",
+        },
+        {
+          msg: "Very good, Mélusine! The concentration of magic in the cellar is perfect! Hehehe...",
+        },
+        {
+          msg: "But... What's happening, Master?",
+        },
+        {
+          msg: "Meow... <i>(Oh no, I've failed...)</i>",
+        },
+      ];
+
+      const hasFinishedOtherGame = getOtherGameFinishedLevelCount() >= 3;
+
+      if (hasFinishedOtherGame) {
+      }
+
+      let currentScene = -1;
+
+      return new Promise(() => {
+        const showNextScene = () => {
+          currentScene++;
+
+          dialog.innerHTML = scenarioScenes[currentScene].msg;
+
+          switch (currentScene) {
+            case 0: {
+              melusine.classList.add("left");
+
+              speakTo(melusine, master);
+
+              break;
+            }
+
+            case 1: {
+              speakTo(master, melusine);
+              break;
+            }
+
+            case 2: {
+              master.classList.add("stop", "r");
+              master.classList.remove("speaking");
+              melusine.classList.add("shocked");
+              break;
+            }
+
+            case 3: {
+              cat.classList.add("walk");
+              cat.style.opacity = 1;
+              cat
+                .animate(
+                  [
+                    { transform: "translateX(100%) scaleX(-1)" },
+                    { transform: "translateX(0) scaleX(-1)" },
+                  ],
+                  {
+                    duration: 1200,
+                    easing: "linear",
+                    fill: "forwards",
+                  }
+                )
+                .finished.then(() => {
+                  cat.classList.remove("walk");
+                });
+
+              break;
+            }
+          }
+
+          const lastScene = currentScene === scenarioScenes.length - 1;
+
+          dialog.onclick = lastScene
+            ? () => {
+                dialog.classList.add("tend");
+
+                dialog.innerHTML = hasFinishedOtherGame
+                  ? `TODO`
+                  : `You've finished <b>Pawfect Stack: Oracle of Order</b>! To discover the true ending, also complete <a target="_parent" href=""><b>Pawfect Stack: Oracle of Chaos</b></a>!`;
+              }
+            : showNextScene;
+
+          if (lastScene) {
+            dialog.classList.add("end");
+          }
+        };
+
+        showNextScene();
+      });
+    }
+
     const scenarioScenes = [
       {
         msg: "My little Mélusine, I entrust you with a mission of the utmost importance!",

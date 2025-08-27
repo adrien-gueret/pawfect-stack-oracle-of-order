@@ -3,9 +3,11 @@ import { getKey } from "./save.js";
 import initStore, { dispatch, getState } from "./store.js";
 
 const defaultState = {
-  m: true,
-  b: null,
-  s: 0,
+  m: true, // is sound muted
+  b: null, // current board
+  s: 0, // current spent magic
+  order: 0, // Last level index for 'order game'
+  chaos: 0, // Last level index for 'chaos game'
 };
 
 export function reducer(state = defaultState, { type, payload }) {
@@ -31,12 +33,21 @@ export function reducer(state = defaultState, { type, payload }) {
         ...state,
         m: payload.isMuted,
       };
+    case "setFinishedLevelCount":
+      return {
+        ...state,
+        [process.env.GAME_TYPE]: payload,
+      };
     default:
       return state;
   }
 }
 
 export const getCurrentBoard = () => getState().b;
+export const getThisGameFinishedLevelCount = () =>
+  getState()[process.env.GAME_TYPE];
+export const getOtherGameFinishedLevelCount = () =>
+  getState()[process.env.GAME_TYPE === "order" ? "chaos" : "order"];
 
 function buildTempBoard(board) {
   const tempBoard = [];

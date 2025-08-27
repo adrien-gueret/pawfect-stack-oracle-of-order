@@ -126,5 +126,7 @@ export default async function startTuto(levelIndex) {
       [],
       ["noshop", "nocursor"]
     );
+  } else {
+    updateHelp("Tidy up the cellar!");
   }
 }
