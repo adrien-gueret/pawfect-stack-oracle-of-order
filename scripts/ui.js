@@ -12,16 +12,10 @@ import {
   getItemUniqIds,
   getMagic,
   getTotalItems,
+  areSoundMuted,
 } from "./state.js";
 import { dispatch } from "./store.js";
-
-export function toggleSoundsCheckbox(isChecked) {
-  soundsCheckbox.checked = isChecked;
-}
-
-export function onSoundsCheckboxChange(callback) {
-  soundsCheckbox.onchange = callback;
-}
+import { levelWin, levelLost, potionBroken, toggleSounds } from "./sounds.js";
 
 function renderWallsCanvas() {
   [...walls.querySelectorAll("canvas")].forEach((c) => {
@@ -180,6 +174,7 @@ export async function applyGravity() {
               setTimeout(animateFall, 300);
             } else {
               if (id(item) === 0) {
+                potionBroken();
                 destroyItem(item).then(resolve);
               } else {
                 resolve();
@@ -197,6 +192,7 @@ export async function applyGravity() {
 
               return new Promise((resolve) => {
                 if (id(item) === 0) {
+                  potionBroken();
                   destroyItem(item).then(resolve);
                 } else {
                   resolve();
@@ -274,10 +270,6 @@ export async function runScenario(specificGameScenario) {
   await specificGameScenario(master, melusine, cat, dialog, speakTo);
 }
 
-export default async function init(faviconPixels) {
-  renderFavicon(faviconPixels);
-}
-
 let maxItems = 0;
 let minMagic = 0;
 
@@ -306,6 +298,8 @@ export const endGame = (hasWon) => {
     );
 
   gameEnd.classList.add("v");
+
+  hasWon ? levelWin() : levelLost();
 };
 
 export function startGame(levelIndex, specificGameStart) {
@@ -344,4 +338,20 @@ export function startGame(levelIndex, specificGameStart) {
   });
 
   specificGameStart(levelIndex);
+}
+
+function toggleSoundsCheckbox(isChecked) {
+  soundsCheckbox.checked = isChecked;
+}
+
+export default function init(faviconPixels) {
+  renderFavicon(faviconPixels);
+
+  toggleSoundsCheckbox(!areSoundMuted());
+
+  soundsCheckbox.onchange = (e) => {
+    const isChecked = e.currentTarget.checked;
+    toggleSounds(!isChecked);
+    toggleSoundsCheckbox(isChecked);
+  };
 }

@@ -94,7 +94,7 @@ export function getItemUniqIdBelowItem(itemUniqId, board) {
   return Array.from(result);
 }
 
-export async function growPlant(driedPlantCanvas, board) {
+export function growPlant(driedPlantCanvas, board) {
   const descStart = "By watering the dried plant, it";
   let fullPlant = {
     uniqId: driedPlantCanvas.gameItem.uniqId,

@@ -26,6 +26,11 @@ export function reducer(state = defaultState, { type, payload }) {
         ...state,
         s: state.s + payload,
       };
+    case "toggleMuteSounds":
+      return {
+        ...state,
+        m: payload.isMuted,
+      };
     default:
       return state;
   }

@@ -35,6 +35,7 @@ import { dispatch } from "../../store.js";
 
 import getActions from "./actions.js";
 import startTuto from "./tutos.js";
+import { putItem, plantGrowth, itemDisappears, meow } from "../../sounds.js";
 
 function addItemInPool(forcedItem) {
   const item = forcedItem || getRandomWizardItem();
@@ -116,10 +117,12 @@ const actionCallbacks = {
       if (domSpellTarget.gameItem.isCat) {
         await catRun();
       } else {
-        const [newBoard, newPlant] = await growPlant(
+        const [newBoard, newPlant] = growPlant(
           domSpellTarget,
           getCurrentBoard()
         );
+
+        plantGrowth();
 
         setInteractiveBg(newPlant);
         setInteractive(newPlant, "magic");
@@ -135,6 +138,8 @@ const actionCallbacks = {
   },
   Ejectum(action, cb) {
     prepareSpellToCast(action, "r", async ({ gameItem }) => {
+      itemDisappears();
+
       await destroyItem(gameItem);
 
       updateActionsState();
@@ -163,6 +168,9 @@ const cat = initCatAnimation(
 const addCatItem = () => {
   const item = getRandomCatItem();
   item.desc = "A gift from the cat. It's useless...";
+
+  meow();
+
   addItemInPool(item);
 };
 
@@ -177,6 +185,8 @@ const catRun = async () => {
     type: "setBoard",
     payload: removeItemToBoard(cat.uniqId, getCurrentBoard()),
   });
+
+  meow();
 
   cat.canvas
     .animate(
@@ -202,13 +212,8 @@ const moveCat = () => {
   walls.prepend(cat.canvas);
   cat.canvas.inert = false;
 
-  dispatch({
-    type: "setBoard",
-    payload: removeItemToBoard(cat.uniqId, getCurrentBoard()),
-  });
-
   const coordinates = getRandomCoordinatesOfEmptySpaceAboveFloor(
-    getCurrentBoard()
+    removeItemToBoard(cat.uniqId, getCurrentBoard())
   );
 
   if (!coordinates) {
@@ -219,11 +224,13 @@ const moveCat = () => {
   cat.canvas.style.top = `${coordinates.row * 48 + 48}px`;
   cat.canvas.coor = coordinates;
 
+  meow();
+
   dispatch({
     type: "setBoard",
     payload: applyItemToBoard(
       cat,
-      getCurrentBoard(),
+      removeItemToBoard(cat.uniqId, getCurrentBoard()),
       coordinates.col,
       coordinates.row
     ),
@@ -383,6 +390,8 @@ function prepareItemToDrop(item) {
       payload: applyItemToBoard(item, getCurrentBoard(), col, row),
     });
 
+    putItem();
+
     await applyGravity();
 
     updateActionsState();
@@ -442,7 +451,7 @@ export function startGame(levelIndex) {
   shop.inert = false;
   actionsMenu.inert = false;
 
-  shop.innerHTML = "";
+  shop.innerHTML = "<span>Reserve</span>";
 
   addItemInPool();
   addItemInPool();

@@ -33,7 +33,7 @@ export default async function startTuto(levelIndex) {
     goals.style.display = "none";
 
     updateHelp(
-      "Here is the cellar! The objects to tidy up are in the reserve. Click to see them.",
+      "Here is the cellar! The items to tidy up are in the reserve. Click to see them.",
       ["noshop"]
     );
 

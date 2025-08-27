@@ -1,21 +1,21 @@
 import initSections, { goToSection } from "./sections.js";
 import initUI, { startGame, runScenario } from "./ui.js";
 
-import initState, { areSoundMuted } from "./state.js";
-import initSounds from "./sounds.js";
+import initState from "./state.js";
+import playMainMusic from "./sounds.js";
 
 import specificGame from "./specificGame/index.js";
 
-(async () => {
-  await initUI(specificGame.favicon);
-
+(() => {
   initState();
+
+  initUI(specificGame.favicon);
 
   let isSoundInit = false;
   initSections(async ({ currentSection, nextSection, vars }) => {
     if (!isSoundInit && currentSection === "home" && nextSection !== "home") {
       isSoundInit = true;
-      initSounds(areSoundMuted());
+      playMainMusic();
     }
 
     if (nextSection === "scenarioSection") {
