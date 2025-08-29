@@ -107,7 +107,7 @@ export function growPlant(driedPlantCanvas, board) {
       [0, 1],
     ],
     x: 0,
-    y: 112,
+    y: 96,
   };
 
   let mediumPlant = {

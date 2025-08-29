@@ -102,13 +102,13 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     )
     .replaceAll('"use strict";', "")
     .replaceAll("./images/sprites.png", "./s.png")
-    .replaceAll("./images/logo.png", toBase64Url("./images/logo.png"))
+    .replaceAll("./images/logo.webp", toBase64Url("./images/logo.webp"))
     .replaceAll(
-      "./images/logo-order.png",
+      "./images/logo-order.webp",
       toBase64Url(
         gameName === "order"
-          ? "./images/logo-order.png"
-          : "./images/logo-chaos.png"
+          ? "./images/logo-order.webp"
+          : "./images/logo-chaos.webp"
       )
     );
 

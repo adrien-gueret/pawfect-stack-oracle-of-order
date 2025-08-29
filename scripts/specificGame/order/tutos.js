@@ -30,7 +30,7 @@ const updateHelp = (text, classesToAdd = [], classesToRemove = []) => {
 export default async function startTuto(levelIndex) {
   if (levelIndex === 0) {
     actionsMenu.style.display = "none";
-    goals.style.display = "none";
+    levelGoals.style.display = "none";
 
     updateHelp(
       "Here is the cellar! The items to tidy up are in the reserve. Click to see them.",
@@ -87,7 +87,7 @@ export default async function startTuto(levelIndex) {
 
     await waitFor("item:dropped");
 
-    goals.style.removeProperty("display");
+    levelGoals.style.removeProperty("display");
 
     updateHelp(
       "The game ends when we place the required number of items; we win if we've reached the minimum required amount of magic. Check the top left of the screen!",

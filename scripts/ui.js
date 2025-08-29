@@ -35,7 +35,7 @@ function renderWallsCanvas() {
     const sx = 0,
       sy = 80,
       sw = 32,
-      sh = 32;
+      sh = 16;
     const scale = 3;
     const dw = sw * scale,
       dh = sh * scale;
@@ -346,7 +346,7 @@ export function startGame(levelIndex, specificGameStart) {
   baseBoard.flat().forEach((val, index) => {
     if (val === -1) {
       const cell = gameTable.children[index];
-      cell.className = `brick v${getRandom(3)}`;
+      cell.className = `brick v${getRandom(1)}`;
     }
   });
 

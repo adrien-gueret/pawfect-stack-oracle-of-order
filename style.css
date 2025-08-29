@@ -6,7 +6,7 @@
 
 body {
   --sw: 64px;
-  --sh: 224px;
+  --sh: 208px;
 
   font-family: monospace;
   background-color: #feebc9;
@@ -87,7 +87,7 @@ body:not([data-current-section]) #gameOptions,
   width: 335px;
   height: 210px;
   overflow: hidden;
-  background-image: url("./images/logo.png");
+  background-image: url("./images/logo.webp");
   background-size: contain;
   margin: auto;
 }
@@ -95,7 +95,7 @@ body:not([data-current-section]) #gameOptions,
 #home h2 {
   width: 360px;
   height: 75px;
-  background-image: url("./images/logo-order.png");
+  background-image: url("./images/logo-order.webp");
   background-size: contain;
   background-repeat: no-repeat;
   margin-top: 4px;
@@ -276,9 +276,9 @@ div.s {
 
 .scenarioMelusine {
   --x: -0;
-  --y: -1280px;
+  --y: -1152px;
   --target-x: -256px;
-  --target-y: -1280px;
+  --target-y: -1152px;
 }
 
 #gameStats .scenarioMelusine {
@@ -289,9 +289,9 @@ div.s {
 
 .scenarioMaster {
   --x: -0;
-  --y: -1536px;
+  --y: -1408px;
   --target-x: -256px;
-  --target-y: -1536px;
+  --target-y: -1408px;
 }
 
 .scenarioCat {
@@ -320,12 +320,12 @@ div.s {
 
 .scenarioMelusine {
   --x: 0;
-  --y: -1280px;
+  --y: -1152px;
 }
 
 .scenarioMelusine.shocked {
   --x: -128px;
-  --y: -1408px;
+  --y: -1280px;
 }
 
 .scenarioCat {
@@ -538,16 +538,6 @@ div.brick.v1 {
   --by: -240px;
 }
 
-div.brick.v2 {
-  --bx: 0;
-  --by: -288px;
-}
-
-div.brick.v3 {
-  --bx: -48px;
-  --by: -288px;
-}
-
 div.Rotarigus,
 div.Rotaleftus {
   --bx: -144px;
@@ -564,7 +554,7 @@ div.Hydravo {
 
 div.Ejectum {
   --bx: -48px;
-  --by: -432px;
+  --by: -384px;
 }
 
 #actionsMenu,

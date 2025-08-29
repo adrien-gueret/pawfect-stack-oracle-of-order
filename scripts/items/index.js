@@ -65,7 +65,7 @@ const items = [
     value: 1,
     shape: [[1]],
     x: 0,
-    y: 128,
+    y: 112,
   },
   {
     name: "Dead Mouse",
@@ -106,7 +106,7 @@ const items = [
     value: 2,
     shape: [[1]],
     x: 0,
-    y: 144,
+    y: 128,
   },
   {
     name: "Grimalkin",
