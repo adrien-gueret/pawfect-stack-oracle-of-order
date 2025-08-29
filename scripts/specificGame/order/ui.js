@@ -103,6 +103,7 @@ const actionCallbacks = {
       rotateItemToRight(canvas.gameItem);
     });
     increaseActionCost(action);
+    updateActionsState();
     cb();
   },
   Rotaleftus(action, cb) {
@@ -110,6 +111,7 @@ const actionCallbacks = {
       rotateItemToLeft(canvas.gameItem);
     });
     increaseActionCost(action);
+    updateActionsState();
     cb();
   },
   Hydravo(action, cb) {
@@ -141,8 +143,6 @@ const actionCallbacks = {
       itemDisappears();
 
       await destroyItem(gameItem);
-
-      updateActionsState();
 
       await applyGravity();
       cb();
