@@ -1,6 +1,7 @@
 export default {
   catDesc: "That's me! Mélusine can't place items where I am.",
-  catItemDesc: "A gift from me to Mélusine. It's a bit bulky, but I'm sure she loves it!",
+  catItemDesc:
+    "A gift from me to Mélusine. It's a bit bulky, but I'm sure she loves it!",
   favicon: [
     [],
     [],

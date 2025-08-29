@@ -82,6 +82,8 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
       () => `<style>${minifiedCSS}</style>`
     )
     .replaceAll('"use strict";', "")
+    .replaceAll("--target-x", "--tx")
+    .replaceAll("--target-y", "--ty")
     .replaceAll("./images/sprites.png", "./s.png")
     .replaceAll("./images/logo.webp", toBase64Url("./images/logo.webp"))
     .replaceAll(
@@ -97,12 +99,6 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
 
   const ids = [...indexHTML.matchAll(/id="([^"]*?)"/g)];
 
-  ids.forEach((id, i) => {
-    if (id[1] && id[1].length >= 4) {
-      indexHTML = indexHTML.replaceAll(id[1], "_" + i);
-    }
-  });
-
   const classNamesToMangle = [
     "logos",
     "scenarioDialog",
@@ -113,11 +109,37 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     "skip",
     "brick",
     "actionDisabled",
+    "noshop",
+    "nocursor",
+    "speaking",
+    "walk",
+    "shocked",
+    "casting",
+    "dragging",
   ];
 
   classNamesToMangle.forEach((className, i) => {
     const re = new RegExp(`\\b${className}\\b`, "g");
     indexHTML = indexHTML.replaceAll(re, "_" + i);
+  });
+
+  ids.forEach((id, i) => {
+    if (id[1] && id[1].length >= 4) {
+      indexHTML = indexHTML.replaceAll(id[1], "_" + i);
+    }
+  });
+
+  const keyframesToMangle = [
+    "spriteAnimation",
+    "slideRight",
+    "blinkArrow",
+    "wubble",
+    "glow",
+  ];
+
+  keyframesToMangle.forEach((kf, i) => {
+    const re = new RegExp(`\\b${kf}\\b`, "g");
+    indexHTML = indexHTML.replaceAll(re, "k" + i);
   });
 
   const minifiedHTML = (await minify.html(indexHTML)).replaceAll(

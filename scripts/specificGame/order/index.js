@@ -45,6 +45,7 @@ export default {
           "Meow! <i>(The Master used Mélusine to accumulate magic, become overpowered and dominate the world!)</i>",
           "Meow... <i>(I tried everything to prevent Mélusine from helping him without her knowing...)</i>",
           "Meow!!! <i>(Attack! We must stop him!)</i>",
+          "",
           "Master... ? Are you alright? Grimalkin jumped on you... That won't help with your allergy to his fur!"
         );
       } else {
@@ -102,7 +103,7 @@ export default {
               break;
             }
 
-            case 5: {
+            case 6: {
               cat.classList.add("walk");
               cat.style.animationDuration = "333ms";
               cat
