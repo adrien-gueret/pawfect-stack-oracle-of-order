@@ -40,7 +40,7 @@ export default async function startTuto(levelIndex) {
     await waitForClick();
 
     updateHelp(
-      "The reserve is just on the right. Click on an item to select it. It'll be sent to the cellar.",
+      "The reserve is on the right. Click on an item to select it. It'll be sent to the cellar.",
       [],
       ["noshop"]
     );
