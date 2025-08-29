@@ -289,6 +289,7 @@ div.s {
 }
 
 .scenarioCat {
+  z-index: 110;
   --x: -256px;
   --y: -1408px;
   --target-x: -512px;
@@ -329,42 +330,33 @@ div.s {
 
 .scenarioMaster.r {
   animation: spriteAnimation 1s steps(2) infinite,
-    wubble 2s ease-in-out infinite, glow 2.4s ease-in-out infinite;
+    wubble 2s ease-in-out infinite alternate,
+    glow 2.4s ease-in-out infinite alternate;
   transform-origin: 50% 70%;
   z-index: 105;
   position: relative;
 }
 
 @keyframes wubble {
-  0% {
+  0%,
+  50%,
+  100% {
     bottom: 0;
   }
   25% {
     bottom: 4px;
   }
-  50% {
-    bottom: 0;
-  }
   75% {
     bottom: -3px;
-  }
-  100% {
-    bottom: 0;
   }
 }
 
 @keyframes glow {
-  0% {
+  from {
     filter: drop-shadow(0 0 0 transparent);
   }
-  40% {
-    filter: drop-shadow(0 0 6px #feebc9);
-  }
-  60% {
+  to {
     filter: drop-shadow(0 0 12px #feebc9);
-  }
-  100% {
-    filter: drop-shadow(0 0 0 transparent);
   }
 }
 
@@ -446,7 +438,7 @@ div.s {
 }
 
 #walls {
-  margin: 0 auto 0 auto;
+  margin: 0 auto;
   padding: 48px;
   position: relative;
   overflow: hidden;

@@ -33,23 +33,22 @@ export default {
       cat.style.opacity = 0;
 
       const scenarioScenes = [
-        {
-          msg: "Master! I've completed the task you entrusted to me!",
-        },
-        {
-          msg: "Very good, Mélusine! The concentration of magic in the cellar is perfect! Hehehe...",
-        },
-        {
-          msg: "But... What's happening, Master?",
-        },
-        {
-          msg: "Meow... <i>(Oh no, I've failed...)</i>",
-        },
+        "Master! I've completed the task you entrusted to me!",
+        "Very good, Mélusine! The concentration of magic in the cellar is perfect! Hehehe...",
+        "But... What's happening, Master?",
       ];
 
       const hasFinishedOtherGame = getOtherGameFinishedLevelCount() >= 3;
 
       if (hasFinishedOtherGame) {
+        scenarioScenes.push(
+          "Meow! <i>(The Master used Mélusine to accumulate magic, become overpowered and dominate the world!)</i>",
+          "Meow... <i>(I tried everything to prevent Mélusine from helping him without her knowing...)</i>",
+          "Meow!!! <i>(Attack! We must stop him!)</i>",
+          "Master... ? Are you alright? Grimalkin jumped on you... That won't help with your allergy to his fur!"
+        );
+      } else {
+        scenarioScenes.push("Meow... <i>(Oh no, I've failed...)</i>");
       }
 
       let currentScene = -1;
@@ -58,7 +57,7 @@ export default {
         const showNextScene = () => {
           currentScene++;
 
-          dialog.innerHTML = scenarioScenes[currentScene].msg;
+          dialog.innerHTML = scenarioScenes[currentScene];
 
           switch (currentScene) {
             case 0: {
@@ -102,6 +101,39 @@ export default {
 
               break;
             }
+
+            case 5: {
+              cat.classList.add("walk");
+              cat.style.animationDuration = "333ms";
+              cat
+                .animate(
+                  [
+                    { transform: "translateX(0) scaleX(-1)" },
+                    { transform: "translateX(-300%) scaleX(-1)" },
+                  ],
+                  {
+                    duration: 600,
+                    easing: "linear",
+                    fill: "forwards",
+                  }
+                )
+                .finished.then(() => {
+                  master.classList.remove("r");
+                  cat.classList.remove("walk");
+                  cat.style.removeProperty("animationDuration");
+                  master.animate(
+                    [
+                      { transform: "translateX(0) rotate(0)" },
+                      { transform: "translateX(-300%) rotate(360deg" },
+                    ],
+                    {
+                      duration: 600,
+                      easing: "ease-in",
+                      fill: "forwards",
+                    }
+                  );
+                });
+            }
           }
 
           const lastScene = currentScene === scenarioScenes.length - 1;
@@ -111,7 +143,7 @@ export default {
                 dialog.classList.add("tend");
 
                 dialog.innerHTML = hasFinishedOtherGame
-                  ? `TODO`
+                  ? `You've finished BOTH <b>Pawfect Stack</b> games! Thank you so much, I hope you enjoyed the experience! :D`
                   : `You've finished <b>Pawfect Stack: Oracle of Order</b>! To discover the true ending, also complete <a target="_parent" href=""><b>Pawfect Stack: Oracle of Chaos</b></a>!`;
               }
             : showNextScene;
@@ -126,27 +158,13 @@ export default {
     }
 
     const scenarioScenes = [
-      {
-        msg: "My little Mélusine, I entrust you with a mission of the utmost importance!",
-      },
-      {
-        msg: `Oh, what is it, Master? Ingredients to find? A potion to brew? A spell to craft?`,
-      },
-      {
-        msg: `The cellar really needs to be tidied up!`,
-      },
-      {
-        msg: "Oh... I see. I'll take care of it right away.",
-      },
-      {
-        msg: "And make sure the concentration of magic is optimal!",
-      },
-      {
-        msg: "Very well, Master.",
-      },
-      {
-        msg: "Meow...",
-      },
+      "My little Mélusine, I entrust you with a mission of the utmost importance!",
+      `Oh, what is it, Master? Ingredients to find? A potion to brew? A spell to craft?`,
+      `The cellar really needs to be tidied up!`,
+      "Oh... I see. I'll take care of it right away.",
+      "And make sure the concentration of magic is optimal!",
+      "Very well, Master.",
+      "Meow...",
     ];
 
     let currentScene = -1;
@@ -155,7 +173,7 @@ export default {
       const showNextScene = () => {
         currentScene++;
 
-        dialog.innerHTML = scenarioScenes[currentScene].msg;
+        dialog.innerHTML = scenarioScenes[currentScene];
 
         switch (currentScene) {
           case 0: {
