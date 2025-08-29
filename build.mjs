@@ -36,39 +36,20 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     gameName === "order"
       ? `[data-current-section="home"] main {
   background-image: radial-gradient(
-    circle at 50% 3%,
-    #a0302d 0 15%,
-    #b8453f 15% 22%,
-    #d05a51 22% 30%,
-    #e86f63 30% 38%,
-    #ff8475 38% 45%,
-    #ff9987 45% 52%,
-    #ffae99 52% 59%,
-    #ffc3ab 59% 66%,
-    #ffd8bd 66% 73%,
-    #ffedcf 73% 80%,
-    #fff2e1 80% 87%,
-    #fff7f3 87% 100%
-  );
-  background-color: #fff7f3;
+    circle at 50% 50%,  
+    #a0302d 0 60%,
+    #e86f63 0 80%,
+    #ffae99 0 90%,
+    #fff7f3 0 100%);
 }`
       : `[data-current-section="home"] main {
   background-image: radial-gradient(
-    circle at 50% 3%,
-    #205d61 0 15%,
-    #2a6b6f 15% 22%,
-    #34797d 22% 30%,
-    #3e878b 30% 38%,
-    #489599 38% 45%,
-    #52a3a7 45% 52%,
-    #5cb1b5 52% 59%,
-    #66bfc3 59% 66%,
-    #70cdd1 66% 73%,
-    #7adbdf 73% 80%,
-    #84e9ed 80% 87%,
-    #8ef7fb 87% 100%
+    circle at 50% 50%,  
+    #205d61 0 60%,
+    #3e878b 0 80%,
+    #66bfc3 0 90%,
+    #8ef7fb 0 100%
   );
-  background-color: #8ef7fb;
 }`;
 
   let indexJS = fs
