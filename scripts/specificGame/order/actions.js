@@ -11,7 +11,7 @@ export default () => [
   },
   {
     name: "Hydravo",
-    desc: "Throws water on a cell in the cellar. It's said cats don't like water...",
+    desc: "Throws water on a cell in the cellar. Plants love it, but the cat doesn't...",
     value: 0,
   },
   {

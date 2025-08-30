@@ -1,7 +1,7 @@
 export default {
-  catDesc: "That's me! Mélusine can't place items where I am.",
+  catDesc: "That's me! Mia can't place items where I am.",
   catItemDesc:
-    "A gift from me to Mélusine. It's a bit bulky, but I'm sure she loves it!",
+    "A gift from me to Mia. It's a bit bulky, but I'm sure she loves it!",
   favicon: [
     [],
     [],
@@ -35,7 +35,7 @@ export default {
         msg: `The little witch doesn't seem very skilled, but she's ambitious...`,
       },
       {
-        msg: "It's just you and me now, Mélusine!",
+        msg: "It's just you and me now, Mia!",
       },
       {
         msg: "Meow!",

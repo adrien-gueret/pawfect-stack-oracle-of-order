@@ -34,16 +34,16 @@ export default {
 
       const scenarioScenes = [
         "Master! I've completed the task you entrusted to me!",
-        "Very good, Mélusine! The concentration of magic in the cellar is perfect! Hehehe...",
-        "But... What's happening, Master?",
+        "Very good, Mia! The concentration of magic in the cellar is perfect! Hehehe...",
+        "What's happening, Master?",
       ];
 
       const hasFinishedOtherGame = getOtherGameFinishedLevelCount() >= 3;
 
       if (hasFinishedOtherGame) {
         scenarioScenes.push(
-          "Meow! <i>(The Master used Mélusine to accumulate magic, become overpowered and dominate the world!)</i>",
-          "Meow... <i>(I tried everything to prevent Mélusine from helping him without her knowing...)</i>",
+          "Meow! <i>(The Master used Mia to accumulate magic, become overpowered and dominate the world!)</i>",
+          "Meow... <i>(I tried everything to prevent Mia from helping him without her knowing...)</i>",
           "Meow!!! <i>(Attack! We must stop him!)</i>",
           "",
           "Master... ? Are you alright? Grimalkin jumped on you... That won't help with your allergy to his fur!"
@@ -159,7 +159,7 @@ export default {
     }
 
     const scenarioScenes = [
-      "My little Mélusine, I entrust you with a mission of the utmost importance!",
+      "My little Mia, I entrust you with a mission of the utmost importance!",
       `Oh, what is it, Master? Ingredients to find? A potion to brew? A spell to craft?`,
       `The cellar really needs to be tidied up!`,
       "Oh... I see. I'll take care of it right away.",

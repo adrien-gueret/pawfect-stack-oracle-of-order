@@ -101,7 +101,7 @@ export default async function startTuto(levelIndex) {
     await waitFor("item:dropped");
 
     updateHelp(
-      "As long as an object is in the cellar, it gives its magic value to the cellar. This magic score is our main goal, but you can also spend some magic points to cast spells: try it now!",
+      "As long as an object is in the cellar, it gives its magic to it. The magic score is our main goal but you can also spend some magic to cast spells: try it now! (there is one to scare the cat away!)",
       ["noshop", "nocursor"]
     );
 
