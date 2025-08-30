@@ -117,7 +117,7 @@ export function growPlant(driedPlantCanvas, board) {
     canvas: document.createElement("canvas"),
     shape: [[1], [1]],
     x: 16,
-    y: 112,
+    y: 96,
   };
 
   let smallPlant = {
@@ -127,7 +127,7 @@ export function growPlant(driedPlantCanvas, board) {
     canvas: document.createElement("canvas"),
     shape: [[1]],
     x: 16,
-    y: 128,
+    y: 112,
   };
 
   const boardWithoutDriedPlant = removeItemToBoard(
@@ -263,7 +263,7 @@ const levels = (() => {
 
 const itemGoals = [15, 18, 20];
 
-const magicGoals = [40, 60, 80];
+const magicGoals = [40, 60, 70];
 
 export const getLevel = (levelIndex = 0) => {
   return [levels[levelIndex], itemGoals[levelIndex], magicGoals[levelIndex]];
