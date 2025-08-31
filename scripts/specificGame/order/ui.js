@@ -159,11 +159,19 @@ const increaseActionCost = (action) => {
   magicScore.innerHTML = getMagic();
 };
 
-const cat = initCatAnimation(
-  getCat(
-    "The master's cat. He's cute, but he's getting in our way a bit here..."
-  )
-);
+function cat() {
+  if (cat.c) {
+    return cat.c;
+  }
+
+  cat.c = initCatAnimation(
+    getCat(
+      "The master's cat. He's cute, but he's getting in our way a bit here..."
+    )
+  );
+
+  return cat.c;
+}
 
 const addCatItem = () => {
   const item = getRandomCatItem();
@@ -177,18 +185,19 @@ const addCatItem = () => {
 let catRunSince = 0;
 const catRun = async () => {
   catRunSince = 1;
-  cat.run = true;
-  cat.animate();
-  cat.canvas.inert = true;
+  const catItem = cat();
+  catItem.run = true;
+  catItem.animate();
+  catItem.canvas.inert = true;
 
   dispatch({
     type: "setBoard",
-    payload: removeItemToBoard(cat.uniqId, getCurrentBoard()),
+    payload: removeItemToBoard(catItem.uniqId, getCurrentBoard()),
   });
 
   meow();
 
-  cat.canvas
+  catItem.canvas
     .animate(
       [
         { transform: "translate(0, 0)" },
@@ -200,37 +209,38 @@ const catRun = async () => {
       }
     )
     .finished.then(() => {
-      cat.canvas.remove();
+      catItem.canvas.remove();
     });
 
   await applyGravity();
 };
 
 const moveCat = () => {
-  cat.run = false;
+  const catItem = cat();
+  catItem.run = false;
   catRunSince = 0;
-  walls.prepend(cat.canvas);
-  cat.canvas.inert = false;
+  walls.prepend(catItem.canvas);
+  catItem.canvas.inert = false;
 
   const coordinates = getRandomCoordinatesOfEmptySpaceAboveFloor(
-    removeItemToBoard(cat.uniqId, getCurrentBoard())
+    removeItemToBoard(catItem.uniqId, getCurrentBoard())
   );
 
   if (!coordinates) {
     return;
   }
 
-  cat.canvas.style.left = `${coordinates.col * 48 + 48}px`;
-  cat.canvas.style.top = `${coordinates.row * 48 + 48}px`;
-  cat.canvas.coor = coordinates;
+  catItem.canvas.style.left = `${coordinates.col * 48 + 48}px`;
+  catItem.canvas.style.top = `${coordinates.row * 48 + 48}px`;
+  catItem.canvas.coor = coordinates;
 
   meow();
 
   dispatch({
     type: "setBoard",
     payload: applyItemToBoard(
-      cat,
-      removeItemToBoard(cat.uniqId, getCurrentBoard()),
+      catItem,
+      removeItemToBoard(catItem.uniqId, getCurrentBoard()),
       coordinates.col,
       coordinates.row
     ),
@@ -415,7 +425,7 @@ function prepareItemToDrop(item) {
     let hasAddedItem = false;
 
     if (catRunSince === 0 || catRunSince >= 3) {
-      if (!cat.canvas.parentNode) {
+      if (!cat().canvas.parentNode) {
         await moveCat();
       } else {
         const catActions = [moveCat, addCatItem];

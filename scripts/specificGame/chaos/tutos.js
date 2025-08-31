@@ -42,7 +42,7 @@ export default async function startTuto(levelIndex) {
     actionsMenu.style.removeProperty("display");
 
     updateHelp(
-      'To be able to act, I have to be in the cellar. Click on the "move" trick, on the upper right and place me so as to block Mia.',
+      'To be able to act, I have to be in the cellar. Click on the "Move" trick, on the upper right and place me in the cellar.',
       ["nocursor"]
     );
 

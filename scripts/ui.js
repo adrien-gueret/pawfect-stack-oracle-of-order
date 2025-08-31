@@ -221,13 +221,17 @@ export const initCatAnimation = (c) => {
     c.x = c.x === 32 ? 48 : 32;
     c.y = c.run ? 192 : 176;
 
+    clock = setTimeout(animate, c.run ? 333 : 1000);
+
+    if (c.s) {
+      return;
+    }
+
     drawItem(
       c,
       3,
       c.run ? null : c.hover ? "rgba(255, 255, 255, 0.2)" : "#331c1a"
     );
-
-    clock = setTimeout(animate, c.run ? 333 : 1000);
   };
 
   animate();

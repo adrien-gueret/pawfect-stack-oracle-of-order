@@ -157,6 +157,7 @@ async function goBackItemToShop(item) {
   gameTable.onmousemove = null;
   gameTable.style.cursor = "default";
   actionsMenu.inert = false;
+  item.s = false;
 
   await item.canvas.animate(
     [{ transform: "translateY(0)" }, { transform: "translateY(300px)" }],
@@ -174,59 +175,22 @@ async function goBackItemToShop(item) {
 }
 
 const actionCallbacks = {
-  Rotarigus(action, cb) {
-    shop.querySelectorAll("canvas").forEach((canvas) => {
-      rotateItemToRight(canvas.gameItem);
-    });
-    increaseActionCost(action);
-    cb();
-  },
-  Rotaleftus(action, cb) {
-    shop.querySelectorAll("canvas").forEach((canvas) => {
-      rotateItemToLeft(canvas.gameItem);
-    });
-    increaseActionCost(action);
-    cb();
-  },
-  Hydravo(action, cb) {
-    prepareSpellToCast(action, "h", async (domSpellTarget) => {
-      if (domSpellTarget.gameItem.isCat) {
-        await catRun();
-      } else {
-        const [newBoard, newPlant] = growPlant(
-          domSpellTarget,
-          getCurrentBoard()
-        );
-
-        plantGrowth();
-
-        setInteractiveBg(newPlant);
-        setInteractive(newPlant, "magic");
-
-        dispatch({
-          type: "setBoard",
-          payload: newBoard,
-        });
-      }
-
-      cb();
-    });
-  },
-  Ejectum(action, cb) {
-    prepareSpellToCast(action, "r", async (spell) => {
-      itemDisappears();
-
-      await destroyItem(spell.gameItem);
-
-      await applyGravity();
-      cb();
-    });
+  Move(action, cb) {
+    prepareItemToDrop(cat());
   },
 };
 
-const cat = initCatAnimation(
-  getCat("That's me! Mia can't place items where I am.")
-);
+function cat() {
+  if (cat.c) {
+    return cat.c;
+  }
+
+  cat.c = initCatAnimation(
+    getCat("That's me! Mia can't place items where I am.")
+  );
+
+  return cat.c;
+}
 
 const addCatItem = () => {
   const item = getRandomCatItem();
@@ -353,6 +317,7 @@ function prepareItemToDrop(item) {
   item.canvas.style.zIndex = 100;
   walls.append(itemToDropCanvas);
   actionsMenu.inert = true;
+  item.s = true;
 
   let isAllowToDrop = false;
 
@@ -420,6 +385,8 @@ function prepareItemToDrop(item) {
     );
 
     const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
+
+    item.s = false;
 
     await placeItem(item, row, col);
 
