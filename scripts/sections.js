@@ -27,13 +27,13 @@ function renderSection(sectionName) {
   if (resultSectionChange !== false) {
     document.body.dataset.currentSection = newSection;
   } else {
-    window.history.forward();
+    history.forward();
   }
 }
 
 export function goToSection(sectionName, vars = {}) {
   nextSectionVars = vars;
-  window.location.hash = sectionName;
+  location.hash = sectionName;
 }
 
 export default function init(onSectionChangeCallback) {
@@ -55,10 +55,10 @@ export default function init(onSectionChangeCallback) {
   );
 
   function onHashChange() {
-    renderSection(window.location.hash.substring(1));
+    renderSection(location.hash.substring(1));
   }
 
-  window.addEventListener("hashchange", onHashChange);
+  addEventListener("hashchange", onHashChange);
 
   document.body.addEventListener("click", (e) => {
     if (e.target.tagName.toUpperCase() !== "A") {

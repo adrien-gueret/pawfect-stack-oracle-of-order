@@ -97,22 +97,22 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
 
   fs.copyFileSync("./images/sprites.png", `${entryPathname}/s.png`);
 
-  const ids = [...indexHTML.matchAll(/id="([^"]*?)"/g)];
-
   const classNamesToMangle = [
+    "skip",
+    "walk",
+    "brick",
     "logos",
+    "tend",
+    "iddlePause",
     "scenarioDialog",
     "scenarioMaster",
     "scenarioMelusine",
     "scenarioCat",
     "scenario",
-    "skip",
-    "brick",
     "actionDisabled",
     "noshop",
     "nocursor",
     "speaking",
-    "walk",
     "shocked",
     "casting",
     "dragging",
@@ -122,6 +122,39 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     const re = new RegExp(`\\b${className}\\b`, "g");
     indexHTML = indexHTML.replaceAll(re, "_" + i);
   });
+
+  const eventNamesToMangle = ["item:selected", "item:dropped", "spell:casted"];
+
+  eventNamesToMangle.forEach((eventName, i) => {
+    const re = new RegExp(`\\b${eventName}\\b`, "g");
+    indexHTML = indexHTML.replaceAll(re, "_" + i);
+  });
+
+  const reduxActionNamesToMangle = [
+    "initGame",
+    "setBoard",
+    "spendMagic",
+    "setFinishedLevelCount",
+  ];
+
+  reduxActionNamesToMangle.forEach((actionName, i) => {
+    const re = new RegExp(`\\b${actionName}\\b`, "g");
+    indexHTML = indexHTML.replaceAll(re, "_" + i);
+  });
+
+  eventNamesToMangle.forEach((eventName, i) => {
+    const re = new RegExp(`\\b${eventName}\\b`, "g");
+    indexHTML = indexHTML.replaceAll(re, "_" + i);
+  });
+
+  const propertiesToMangle = ["justDrop", "gameItem", "canvas"];
+
+  propertiesToMangle.forEach((propName, i) => {
+    const re = new RegExp(`(?<=\\.)${propName}\\b`, "g");
+    indexHTML = indexHTML.replaceAll(re, "_" + i);
+  });
+
+  const ids = [...indexHTML.matchAll(/id="([^"]*?)"/g)];
 
   ids.forEach((id, i) => {
     if (id[1] && id[1].length >= 4) {
@@ -142,10 +175,12 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     indexHTML = indexHTML.replaceAll(re, "k" + i);
   });
 
-  const minifiedHTML = (await minify.html(indexHTML)).replaceAll(
-    '<script>window.process={env:{GAME_TYPE:"order"}}</script>',
-    ""
-  );
+  const minifiedHTML = (await minify.html(indexHTML))
+    .replaceAll('<script>window.process={env:{GAME_TYPE:"order"}}</script>', "")
+    .replaceAll(
+      '<script>window.process={env:{GAME_TYPE:"chaos"}}</script>',
+      ""
+    );
 
   fs.writeFileSync(`${gameName}-min.html`, minifiedHTML, { encoding: "utf8" });
 

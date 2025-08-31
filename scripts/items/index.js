@@ -128,7 +128,7 @@ export function drawItem(
   justFirstTile = false,
   overlaps = []
 ) {
-  const { canvas } = item;
+  const canvas = item.canvas;
   const ctx = canvas.getContext("2d");
   const img = new Image();
   img.src = SPRITES_SRC;

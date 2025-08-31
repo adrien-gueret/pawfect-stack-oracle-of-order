@@ -37,8 +37,8 @@ import getActions from "./actions.js";
 import startTuto from "./tutos.js";
 import { putItem, plantGrowth, itemDisappears, meow } from "../../sounds.js";
 
-function addItemInPool(forcedItem) {
-  const item = forcedItem || getRandomWizardItem();
+function addItemInPool() {
+  const item = getRandomCatItem();
 
   item.canvas = document.createElement("canvas");
   item.canvas.className = "c" + id(item);
@@ -86,15 +86,6 @@ async function goBackItemToShop(item) {
   item.canvas.style.removeProperty("left");
   item.canvas.style.removeProperty("top");
   shop.append(item.canvas);
-}
-
-function updateActionsState() {
-  const magic = getMagic();
-
-  actionsMenu.querySelectorAll("div").forEach((actionDiv) => {
-    const cost = +actionDiv.dataset.cost;
-    actionDiv.classList.toggle("actionDisabled", magic < cost);
-  });
 }
 
 const actionCallbacks = {
@@ -150,111 +141,36 @@ const actionCallbacks = {
   },
 };
 
-const increaseActionCost = (action) => {
-  dispatch({
-    type: "spendMagic",
-    payload: action.value++,
-  });
-  action.canvas.dataset.cost = Math.min(action.value, 5);
-  magicScore.innerHTML = getMagic();
-};
-
 const cat = initCatAnimation(
-  getCat(
-    "The master's cat. He's cute, but he's getting in our way a bit here..."
-  )
+  getCat("That's me! Mia can't place items where I am.")
 );
 
 const addCatItem = () => {
   const item = getRandomCatItem();
-  item.desc = "A gift from the cat. It's useless...";
+  item.desc =
+    "A gift from me to Mia. It's a bit bulky, but I'm sure she'll love it!";
 
   meow();
 
   addItemInPool(item);
 };
 
-let catRunSince = 0;
-const catRun = async () => {
-  catRunSince = 1;
-  cat.run = true;
-  cat.animate();
-  cat.canvas.inert = true;
-
-  dispatch({
-    type: "setBoard",
-    payload: removeItemToBoard(cat.uniqId, getCurrentBoard()),
-  });
-
-  meow();
-
-  cat.canvas
-    .animate(
-      [
-        { transform: "translate(0, 0)" },
-        { transform: "translate(450px, -100px)" },
-      ],
-      {
-        duration: 1500,
-        easing: "ease-in",
-      }
-    )
-    .finished.then(() => {
-      cat.canvas.remove();
-    });
-
-  await applyGravity();
-};
-
-const moveCat = () => {
-  cat.run = false;
-  catRunSince = 0;
-  walls.prepend(cat.canvas);
-  cat.canvas.inert = false;
-
-  const coordinates = getRandomCoordinatesOfEmptySpaceAboveFloor(
-    removeItemToBoard(cat.uniqId, getCurrentBoard())
-  );
-
-  if (!coordinates) {
-    return;
-  }
-
-  cat.canvas.style.left = `${coordinates.col * 48 + 48}px`;
-  cat.canvas.style.top = `${coordinates.row * 48 + 48}px`;
-  cat.canvas.coor = coordinates;
-
-  meow();
-
-  dispatch({
-    type: "setBoard",
-    payload: applyItemToBoard(
-      cat,
-      removeItemToBoard(cat.uniqId, getCurrentBoard()),
-      coordinates.col,
-      coordinates.row
-    ),
-  });
-
-  return applyGravity();
-};
-
-let spellCloneElement;
+let trickCloneElement;
 function followMouse({ clientX, clientY }) {
-  spellCloneElement.style.transform = `translate(${clientX + 8}px, ${
+  trickCloneElement.style.transform = `translate(${clientX + 8}px, ${
     clientY + 8
   }px)`;
 }
 
-function prepareSpellToCast(spell, className, cast) {
+function prepareTrick(trick, className, cast) {
   let hasBeenCast = false;
 
   function cancel() {
     document.body.classList.remove(className);
     document.body.removeEventListener("mousemove", followMouse);
     document.body.removeEventListener("click", run);
-    spell.canvas.classList.remove("casting");
-    spellCloneElement?.remove();
+    trick.canvas.classList.remove("casting");
+    trickCloneElement?.remove();
   }
 
   async function run(e) {
@@ -269,13 +185,10 @@ function prepareSpellToCast(spell, className, cast) {
     const isOK = gameItem && tagName === "CANVAS";
 
     if (isOK) {
-      const spellResult = await cast(e.target);
+      const trickResult = await cast(e.target);
 
-      if (spellResult !== false) {
+      if (trickResult !== false) {
         cancel();
-        increaseActionCost(spell);
-        updateActionsState();
-
         shop.inert = false;
         return;
       }
@@ -289,16 +202,16 @@ function prepareSpellToCast(spell, className, cast) {
     shop.inert = false;
     return;
   }
-  spellCloneElement = spell.canvas.cloneNode();
-  const { left, top } = spell.canvas.getBoundingClientRect();
-  walls.append(spellCloneElement);
+  trickCloneElement = trick.canvas.cloneNode();
+  const { left, top } = trick.canvas.getBoundingClientRect();
+  walls.append(trickCloneElement);
 
   followMouse({ clientX: left, clientY: top });
 
   document.body.classList.add(className);
   document.body.addEventListener("mousemove", followMouse);
   document.body.addEventListener("click", run);
-  spell.canvas.classList.add("casting");
+  trick.canvas.classList.add("casting");
 
   shop.inert = true;
 }
@@ -412,24 +325,7 @@ function prepareItemToDrop(item) {
     });
     dispatchEvent(ce);
 
-    let hasAddedItem = false;
-
-    if (catRunSince === 0 || catRunSince >= 3) {
-      if (!cat.canvas.parentNode) {
-        await moveCat();
-      } else {
-        const catActions = [moveCat, addCatItem];
-        const catAction = catActions[ce.ci ?? getRandom(catActions.length - 1)];
-        await catAction();
-        hasAddedItem = catAction === addCatItem;
-      }
-    } else {
-      catRunSince++;
-    }
-
-    if (!hasAddedItem) {
-      addItemInPool();
-    }
+    addItemInPool();
 
     if (checkEnd()) {
       endGame(isMagicGoalReached());
@@ -457,7 +353,7 @@ export function startGame(levelIndex) {
 
   actionsMenu.innerHTML = "";
 
-  actionsMenu.append(document.createTextNode("Spells"));
+  actionsMenu.append(document.createTextNode("Tricks"));
   getActions().forEach((action) => {
     const d = document.createElement("div");
     d.dataset.cost = action.value;
@@ -467,7 +363,7 @@ export function startGame(levelIndex) {
     actionsMenu.append(d);
     action.canvas = d;
 
-    setInteractive(action, "cost", () => {
+    setInteractive(action, "", () => {
       actionCallbacks[action.name](action, () => {
         action.justDrop = true;
         dispatchEvent(new CustomEvent("spell:casted", { detail: action }));

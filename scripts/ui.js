@@ -74,11 +74,11 @@ export function setInteractive(item, valueLabel, onClick) {
     if (item.justDrop) {
       return;
     }
-    const prev = help.innerHTML;
+    const prev = helpContainer.innerHTML;
 
-    help.innerHTML = `<span><b>${item.name}</b>: ${
-      item.desc
-    } <i>(${valueLabel}: <b>${item.value ?? 0}</b>)</i></span>`;
+    helpContainer.innerHTML = `<span><b>${item.name}</b>: ${item.desc} ${
+      valueLabel ? `<i>(${valueLabel}: <b>${item.value ?? 0}</b>)</i>` : ""
+    }</span>`;
 
     item.canvas.onmouseleave = () => {
       if (item.justDrop) {
@@ -86,7 +86,7 @@ export function setInteractive(item, valueLabel, onClick) {
         return;
       }
 
-      help.innerHTML = prev;
+      helpContainer.innerHTML = prev;
     };
   };
 
@@ -257,8 +257,8 @@ function renderFavicon(pixels) {
 
 export function speakTo(c1, c2) {
   c1.classList.add("speaking");
-  c1.classList.remove("stop");
-  c2.classList.add("stop");
+  c1.classList.remove("iddlePause");
+  c2.classList.add("iddlePause");
   c2.classList.remove("speaking");
 }
 

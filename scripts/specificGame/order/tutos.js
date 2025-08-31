@@ -9,7 +9,7 @@ const waitForClick = () => {
 const waitFor = (eventName, callback) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      window.addEventListener(
+      addEventListener(
         eventName,
         (e) => {
           callback?.(e);
@@ -22,9 +22,9 @@ const waitFor = (eventName, callback) => {
 };
 
 const updateHelp = (text, classesToAdd = [], classesToRemove = []) => {
-  help.innerHTML = text;
-  help.parentNode.classList.add(...classesToAdd);
-  help.parentNode.classList.remove(...classesToRemove);
+  helpContainer.innerHTML = text;
+  helpContainer.parentNode.classList.add(...classesToAdd);
+  helpContainer.parentNode.classList.remove(...classesToRemove);
 };
 
 export default async function startTuto(levelIndex) {

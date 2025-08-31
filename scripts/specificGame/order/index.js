@@ -75,7 +75,7 @@ export default {
             }
 
             case 2: {
-              master.classList.add("stop", "r");
+              master.classList.add("iddlePause", "r");
               master.classList.remove("speaking");
               melusine.classList.add("shocked");
               break;
@@ -145,7 +145,7 @@ export default {
 
                 dialog.innerHTML = hasFinishedOtherGame
                   ? `You've finished BOTH <b>Pawfect Stack</b> games! Thank you so much, I hope you enjoyed the experience! :D`
-                  : `You've finished <b>Pawfect Stack: Oracle of Order</b>! To discover the true ending, also complete <a target="_parent" href=""><b>Pawfect Stack: Oracle of Chaos</b></a>!`;
+                  : `You've finished <b>Pawfect Stack: Oracle of Order</b>! To discover the true ending, also complete <a target="_parent" href="https://js13kgames.com/2025/games/pawfect-stack-oracle-of-chaos"><b>Pawfect Stack: Oracle of Chaos</b></a>!`;
               }
             : showNextScene;
 
@@ -219,7 +219,7 @@ export default {
 
           case 5: {
             speakTo(melusine, master);
-            master.classList.remove("stop");
+            master.classList.remove("iddlePause");
 
             const masterAnimation = master.animate(
               [
@@ -237,7 +237,7 @@ export default {
               master.style.opacity = 0;
             });
 
-            window.setTimeout(() => {
+            setTimeout(() => {
               melusine.classList.remove("left", "speaking");
               melusine.animate(
                 [
@@ -264,7 +264,7 @@ export default {
               fill: "forwards",
             });
 
-            window.setTimeout(() => {
+            setTimeout(() => {
               cat.classList.add("walk");
               cat
                 .animate(

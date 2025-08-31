@@ -13,7 +13,7 @@ import specificGame from "./specificGame/index.js";
 
   let isSoundInit = false;
   initSections(async ({ currentSection, nextSection, vars }) => {
-    if (!isSoundInit && currentSection === "home" && nextSection !== "home") {
+    if (!isSoundInit && currentSection === "home") {
       isSoundInit = true;
       playMainMusic();
     }
