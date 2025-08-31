@@ -460,10 +460,9 @@ export function startGame(levelIndex) {
   actionsMenu.append(document.createTextNode("Spells"));
   getActions().forEach((action) => {
     const d = document.createElement("div");
-    d.dataset.cost = action.value;
-    d.className = `${action.name} s ${
-      action.value > 0 ? "actionDisabled" : ""
-    }`;
+    d.dataset.cost = 0;
+    action.value = 0;
+    d.className = `${action.name} s`;
     actionsMenu.append(d);
     action.canvas = d;
 

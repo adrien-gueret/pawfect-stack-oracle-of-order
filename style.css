@@ -529,8 +529,21 @@ div.Rotaleftus {
   --bx: -144px;
   --by: -480px;
 }
-div.Rotaleftus {
+div.Rotaleftus,
+div.Pushtoright,
+div.Move {
   transform: scaleX(-1);
+}
+
+div.Pushtoright,
+div.Pushtoleft {
+  --bx: -144px;
+  --by: -240px;
+}
+
+div.Move {
+  --bx: -144px;
+  --by: -576px;
 }
 
 div.Hydravo {

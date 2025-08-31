@@ -1,10 +1,14 @@
 export default () => [
   {
     name: "Move",
-    desc: "Placez-moi où vous voulez dans la cave pour gêner Mia.",
+    desc: "Place me wherever you want in the cave to disturb Mia.",
   },
   {
-    name: "",
-    desc: "Rotates ALL items in the reserve 90° to the left.",
+    name: "Push to left",
+    desc: "Push an object to the left",
+  },
+  {
+    name: "Push to right",
+    desc: "Push an object to the right",
   },
 ];

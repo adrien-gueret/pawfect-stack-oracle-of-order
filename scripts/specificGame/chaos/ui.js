@@ -37,13 +37,98 @@ import getActions from "./actions.js";
 import startTuto from "./tutos.js";
 import { putItem, plantGrowth, itemDisappears, meow } from "../../sounds.js";
 
-function addItemInPool() {
-  const item = getRandomCatItem();
+function getBestPositionForItem(item) {
+  const currentBoard = getCurrentBoard();
 
+  const validPositions = [];
+  for (let row = 0; row < currentBoard.length; row++) {
+    for (let col = 0; col < currentBoard[row].length; col++) {
+      const overlaps = checkApplyItemToBoard(item, currentBoard, col, row);
+      if (overlaps.length === 0) {
+        validPositions.push([row, col]);
+      }
+    }
+  }
+
+  if (validPositions.length === 0) {
+    return false;
+  }
+
+  if (id(item) === 0) {
+    const stablePositions = validPositions.filter(([row, col]) => {
+      if (row === currentBoard.length - 1) return true;
+      return currentBoard[row + 1][col] !== 0;
+    });
+    if (stablePositions.length > 0) {
+      return stablePositions[0];
+    }
+  } else if (id(item) === 6) {
+    const growthPositions = validPositions.filter(([row, col]) =>
+      [
+        [row - 1, col - 1],
+        [row - 1, col],
+        [row, col - 1],
+        [row - 1, col],
+        [row, col - 1],
+      ].some(
+        ([r, c]) =>
+          r >= 0 &&
+          c >= 0 &&
+          r < currentBoard.length &&
+          c < currentBoard[0].length &&
+          currentBoard[r][c] === 0
+      )
+    );
+    if (growthPositions.length > 0) {
+      return growthPositions[0];
+    }
+  }
+
+  if (id(item) === 11) {
+    const bookPositions = validPositions.map(([row, col]) => {
+      let bookCount = 0;
+
+      for (let r = row - 1; r <= row + 1; r++) {
+        for (let c = col - 1; c <= col + 1; c++) {
+          if (
+            r >= 0 &&
+            c >= 0 &&
+            r < currentBoard.length &&
+            c < currentBoard[0].length
+          ) {
+            const itemId = currentBoard[r][c];
+            if (itemId !== 0) {
+              const canvas = document.getElementById("i" + itemId);
+              if (canvas && id(canvas.gameItem) === 11) {
+                bookCount++;
+              }
+            }
+          }
+        }
+      }
+      return [row, col, bookCount];
+    });
+
+    bookPositions.sort((a, b) => b[2] - a[2]);
+    if (bookPositions.length > 0) {
+      return [bookPositions[0][0], bookPositions[0][1]];
+    }
+  }
+
+  return validPositions[getRandom(validPositions.length - 1)];
+}
+
+function attachCanvasToItem(item) {
   item.canvas = document.createElement("canvas");
   item.canvas.className = "c" + id(item);
   item.canvas.id = "i" + item.uniqId;
   item.canvas.gameItem = item;
+}
+
+function addItemInPool() {
+  const item = getRandomCatItem();
+
+  attachCanvasToItem(item);
 
   drawItem(item, 2);
 
@@ -94,7 +179,6 @@ const actionCallbacks = {
       rotateItemToRight(canvas.gameItem);
     });
     increaseActionCost(action);
-    updateActionsState();
     cb();
   },
   Rotaleftus(action, cb) {
@@ -102,7 +186,6 @@ const actionCallbacks = {
       rotateItemToLeft(canvas.gameItem);
     });
     increaseActionCost(action);
-    updateActionsState();
     cb();
   },
   Hydravo(action, cb) {
@@ -150,8 +233,6 @@ const addCatItem = () => {
   item.desc =
     "A gift from me to Mia. It's a bit bulky, but I'm sure she'll love it!";
 
-  meow();
-
   addItemInPool(item);
 };
 
@@ -160,6 +241,54 @@ function followMouse({ clientX, clientY }) {
   trickCloneElement.style.transform = `translate(${clientX + 8}px, ${
     clientY + 8
   }px)`;
+}
+
+async function placeItem(item, row, col) {
+  item.canvas.onclick = null;
+  item.canvas.coor = { row, col };
+  item.canvas.style.left = `${(col + 1) * 48}px`;
+  item.canvas.style.top = `${(row + 1) * 48}px`;
+
+  drawItem(item, 3, "#331c1a");
+
+  walls.append(item.canvas);
+
+  setZIndex(item);
+
+  setInteractiveBg(item);
+
+  dispatch({
+    type: "setBoard",
+    payload: applyItemToBoard(item, getCurrentBoard(), col, row),
+  });
+
+  putItem();
+
+  await applyGravity();
+
+  item.justDrop = true;
+
+  if (id(item) === 11) {
+    Object.defineProperty(item, "value", {
+      get() {
+        return getSpecificBookMagic(item.uniqId);
+      },
+    });
+  }
+
+  dispatchEvent(
+    new CustomEvent("item:dropped", {
+      detail: item,
+    })
+  );
+}
+
+async function placeRandomWizardItem() {
+  const item = getRandomWizardItem();
+  attachCanvasToItem(item);
+  const [row, col] = getBestPositionForItem(item);
+
+  await placeItem(item, row, col);
 }
 
 function prepareTrick(trick, className, cast) {
@@ -292,38 +421,7 @@ function prepareItemToDrop(item) {
 
     const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
 
-    drawItem(item, 3, "#331c1a");
-
-    item.canvas.onclick = null;
-    setZIndex(item);
-
-    setInteractiveBg(item);
-
-    dispatch({
-      type: "setBoard",
-      payload: applyItemToBoard(item, getCurrentBoard(), col, row),
-    });
-
-    putItem();
-
-    await applyGravity();
-
-    updateActionsState();
-
-    item.justDrop = true;
-
-    if (id(item) === 11) {
-      Object.defineProperty(item, "value", {
-        get() {
-          return getSpecificBookMagic(item.uniqId);
-        },
-      });
-    }
-
-    const ce = new CustomEvent("item:dropped", {
-      detail: item,
-    });
-    dispatchEvent(ce);
+    await placeItem(item, row, col);
 
     addItemInPool();
 
@@ -347,6 +445,8 @@ export function startGame(levelIndex) {
 
   shop.innerHTML = "<span>Reserve</span>";
 
+  placeRandomWizardItem();
+
   addItemInPool();
   addItemInPool();
   addItemInPool();
@@ -356,10 +456,7 @@ export function startGame(levelIndex) {
   actionsMenu.append(document.createTextNode("Tricks"));
   getActions().forEach((action) => {
     const d = document.createElement("div");
-    d.dataset.cost = action.value;
-    d.className = `${action.name} s ${
-      action.value > 0 ? "actionDisabled" : ""
-    }`;
+    d.className = `${action.name.replaceAll(" ", "")} s`;
     actionsMenu.append(d);
     action.canvas = d;
 
