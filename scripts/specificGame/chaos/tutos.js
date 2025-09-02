@@ -121,6 +121,8 @@ export default async function startTuto(levelIndex) {
     );
 
     await waitForClick();
+  } else {
+    document.body.classList.add("catRunning");
   }
   updateHelp("Stop Mia from tidying the cellar properly!", [], ["noshop"]);
 }

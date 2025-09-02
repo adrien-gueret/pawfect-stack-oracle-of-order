@@ -80,7 +80,7 @@ function getBestPositionForItem(item) {
       )
     );
     if (growthPositions.length > 0) {
-      return growthPositions[0];
+      return growthPositions[getRandom(growthPositions.length - 1)];
     }
   }
 
@@ -241,19 +241,30 @@ async function placeItem(item, row, col, isWizard) {
       },
     });
   }
+
+  if (checkEnd()) {
+    endGame(!isMagicGoalReached());
+    return true;
+  }
+
+  return false;
 }
 
 async function placeRandomWizardItem() {
   const item = getRandomWizardItem();
   attachCanvasToItem(item);
-  const [row, col] = getBestPositionForItem(item);
+  const position = getBestPositionForItem(item);
+
+  if (!position) {
+    return placeRandomWizardItem();
+  }
 
   setInteractive(item, "magic");
 
-  await placeItem(item, row, col, true);
+  await placeItem(item, position[0], position[1], true);
 }
 
-const catRun = async () => {
+const hydravoOnCat = async () => {
   const catItem = cat();
   catItem.run = true;
   catItem.animate();
@@ -287,10 +298,6 @@ const catRun = async () => {
   await applyGravity();
 };
 
-async function hydravoOnCat() {
-  catRun();
-}
-
 async function ejectum() {
   const currentBoard = getCurrentBoard();
   const catItems = [];
@@ -319,8 +326,49 @@ async function ejectum() {
   return true;
 }
 
+const hydravoOnPlant = async () => {
+  const currentBoard = getCurrentBoard();
+  const driedPlants = [];
+
+  for (let row = 0; row < currentBoard.length; row++) {
+    for (let col = 0; col < currentBoard[row].length; col++) {
+      const itemId = currentBoard[row][col];
+      if (itemId > 0) {
+        const canvas = document.getElementById("i" + itemId);
+        if (canvas && id(canvas.gameItem) === 6) {
+          driedPlants.push(canvas);
+        }
+      }
+    }
+  }
+
+  if (driedPlants.length === 0) {
+    return false;
+  }
+
+  const randomPlant = driedPlants[getRandom(driedPlants.length - 1)];
+
+  const [, newPlant] = growPlant(randomPlant, currentBoard);
+  plantGrowth();
+
+  setInteractiveBg(newPlant);
+  setInteractive(newPlant, "magic");
+  setZIndex(newPlant);
+
+  magicScore.innerHTML = getMagic();
+
+  return true;
+};
+
 async function nextWizardAction(forcedActionIndex) {
-  const wizardActions = [placeRandomWizardItem, hydravoOnCat, ejectum];
+  const wizardActions = [
+    placeRandomWizardItem,
+    hydravoOnCat,
+    ejectum,
+    hydravoOnPlant,
+    placeRandomWizardItem,
+    placeRandomWizardItem,
+  ];
   const wizardAction =
     wizardActions[forcedActionIndex ?? getRandom(wizardActions.length - 1)];
 
@@ -464,13 +512,11 @@ function prepareItemToDrop(item, cb) {
 
     item.s = false;
 
-    await placeItem(item, row, col);
+    const isEnd = await placeItem(item, row, col);
 
     cb?.();
 
-    if (checkEnd()) {
-      endGame(!isMagicGoalReached());
-    } else {
+    if (!isEnd) {
       shop.inert = false;
       actionsMenu.inert = false;
 
@@ -480,10 +526,12 @@ function prepareItemToDrop(item, cb) {
     }
   };
 
-  shop.onmouseenter = () => {
-    shop.onmouseenter = null;
-    goBackItemToShop(item);
-  };
+  shop.onmouseenter = item.isCat
+    ? null
+    : () => {
+        shop.onmouseenter = null;
+        goBackItemToShop(item);
+      };
 }
 
 export function startGame(levelIndex) {
