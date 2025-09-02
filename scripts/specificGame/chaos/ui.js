@@ -186,7 +186,10 @@ const actionCallbacks = {
     prepareItemToDrop(cat(), () => {
       cb();
       document.body.classList.remove("catRunning");
+      shop.inert = false;
+      catJustMoved = true;
     });
+    shop.inert = true;
   },
 };
 
@@ -360,10 +363,12 @@ const hydravoOnPlant = async () => {
   return true;
 };
 
+let catJustMoved = false;
+
 async function nextWizardAction(forcedActionIndex) {
   const wizardActions = [
     placeRandomWizardItem,
-    hydravoOnCat,
+    catJustMoved ? hydravoOnPlant : hydravoOnCat,
     ejectum,
     hydravoOnPlant,
     placeRandomWizardItem,
@@ -373,6 +378,8 @@ async function nextWizardAction(forcedActionIndex) {
     wizardActions[forcedActionIndex ?? getRandom(wizardActions.length - 1)];
 
   const results = await wizardAction();
+
+  catJustMoved = false;
 
   if (results === false) {
     return placeRandomWizardItem();
@@ -448,7 +455,7 @@ function prepareItemToDrop(item, cb) {
   walls.classList.add("dragging");
 
   gameTable.onmousemove = (e) => {
-    shop.inert = false;
+    shop.inert = item.isCat;
 
     const cellIndex = Array.prototype.indexOf.call(
       e.target.parentNode.children,
