@@ -48,7 +48,7 @@ export default async function startTuto(levelIndex) {
 
     await waitForClick();
 
-    actionsMenu.style.removeProperty("display");
+    delete actionsMenu.style.removeProperty("display");
     actionsDomNodes[0].style.removeProperty("display");
 
     updateHelp(

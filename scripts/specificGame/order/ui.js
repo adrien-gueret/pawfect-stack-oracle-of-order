@@ -97,8 +97,8 @@ function updateActionsState() {
   });
 }
 
-const actionCallbacks = {
-  Rotarigus(action, cb) {
+const actionCallbacks = [
+  (action, cb) => {
     shop.querySelectorAll("canvas").forEach((canvas) => {
       rotateItemToRight(canvas.gameItem);
     });
@@ -106,7 +106,7 @@ const actionCallbacks = {
     updateActionsState();
     cb();
   },
-  Rotaleftus(action, cb) {
+  (action, cb) => {
     shop.querySelectorAll("canvas").forEach((canvas) => {
       rotateItemToLeft(canvas.gameItem);
     });
@@ -114,7 +114,7 @@ const actionCallbacks = {
     updateActionsState();
     cb();
   },
-  Hydravo(action, cb) {
+  (action, cb) => {
     prepareSpellToCast(action, "h", async (domSpellTarget) => {
       if (domSpellTarget.gameItem.isCat) {
         await catRun();
@@ -139,7 +139,7 @@ const actionCallbacks = {
       cb();
     });
   },
-  Ejectum(action, cb) {
+  (action, cb) => {
     prepareSpellToCast(action, "r", async (spell) => {
       itemDisappears();
 
@@ -149,7 +149,7 @@ const actionCallbacks = {
       cb();
     });
   },
-};
+];
 
 const increaseActionCost = (action) => {
   dispatch({
@@ -469,7 +469,7 @@ export function startGame(levelIndex) {
   actionsMenu.innerHTML = "";
 
   actionsMenu.append(document.createTextNode("Spells"));
-  getActions().forEach((action) => {
+  getActions().forEach((action, index) => {
     const d = document.createElement("div");
     d.dataset.cost = 0;
     action.value = 0;
@@ -478,7 +478,7 @@ export function startGame(levelIndex) {
     action.canvas = d;
 
     setInteractive(action, "cost", () => {
-      actionCallbacks[action.name](action, () => {
+      actionCallbacks[index](action, () => {
         action.justDrop = true;
         dispatchEvent(new CustomEvent("spell:casted", { detail: action }));
       });

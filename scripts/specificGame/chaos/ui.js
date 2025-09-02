@@ -59,6 +59,8 @@ function checkPushableSates() {
   });
 }
 
+const checkGravity = () => applyGravity().then(checkPushableSates);
+
 function getBestPositionForItem(item) {
   const currentBoard = getCurrentBoard();
 
@@ -198,8 +200,7 @@ async function pushItem(canvas, direction = -1) {
 
   putItem();
 
-  await applyGravity();
-  checkPushableSates();
+  await checkGravity();
 
   return true;
 }
@@ -227,8 +228,8 @@ async function goBackItemToShop(item) {
   shop.append(item.canvas);
 }
 
-const actionCallbacks = {
-  Move(action, cb) {
+const actionCallbacks = [
+  (action, cb) => {
     prepareItemToDrop(cat(), () => {
       cb();
       document.body.classList.remove("catRunning");
@@ -237,19 +238,19 @@ const actionCallbacks = {
     });
     shop.inert = true;
   },
-  "Push to left": (action, cb) => {
+  (action, cb) => {
     prepareTrick(action, "l", async (canvas) => {
       await pushItem(canvas);
       cb();
     });
   },
-  "Push to right": (action, cb) => {
+  (action, cb) => {
     prepareTrick(action, "r", async (canvas) => {
       await pushItem(canvas, 1);
       cb();
     });
   },
-};
+];
 
 function cat() {
   if (cat.c) {
@@ -291,8 +292,7 @@ async function placeItem(item, row, col, isWizard) {
 
   putItem();
 
-  await applyGravity();
-  checkPushableSates();
+  await checkGravity();
 
   item.justDrop = !isWizard;
 
@@ -357,8 +357,7 @@ const hydravoOnCat = async () => {
       catItem.canvas.remove();
     });
 
-  await applyGravity();
-  checkPushableSates();
+  await checkGravity();
 };
 
 async function ejectum() {
@@ -385,8 +384,7 @@ async function ejectum() {
 
   await destroyItem(itemToRemove);
   itemDisappears();
-  await applyGravity();
-  checkPushableSates();
+  await checkGravity();
 
   return true;
 }
@@ -623,14 +621,14 @@ export function startGame(levelIndex) {
   actionsMenu.innerHTML = "";
 
   actionsMenu.append(document.createTextNode("Tricks"));
-  getActions().forEach((action) => {
+  getActions().forEach((action, index) => {
     const d = document.createElement("div");
     d.className = `${action.name.replaceAll(" ", "")} s`;
     actionsMenu.append(d);
     action.canvas = d;
 
     setInteractive(action, "", () => {
-      actionCallbacks[action.name](action, () => {
+      actionCallbacks[index](action, () => {
         action.justDrop = true;
       });
     });
