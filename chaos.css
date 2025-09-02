@@ -1,0 +1,52 @@
+[data-current-section="home"] main {
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #205d61 0 60%,
+    #3e878b 0 80%,
+    #66bfc3 0 90%,
+    #8ef7fb 0 100%
+  );
+}
+
+div.Pushtoright,
+div.Move,
+div.Pushtoright:before {
+  transform: scaleX(-1);
+}
+
+div.Pushtoright,
+div.Pushtoleft {
+  --bx: -144px;
+  --by: -240px;
+}
+
+div.Move {
+  --bx: -144px;
+  --by: -576px;
+}
+
+.catRunning #actionsMenu .s:not(:first-of-type) {
+  pointer-events: none;
+  border: 0;
+}
+
+.catRunning #shop canvas {
+  display: none;
+}
+
+.catRunning #shop:before,
+.catRunning #actionsMenu .s:not(:first-of-type):before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background-image: url("./images/sprites.png");
+  background-size: calc(var(--sw) * 3) calc(var(--sh) * 3);
+  background-position: 0 -96px;
+  background-color: #331c1a;
+}
+
+.catRunning #shop:before {
+  background-color: #000;
+}

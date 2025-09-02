@@ -183,7 +183,10 @@ async function goBackItemToShop(item) {
 
 const actionCallbacks = {
   Move(action, cb) {
-    prepareItemToDrop(cat(), cb);
+    prepareItemToDrop(cat(), () => {
+      cb();
+      document.body.classList.remove("catRunning");
+    });
   },
 };
 
@@ -255,6 +258,7 @@ const catRun = async () => {
   catItem.run = true;
   catItem.animate();
   catItem.canvas.inert = true;
+  document.body.classList.add("catRunning");
 
   dispatch({
     type: "setBoard",

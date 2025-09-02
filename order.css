@@ -1,0 +1,29 @@
+[data-current-section="home"] main {
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #a0302d 0 60%,
+    #e86f63 0 80%,
+    #ffae99 0 90%,
+    #fff7f3 0 100%
+  );
+}
+
+div.Rotarigus,
+div.Rotaleftus {
+  --bx: -144px;
+  --by: -480px;
+}
+
+div.Rotaleftus {
+  transform: scaleX(-1);
+}
+
+div.Hydravo {
+  --bx: 0;
+  --by: -96px;
+}
+
+div.Ejectum {
+  --bx: -48px;
+  --by: -384px;
+}

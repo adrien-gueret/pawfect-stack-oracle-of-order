@@ -86,8 +86,6 @@ export function setInteractive(item, valueLabel, onClick) {
         return;
       }
 
-      console.log(prev, item);
-
       helpContainer.innerHTML = prev;
     };
   };

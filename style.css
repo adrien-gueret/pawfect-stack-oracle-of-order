@@ -533,38 +533,6 @@ div.brick.v1 {
   --by: -240px;
 }
 
-div.Rotarigus,
-div.Rotaleftus {
-  --bx: -144px;
-  --by: -480px;
-}
-div.Rotaleftus,
-div.Pushtoright,
-div.Move {
-  transform: scaleX(-1);
-}
-
-div.Pushtoright,
-div.Pushtoleft {
-  --bx: -144px;
-  --by: -240px;
-}
-
-div.Move {
-  --bx: -144px;
-  --by: -576px;
-}
-
-div.Hydravo {
-  --bx: 0;
-  --by: -96px;
-}
-
-div.Ejectum {
-  --bx: -48px;
-  --by: -384px;
-}
-
 #actionsMenu,
 #gameStats {
   position: absolute;

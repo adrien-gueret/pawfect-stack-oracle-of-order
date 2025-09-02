@@ -31,26 +31,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
   let indexHTML = fs.readFileSync("./index.html", "utf8");
 
   let styleCSS = fs.readFileSync("./style.css", "utf8");
-
-  styleCSS +=
-    gameName === "order"
-      ? `[data-current-section="home"] main {
-  background-image: radial-gradient(
-    circle at 50% 50%,  
-    #a0302d 0 60%,
-    #e86f63 0 80%,
-    #ffae99 0 90%,
-    #fff7f3 0 100%);
-}`
-      : `[data-current-section="home"] main {
-  background-image: radial-gradient(
-    circle at 50% 50%,  
-    #205d61 0 60%,
-    #3e878b 0 80%,
-    #66bfc3 0 90%,
-    #8ef7fb 0 100%
-  );
-}`;
+  styleCSS += fs.readFileSync(`./${gameName}.css`, "utf8");
 
   let indexJS = fs
     .readFileSync("./index.js", "utf8")
@@ -82,6 +63,8 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
       '<link href="./style.css" rel="stylesheet" />',
       () => `<style>${minifiedCSS}</style>`
     )
+    .replace('<link href="./chaos.css" rel="stylesheet" />', () => "")
+    .replace('<link href="./order.css" rel="stylesheet" />', () => "")
     .replaceAll('"use strict";', "")
     .replaceAll("--target-x", "--tx")
     .replaceAll("--target-y", "--ty")
@@ -111,6 +94,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     "scenarioCat",
     "scenario",
     "actionDisabled",
+    "catRunning",
     "noshop",
     "nocursor",
     "speaking",
