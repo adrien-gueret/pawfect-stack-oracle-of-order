@@ -128,6 +128,9 @@ function attachCanvasToItem(item) {
 function addItemInPool() {
   const item = getRandomCatItem();
 
+  item.desc =
+    "A gift from me to Mia. It's a bit bulky, but I'm sure she'll love it!";
+
   attachCanvasToItem(item);
 
   drawItem(item, 2);
@@ -145,7 +148,11 @@ function addItemInPool() {
       }
     ).finished;
 
-    prepareItemToDrop(item);
+    prepareItemToDrop(item, () => {
+      if (!checkEnd()) {
+        addItemInPool();
+      }
+    });
 
     dispatchEvent(new CustomEvent("item:selected", { detail: item }));
   });
@@ -156,6 +163,7 @@ async function goBackItemToShop(item) {
   gameTable.onclick = null;
   gameTable.onmousemove = null;
   gameTable.style.cursor = "default";
+  console.log("go back", item);
   actionsMenu.inert = false;
   item.s = false;
 
@@ -176,7 +184,7 @@ async function goBackItemToShop(item) {
 
 const actionCallbacks = {
   Move(action, cb) {
-    prepareItemToDrop(cat());
+    prepareItemToDrop(cat(), cb);
   },
 };
 
@@ -192,14 +200,6 @@ function cat() {
   return cat.c;
 }
 
-const addCatItem = () => {
-  const item = getRandomCatItem();
-  item.desc =
-    "A gift from me to Mia. It's a bit bulky, but I'm sure she'll love it!";
-
-  addItemInPool(item);
-};
-
 let trickCloneElement;
 function followMouse({ clientX, clientY }) {
   trickCloneElement.style.transform = `translate(${clientX + 8}px, ${
@@ -207,7 +207,7 @@ function followMouse({ clientX, clientY }) {
   }px)`;
 }
 
-async function placeItem(item, row, col) {
+async function placeItem(item, row, col, isWizard) {
   item.canvas.onclick = null;
   item.canvas.coor = { row, col };
   item.canvas.style.left = `${(col + 1) * 48}px`;
@@ -230,7 +230,7 @@ async function placeItem(item, row, col) {
 
   await applyGravity();
 
-  item.justDrop = true;
+  item.justDrop = !isWizard;
 
   if (id(item) === 11) {
     Object.defineProperty(item, "value", {
@@ -239,12 +239,6 @@ async function placeItem(item, row, col) {
       },
     });
   }
-
-  dispatchEvent(
-    new CustomEvent("item:dropped", {
-      detail: item,
-    })
-  );
 }
 
 async function placeRandomWizardItem() {
@@ -252,7 +246,52 @@ async function placeRandomWizardItem() {
   attachCanvasToItem(item);
   const [row, col] = getBestPositionForItem(item);
 
-  await placeItem(item, row, col);
+  setInteractive(item, "magic");
+
+  await placeItem(item, row, col, true);
+}
+
+const catRun = async () => {
+  const catItem = cat();
+  catItem.run = true;
+  catItem.animate();
+  catItem.canvas.inert = true;
+
+  dispatch({
+    type: "setBoard",
+    payload: removeItemToBoard(catItem.uniqId, getCurrentBoard()),
+  });
+
+  meow();
+
+  catItem.canvas
+    .animate(
+      [
+        { transform: "translate(0, 0)" },
+        { transform: "translate(450px, -100px)" },
+      ],
+      {
+        duration: 1500,
+        easing: "ease-in",
+      }
+    )
+    .finished.then(() => {
+      catItem.canvas.remove();
+    });
+
+  await applyGravity();
+};
+
+function hydravoOnCat() {
+  catRun();
+}
+
+async function nextWizardAction(forcedActionIndex) {
+  const wizardActions = [placeRandomWizardItem, hydravoOnCat];
+  const wizardAction =
+    wizardActions[forcedActionIndex ?? getRandom(wizardActions.length - 1)];
+
+  return wizardAction();
 }
 
 function prepareTrick(trick, className, cast) {
@@ -309,7 +348,7 @@ function prepareTrick(trick, className, cast) {
   shop.inert = true;
 }
 
-function prepareItemToDrop(item) {
+function prepareItemToDrop(item, cb) {
   drawItem(item, 3);
   const itemToDropCanvas = item.canvas;
   item.canvas.style.left = "240px";
@@ -390,13 +429,17 @@ function prepareItemToDrop(item) {
 
     await placeItem(item, row, col);
 
-    addItemInPool();
+    cb?.();
 
     if (checkEnd()) {
-      endGame(isMagicGoalReached());
+      endGame(!isMagicGoalReached());
     } else {
       shop.inert = false;
       actionsMenu.inert = false;
+
+      const ce = new CustomEvent("item:dropped", { detail: item });
+      dispatchEvent(ce);
+      nextWizardAction(ce.ci);
     }
   };
 
@@ -430,7 +473,6 @@ export function startGame(levelIndex) {
     setInteractive(action, "", () => {
       actionCallbacks[action.name](action, () => {
         action.justDrop = true;
-        dispatchEvent(new CustomEvent("spell:casted", { detail: action }));
       });
     });
   });

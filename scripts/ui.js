@@ -213,7 +213,7 @@ export async function applyGravity() {
 export const initCatAnimation = (c) => {
   let clock;
 
-  setInteractive(c, "magic");
+  setInteractive(c);
   setInteractiveBg(c);
 
   const animate = () => {
@@ -295,8 +295,8 @@ let currentSpecificGameStart = null;
 export const endGame = (hasWon) => {
   endTitle.innerHTML = hasWon ? "Congratulations!" : "Oops...";
   endDescription.innerHTML = hasWon
-    ? "The cellar is tidy and has enough magic concentration!"
-    : "The maximum number of items has been reached, but the magic concentration is not sufficient...";
+    ? "You prevented Mia from reaching the required magic concentration, well done!"
+    : "Mia managed to reach her magic goal despite your efforts to stop her...";
   endButtonNext.innerHTML = hasWon ? "Next" : "Retry";
 
   const nextLevelIndex = currentLevelIndex + 1;
