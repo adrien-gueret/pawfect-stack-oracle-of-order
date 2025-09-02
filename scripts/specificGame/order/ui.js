@@ -128,6 +128,7 @@ const actionCallbacks = {
 
         setInteractiveBg(newPlant);
         setInteractive(newPlant, "magic");
+        setZIndex(newPlant);
 
         dispatch({
           type: "setBoard",

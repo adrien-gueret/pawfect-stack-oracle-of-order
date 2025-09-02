@@ -50,3 +50,26 @@ div.Move {
 .catRunning #shop:before {
   background-color: #000;
 }
+
+.r #actionsMenu > div:after,
+.l #actionsMenu > div:after {
+  display: none;
+}
+
+.r #actionsMenu > div.s:not(.casting),
+.l #actionsMenu > div.s:not(.casting) {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.r #walls canvas,
+.l #walls canvas {
+  cursor: pointer;
+}
+
+.r #walls .cat,
+.l #walls .cat,
+.l #walls .not-to-left,
+.r #walls .not-to-right {
+  pointer-events: none;
+}

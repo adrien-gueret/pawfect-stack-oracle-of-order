@@ -469,21 +469,6 @@ div.s {
   z-index: 0;
 }
 
-.r #walls .cat,
-.h #gameTable ~ canvas:not(.c6) {
-  pointer-events: none;
-}
-
-.h #walls .c6,
-.h #walls .cat {
-  cursor: pointer;
-}
-
-.r #gameTable ~ canvas:hover {
-  opacity: 0.3;
-  cursor: pointer;
-}
-
 #levelDisplay {
   position: absolute;
   top: 12px;
@@ -609,17 +594,6 @@ div.s.actionDisabled {
   text-align: center;
   font-size: 2rem;
   top: 3px;
-}
-
-.r #actionsMenu > div:after,
-.h #actionsMenu > div:after {
-  display: none;
-}
-
-.r #actionsMenu > div.s:not(.casting),
-.h #actionsMenu > div.s:not(.casting) {
-  opacity: 0.3;
-  pointer-events: none;
 }
 
 #actionsMenu > div:after {

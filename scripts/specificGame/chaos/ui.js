@@ -4,15 +4,12 @@ import {
   getRandomCatItem,
   getCat,
   id,
-  rotateItemToRight,
-  rotateItemToLeft,
   setZIndex,
 } from "../../items/index.js";
 import {
   checkApplyItemToBoard,
   applyItemToBoard,
   removeItemToBoard,
-  getRandomCoordinatesOfEmptySpaceAboveFloor,
   growPlant,
 } from "../../board/index.js";
 import {
@@ -30,12 +27,37 @@ import {
   getCurrentBoard,
   getMagic,
   getSpecificBookMagic,
+  getItemUniqIds,
 } from "../../state.js";
 import { dispatch } from "../../store.js";
 
 import getActions from "./actions.js";
 import startTuto from "./tutos.js";
 import { putItem, plantGrowth, itemDisappears, meow } from "../../sounds.js";
+
+function checkPushableSates() {
+  const itemUniqIds = getItemUniqIds();
+  const currentBoard = getCurrentBoard();
+
+  itemUniqIds.forEach((uniqId) => {
+    const canvas = document.getElementById("i" + uniqId);
+    if (!canvas || !canvas.gameItem) return;
+
+    const item = canvas.gameItem;
+    const { row, col } = canvas.coor;
+
+    const tempBoard = removeItemToBoard(uniqId, currentBoard);
+
+    canvas.classList.toggle(
+      "not-to-left",
+      checkApplyItemToBoard(item, tempBoard, col - 1, row).length !== 0
+    );
+    canvas.classList.toggle(
+      "not-to-right",
+      checkApplyItemToBoard(item, tempBoard, col + 1, row).length !== 0
+    );
+  });
+}
 
 function getBestPositionForItem(item) {
   const currentBoard = getCurrentBoard();
@@ -158,6 +180,30 @@ function addItemInPool() {
   });
 }
 
+async function pushItem(canvas, direction = -1) {
+  const item = canvas.gameItem;
+  const { row, col } = canvas.coor;
+
+  const newCol = col + direction;
+
+  canvas.coor.col = newCol;
+  canvas.style.left = `${(newCol + 1) * 48}px`;
+
+  const currentBoard = getCurrentBoard();
+  const boardWithoutItem = removeItemToBoard(item.uniqId, currentBoard);
+  dispatch({
+    type: "setBoard",
+    payload: applyItemToBoard(item, boardWithoutItem, newCol, row),
+  });
+
+  putItem();
+
+  await applyGravity();
+  checkPushableSates();
+
+  return true;
+}
+
 async function goBackItemToShop(item) {
   walls.classList.remove("dragging");
   gameTable.onclick = null;
@@ -190,6 +236,18 @@ const actionCallbacks = {
       catJustMoved = true;
     });
     shop.inert = true;
+  },
+  "Push to left": (action, cb) => {
+    prepareTrick(action, "l", async (canvas) => {
+      await pushItem(canvas);
+      cb();
+    });
+  },
+  "Push to right": (action, cb) => {
+    prepareTrick(action, "r", async (canvas) => {
+      await pushItem(canvas, 1);
+      cb();
+    });
   },
 };
 
@@ -234,6 +292,7 @@ async function placeItem(item, row, col, isWizard) {
   putItem();
 
   await applyGravity();
+  checkPushableSates();
 
   item.justDrop = !isWizard;
 
@@ -299,6 +358,7 @@ const hydravoOnCat = async () => {
     });
 
   await applyGravity();
+  checkPushableSates();
 };
 
 async function ejectum() {
@@ -324,7 +384,9 @@ async function ejectum() {
   const itemToRemove = catItems[getRandom(catItems.length - 1)];
 
   await destroyItem(itemToRemove);
+  itemDisappears();
   await applyGravity();
+  checkPushableSates();
 
   return true;
 }
@@ -351,12 +413,17 @@ const hydravoOnPlant = async () => {
 
   const randomPlant = driedPlants[getRandom(driedPlants.length - 1)];
 
-  const [, newPlant] = growPlant(randomPlant, currentBoard);
+  const [newBoard, newPlant] = growPlant(randomPlant, currentBoard);
   plantGrowth();
 
   setInteractiveBg(newPlant);
   setInteractive(newPlant, "magic");
   setZIndex(newPlant);
+
+  dispatch({
+    type: "setBoard",
+    payload: newBoard,
+  });
 
   magicScore.innerHTML = getMagic();
 

@@ -87,6 +87,8 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     "brick",
     "logos",
     "tend",
+    "not-to-left",
+    "not-to-right",
     "iddlePause",
     "scenarioDialog",
     "scenarioMaster",
