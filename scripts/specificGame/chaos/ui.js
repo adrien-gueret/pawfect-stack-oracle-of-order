@@ -163,7 +163,6 @@ async function goBackItemToShop(item) {
   gameTable.onclick = null;
   gameTable.onmousemove = null;
   gameTable.style.cursor = "default";
-  console.log("go back", item);
   actionsMenu.inert = false;
   item.s = false;
 
@@ -276,22 +275,56 @@ const catRun = async () => {
       }
     )
     .finished.then(() => {
+      catItem.run = false;
+      catItem.canvas.inert = false;
       catItem.canvas.remove();
     });
 
   await applyGravity();
 };
 
-function hydravoOnCat() {
+async function hydravoOnCat() {
   catRun();
 }
 
+async function ejectum() {
+  const currentBoard = getCurrentBoard();
+  const catItems = [];
+
+  for (let row = 0; row < currentBoard.length; row++) {
+    for (let col = 0; col < currentBoard[row].length; col++) {
+      const itemId = currentBoard[row][col];
+      if (itemId !== 0) {
+        const canvas = document.getElementById("i" + itemId);
+        if (canvas?.gameItem?.fromCat) {
+          catItems.push(canvas.gameItem);
+        }
+      }
+    }
+  }
+
+  if (catItems.length === 0) {
+    return false;
+  }
+
+  const itemToRemove = catItems[getRandom(catItems.length - 1)];
+
+  await destroyItem(itemToRemove);
+  await applyGravity();
+
+  return true;
+}
+
 async function nextWizardAction(forcedActionIndex) {
-  const wizardActions = [placeRandomWizardItem, hydravoOnCat];
+  const wizardActions = [placeRandomWizardItem, hydravoOnCat, ejectum];
   const wizardAction =
     wizardActions[forcedActionIndex ?? getRandom(wizardActions.length - 1)];
 
-  return wizardAction();
+  const results = await wizardAction();
+
+  if (results === false) {
+    return placeRandomWizardItem();
+  }
 }
 
 function prepareTrick(trick, className, cast) {

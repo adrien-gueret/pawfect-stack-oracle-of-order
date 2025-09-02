@@ -86,6 +86,8 @@ export function setInteractive(item, valueLabel, onClick) {
         return;
       }
 
+      console.log(prev, item);
+
       helpContainer.innerHTML = prev;
     };
   };
@@ -104,6 +106,7 @@ export function destroyItem(item) {
 
     drawItem(item, 3, null, true);
     canvas.inert = true;
+    canvas.onmouseleave = null;
 
     setTimeout(() => {
       canvas.dispatchEvent(new MouseEvent("mouseleave"));

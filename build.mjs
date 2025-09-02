@@ -55,12 +55,13 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
   let indexJS = fs
     .readFileSync("./index.js", "utf8")
     .replaceAll("const ", "let ")
-    .replaceAll("undefined", "void 0");
+    .replaceAll("undefined", "void 0")
+    .replaceAll("document", "D");
 
   fs.unlinkSync("./index.js");
 
   console.log("Minify JS...");
-  const minifiedJS = await minify.js(indexJS);
+  const minifiedJS = await minify.js("let D=document;" + indexJS);
 
   console.log("Minify CSS...");
   const minifiedCSS = await minify.css(styleCSS);

@@ -65,7 +65,6 @@ export default async function startTuto(levelIndex) {
     levelGoals.style.removeProperty("display");
 
     actionsMenu.inert = true;
-    console.log("set inert");
 
     updateHelp(
       "The game ends when the required number of items is in the cellar; we win if Mia's magic goal is NOT reached. Check the top left of the screen!",
@@ -103,14 +102,16 @@ export default async function startTuto(levelIndex) {
       `Hydravo! Mia has cast a water spell on me and I had to run away! When this happens, please use the "move" trick to make me come back...`
     );
 
-    await waitFor("jiji");
+    await waitFor("item:dropped", forceNextWizardAction(2));
 
     actionsDomNodes.forEach((node) => {
       node.style.removeProperty("display");
     });
 
     updateHelp(
-      'Thanks! I have other tricks up my sleeve... but Mia too! She has cast her Ejectum spell and our "gift" has disappeared...'
+      'Thanks! I have other tricks up my sleeve... but Mia too! She has cast her Ejectum spell and our "gift" has disappeared...',
+      [],
+      ["nocursor"]
     );
 
     await waitForClick();
@@ -118,7 +119,8 @@ export default async function startTuto(levelIndex) {
     updateHelp(
       "Now you know everything you need to know to prevent Mia from tidying the cellar properly!"
     );
-  } else {
-    updateHelp("Stop Mia from tidying the cellar properly!");
+
+    await waitForClick();
   }
+  updateHelp("Stop Mia from tidying the cellar properly!", [], ["noshop"]);
 }

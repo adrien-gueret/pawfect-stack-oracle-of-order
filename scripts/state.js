@@ -193,11 +193,3 @@ export function getMagic() {
 export default function init() {
   initStore(reducer, getKey("state") || defaultState);
 }
-
-/*
-DEBUG
-getCurrentBoard().forEach((row, index) => {
-          console.log(index, JSON.stringify(row));
-        });
-
-*/
