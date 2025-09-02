@@ -37,12 +37,19 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     .readFileSync("./index.js", "utf8")
     .replaceAll("const ", "let ")
     .replaceAll("undefined", "void 0")
-    .replaceAll("document", "D");
+    .replaceAll("document", "D")
+    .replaceAll("D.getElementById", "$")
+    .replaceAll("D.body", "B")
+    .replaceAll("Math", "M")
+    .replaceAll("Promise", "P");
 
   fs.unlinkSync("./index.js");
 
   console.log("Minify JS...");
-  const minifiedJS = await minify.js("let D=document;" + indexJS);
+  const minifiedJS = await minify.js(
+    "let D=document;let $=(i)=>D.getElementById(i);let M=Math;let P=Promise;let B=D.body;" +
+      indexJS
+  );
 
   console.log("Minify CSS...");
   const minifiedCSS = await minify.css(styleCSS);
@@ -68,6 +75,8 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     .replaceAll('"use strict";', "")
     .replaceAll("--target-x", "--tx")
     .replaceAll("--target-y", "--ty")
+    .replaceAll("data-current-section", "data-cs")
+    .replaceAll("currentSection", "cs")
     .replaceAll("./images/sprites.png", "./s.png")
     .replaceAll("./images/logo.webp", toBase64Url("./images/logo.webp"))
     .replaceAll(
