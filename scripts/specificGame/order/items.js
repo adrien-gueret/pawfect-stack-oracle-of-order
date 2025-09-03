@@ -26,11 +26,3 @@ export function rotate(item, angle = 0, drawScale = 2) {
 
   return item;
 }
-
-export function rotateItemToRight(item) {
-  return rotate(item, 90);
-}
-
-export function rotateItemToLeft(item) {
-  return rotate(item, 270);
-}

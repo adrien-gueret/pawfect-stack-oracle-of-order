@@ -6,7 +6,7 @@ import {
   id,
   setZIndex,
 } from "../../items/index.js";
-import { rotate, rotateItemToRight, rotateItemToLeft } from "./items.js";
+import { rotate } from "./items.js";
 import {
   checkApplyItemToBoard,
   applyItemToBoard,
@@ -213,7 +213,7 @@ function growPlant(driedPlantCanvas, board) {
 const actionCallbacks = [
   (action, cb) => {
     shop.querySelectorAll("canvas").forEach((canvas) => {
-      rotateItemToRight(canvas.gameItem);
+      rotate(canvas.gameItem, 90);
     });
     increaseActionCost(action);
     updateActionsState();
@@ -221,7 +221,7 @@ const actionCallbacks = [
   },
   (action, cb) => {
     shop.querySelectorAll("canvas").forEach((canvas) => {
-      rotateItemToLeft(canvas.gameItem);
+      rotate(canvas.gameItem, 270);
     });
     increaseActionCost(action);
     updateActionsState();
