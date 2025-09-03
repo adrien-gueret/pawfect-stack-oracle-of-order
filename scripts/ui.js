@@ -6,7 +6,7 @@ import {
   getLevel,
   getItemUniqIdBelowItem,
 } from "./board/index.js";
-import { getRandom } from "./utils.js";
+
 import {
   getCurrentBoard,
   getItemUniqIds,
@@ -130,7 +130,7 @@ export async function applyGravity() {
     await Promise.all(
       itemUniqIds.map(async (itemUniqId) => {
         const canvas = document.getElementById("i" + itemUniqId);
-        const { row, col } = canvas.coor;
+        const [row, col] = canvas.coor;
         const item = canvas.gameItem;
 
         let isOnFloor = false;
@@ -149,7 +149,7 @@ export async function applyGravity() {
         atLeastOneItemHasMoved = atLeastOneItemHasMoved || hasCurrentItemMoved;
 
         const newRow = row + delta;
-        canvas.coor = { col, row: newRow };
+        canvas.coor = [newRow, col];
 
         dispatch({
           type: "setBoard",
@@ -347,7 +347,7 @@ export function startGame(levelIndex, specificGameStart) {
   baseBoard.flat().forEach((val, index) => {
     if (val === -1) {
       const cell = gameTable.children[index];
-      cell.className = `brick v${getRandom(1)}`;
+      cell.className = `brick v${Math.floor(Math.random() * 2)}`;
     }
   });
 

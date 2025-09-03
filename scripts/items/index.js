@@ -172,8 +172,7 @@ export function drawItem(
 
           if (
             overlaps.find(
-              (overlapCoor) =>
-                overlapCoor.col === col && overlapCoor.row === row
+              (overlapCoor) => overlapCoor[1] === col && overlapCoor[0] === row
             )
           ) {
             ctx.fillStyle = "#ff000099";

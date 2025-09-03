@@ -13,10 +13,7 @@ export function checkApplyItemToBoard(item, board, x, y) {
           x + j >= board[0].length ||
           board[y + i][x + j] !== 0
         ) {
-          overlaps.push({
-            row: i,
-            col: j,
-          });
+          overlaps.push([i, j]);
         }
       }
     }
@@ -32,7 +29,7 @@ export function getRandomCoordinatesOfEmptySpaceAboveFloor(board) {
       const hasSomethingBelow =
         board[row + 1] === void 0 || board[row + 1][col] !== 0;
       if (board[row][col] === 0 && hasSomethingBelow) {
-        emptySpaces.push({ col, row });
+        emptySpaces.push([row, col]);
       }
     }
   }

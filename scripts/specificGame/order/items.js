@@ -5,14 +5,12 @@ export function rotate(item, angle = 0, drawScale = 2) {
   item.rot = (currentRotate + angle) % 360;
 
   let newShape = item.shape;
-  const times = angle / 90;
-  for (let t = 0; t < times; t++) {
-    const numRows = newShape.length;
-    const numCols = newShape[0].length;
+
+  for (let t = 0; t < angle / 90; t++) {
     const rotated = [];
-    for (let col = 0; col < numCols; col++) {
+    for (let col = 0; col < newShape[0].length; col++) {
       const newRow = [];
-      for (let row = numRows - 1; row >= 0; row--) {
+      for (let row = newShape.length - 1; row >= 0; row--) {
         newRow.push(newShape[row][col]);
       }
       rotated.push(newRow);

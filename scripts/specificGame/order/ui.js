@@ -23,7 +23,7 @@ import {
   endGame,
   isMagicGoalReached,
 } from "../../ui.js";
-import { convert1DIndexInto2DIndex, getRandom } from "../../utils.js";
+import { convert1DIndexInto2DIndex } from "../../utils.js";
 import {
   getCurrentBoard,
   getMagic,
@@ -174,15 +174,15 @@ function growPlant(driedPlantCanvas, board) {
   ].some(([currentPlant, [baseRowDelta, baseColumnDelta]]) => {
     const rotatedPlant = rotate(currentPlant, driedPlantCanvas.gameItem.rot, 3);
     rotatedPlant.canvas.gameItem = rotatedPlant;
-    rotatedPlant.canvas.coor = { ...driedPlantCanvas.coor };
-    rotatedPlant.canvas.coor.row += baseRowDelta;
-    rotatedPlant.canvas.coor.col += baseColumnDelta;
+    rotatedPlant.canvas.coor = [...driedPlantCanvas.coor];
+    rotatedPlant.canvas.coor[0] += baseRowDelta;
+    rotatedPlant.canvas.coor[1] += baseColumnDelta;
 
     const overlaps = checkApplyItemToBoard(
       rotatedPlant,
       boardWithoutDriedPlant,
-      rotatedPlant.canvas.coor.col,
-      rotatedPlant.canvas.coor.row
+      rotatedPlant.canvas.coor[1],
+      rotatedPlant.canvas.coor[0]
     );
 
     if (overlaps.length) {
@@ -197,15 +197,15 @@ function growPlant(driedPlantCanvas, board) {
   const newBoard = applyItemToBoard(
     newPlant,
     boardWithoutDriedPlant,
-    newPlant.canvas.coor.col,
-    newPlant.canvas.coor.row
+    newPlant.canvas.coor[1],
+    newPlant.canvas.coor[0]
   );
 
   driedPlantCanvas.replaceWith(newPlant.canvas);
   newPlant.canvas.id = driedPlantCanvas.id;
 
-  newPlant.canvas.style.left = `${(newPlant.canvas.coor.col + 1) * 48}px`;
-  newPlant.canvas.style.top = `${(newPlant.canvas.coor.row + 1) * 48}px`;
+  newPlant.canvas.style.left = `${(newPlant.canvas.coor[1] + 1) * 48}px`;
+  newPlant.canvas.style.top = `${(newPlant.canvas.coor[0] + 1) * 48}px`;
 
   return [newBoard, newPlant];
 }
@@ -344,9 +344,9 @@ const moveCat = () => {
     return;
   }
 
-  catItem.canvas.style.left = `${coordinates.col * 48 + 48}px`;
-  catItem.canvas.style.top = `${coordinates.row * 48 + 48}px`;
-  catItem.canvas.coor = coordinates;
+  catItem.canvas.style.left = `${coordinates[1] * 48 + 48}px`;
+  catItem.canvas.style.top = `${coordinates[0] * 48 + 48}px`;
+  catItem.canvas.coor = [...coordinates];
 
   meow();
 
@@ -355,8 +355,8 @@ const moveCat = () => {
     payload: applyItemToBoard(
       catItem,
       removeItemToBoard(catItem.uniqId, getCurrentBoard()),
-      coordinates.col,
-      coordinates.row
+      coordinates[1],
+      coordinates[0]
     ),
   });
 
@@ -463,9 +463,9 @@ function prepareItemToDrop(item) {
       return;
     }
 
-    const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
+    const [row, col] = convert1DIndexInto2DIndex(cellIndex, 10);
 
-    itemToDropCanvas.coor = { row, col };
+    itemToDropCanvas.coor = [row, col];
 
     const ctx = itemToDropCanvas.getContext("2d");
     ctx.clearRect(0, 0, itemToDropCanvas.width, itemToDropCanvas.height);
@@ -501,7 +501,7 @@ function prepareItemToDrop(item) {
       e.target
     );
 
-    const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
+    const [row, col] = convert1DIndexInto2DIndex(cellIndex, 10);
 
     drawItem(item, 3, "#331c1a");
 
@@ -543,7 +543,8 @@ function prepareItemToDrop(item) {
         await moveCat();
       } else {
         const catActions = [moveCat, addCatItem];
-        const catAction = catActions[ce.ci ?? getRandom(catActions.length - 1)];
+        const catAction =
+          catActions[ce.ci ?? Math.floor(Math.random() * catActions.length)];
         await catAction();
         hasAddedItem = catAction === addCatItem;
       }

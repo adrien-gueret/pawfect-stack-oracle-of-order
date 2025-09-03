@@ -157,8 +157,7 @@ function playMainMusic() {
   if (!playMainMusic.ctx) playMainMusic.ctx = new AudioContext();
   const ctx = playMainMusic.ctx;
 
-  // Toujours planifier dans le futur par rapport à currentTime
-  const t0 = Math.max(ctx.currentTime + 0.03, 0); // petite marge
+  const t0 = Math.max(ctx.currentTime + 0.03, 0);
   const g = ctx.createGain();
   g.connect(ctx.destination);
 

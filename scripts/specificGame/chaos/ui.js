@@ -21,7 +21,7 @@ import {
   endGame,
   isMagicGoalReached,
 } from "../../ui.js";
-import { convert1DIndexInto2DIndex, getRandom } from "../../utils.js";
+import { convert1DIndexInto2DIndex } from "../../utils.js";
 import {
   getCurrentBoard,
   getMagic,
@@ -40,10 +40,10 @@ function checkPushableSates() {
 
   itemUniqIds.forEach((uniqId) => {
     const canvas = document.getElementById("i" + uniqId);
-    if (!canvas || !canvas.gameItem) return;
+    if (!canvas?.gameItem) return;
 
     const item = canvas.gameItem;
-    const { row, col } = canvas.coor;
+    const [row, col] = canvas.coor;
 
     const tempBoard = removeItemToBoard(uniqId, currentBoard);
 
@@ -58,16 +58,13 @@ function checkPushableSates() {
   });
 }
 
-const checkGravity = () => applyGravity().then(checkPushableSates);
-
 function getBestPositionForItem(item) {
   const currentBoard = getCurrentBoard();
 
   const validPositions = [];
   for (let row = 0; row < currentBoard.length; row++) {
     for (let col = 0; col < currentBoard[row].length; col++) {
-      const overlaps = checkApplyItemToBoard(item, currentBoard, col, row);
-      if (overlaps.length === 0) {
+      if (checkApplyItemToBoard(item, currentBoard, col, row).length === 0) {
         validPositions.push([row, col]);
       }
     }
@@ -82,6 +79,7 @@ function getBestPositionForItem(item) {
       if (row === currentBoard.length - 1) return true;
       return currentBoard[row + 1][col] !== 0;
     });
+
     if (stablePositions.length > 0) {
       return stablePositions[0];
     }
@@ -103,7 +101,9 @@ function getBestPositionForItem(item) {
       )
     );
     if (growthPositions.length > 0) {
-      return growthPositions[getRandom(growthPositions.length - 1)];
+      return growthPositions[
+        Math.floor(Math.random() * growthPositions.length)
+      ];
     }
   }
 
@@ -133,12 +133,13 @@ function getBestPositionForItem(item) {
     });
 
     bookPositions.sort((a, b) => b[2] - a[2]);
+
     if (bookPositions.length > 0) {
       return [bookPositions[0][0], bookPositions[0][1]];
     }
   }
 
-  return validPositions[getRandom(validPositions.length - 1)];
+  return validPositions[Math.floor(Math.random() * validPositions.length)];
 }
 
 function attachCanvasToItem(item) {
@@ -183,11 +184,11 @@ function addItemInPool() {
 
 async function pushItem(canvas, direction = -1) {
   const item = canvas.gameItem;
-  const { row, col } = canvas.coor;
+  const [row, col] = canvas.coor;
 
   const newCol = col + direction;
 
-  canvas.coor.col = newCol;
+  canvas.coor = [row, newCol];
   canvas.style.left = `${(newCol + 1) * 48}px`;
 
   const currentBoard = getCurrentBoard();
@@ -199,7 +200,7 @@ async function pushItem(canvas, direction = -1) {
 
   putItem();
 
-  await checkGravity();
+  await applyGravity().then(checkPushableSates);
 
   return true;
 }
@@ -272,7 +273,7 @@ function followMouse({ clientX, clientY }) {
 
 async function placeItem(item, row, col, isWizard) {
   item.canvas.onclick = null;
-  item.canvas.coor = { row, col };
+  item.canvas.coor = [row, col];
   item.canvas.style.left = `${(col + 1) * 48}px`;
   item.canvas.style.top = `${(row + 1) * 48}px`;
 
@@ -291,7 +292,7 @@ async function placeItem(item, row, col, isWizard) {
 
   putItem();
 
-  await checkGravity();
+  await applyGravity().then(checkPushableSates);
 
   item.justDrop = !isWizard;
 
@@ -361,7 +362,7 @@ const hydravoOnCat = async () => {
       catItem.canvas.remove();
     });
 
-  await checkGravity();
+  await applyGravity().then(checkPushableSates);
 };
 
 async function ejectum() {
@@ -384,11 +385,11 @@ async function ejectum() {
     return false;
   }
 
-  const itemToRemove = catItems[getRandom(catItems.length - 1)];
+  const itemToRemove = catItems[Math.floor(Math.random() * catItems.length)];
 
   await destroyItem(itemToRemove);
   itemDisappears();
-  await checkGravity();
+  await applyGravity().then(checkPushableSates);
 
   return true;
 }
@@ -443,15 +444,15 @@ function growPlant(driedPlantCanvas, board) {
     [mediumPlant, [-1, -0]],
     [smallPlant, [0, 0]],
   ].some(([currentPlant, [baseRowDelta, baseColumnDelta]]) => {
-    currentPlant.canvas.coor = { ...driedPlantCanvas.coor };
-    currentPlant.canvas.coor.row += baseRowDelta;
-    currentPlant.canvas.coor.col += baseColumnDelta;
+    currentPlant.canvas.coor = [...driedPlantCanvas.coor];
+    currentPlant.canvas.coor[0] += baseRowDelta;
+    currentPlant.canvas.coor[1] += baseColumnDelta;
 
     const overlaps = checkApplyItemToBoard(
       currentPlant,
       boardWithoutDriedPlant,
-      currentPlant.canvas.coor.col,
-      currentPlant.canvas.coor.row
+      currentPlant.canvas.coor[1],
+      currentPlant.canvas.coor[0]
     );
 
     if (overlaps.length) {
@@ -466,15 +467,15 @@ function growPlant(driedPlantCanvas, board) {
   const newBoard = applyItemToBoard(
     newPlant,
     boardWithoutDriedPlant,
-    newPlant.canvas.coor.col,
-    newPlant.canvas.coor.row
+    newPlant.canvas.coor[1],
+    newPlant.canvas.coor[0]
   );
 
   driedPlantCanvas.replaceWith(newPlant.canvas);
   newPlant.canvas.id = driedPlantCanvas.id;
 
-  newPlant.canvas.style.left = `${(newPlant.canvas.coor.col + 1) * 48}px`;
-  newPlant.canvas.style.top = `${(newPlant.canvas.coor.row + 1) * 48}px`;
+  newPlant.canvas.style.left = `${(newPlant.canvas.coor[1] + 1) * 48}px`;
+  newPlant.canvas.style.top = `${(newPlant.canvas.coor[0] + 1) * 48}px`;
 
   return [newBoard, newPlant];
 }
@@ -499,7 +500,8 @@ const hydravoOnPlant = async () => {
     return false;
   }
 
-  const randomPlant = driedPlants[getRandom(driedPlants.length - 1)];
+  const randomPlant =
+    driedPlants[Math.floor(Math.random() * driedPlants.length)];
 
   const [newBoard, newPlant] = growPlant(randomPlant, currentBoard);
   plantGrowth();
@@ -530,7 +532,9 @@ async function nextWizardAction(forcedActionIndex) {
     placeRandomWizardItem,
   ];
   const wizardAction =
-    wizardActions[forcedActionIndex ?? getRandom(wizardActions.length - 1)];
+    wizardActions[
+      forcedActionIndex ?? Math.floor(Math.random() * wizardActions.length)
+    ];
 
   const results = await wizardAction();
 
@@ -632,9 +636,9 @@ function prepareItemToDrop(item, cb) {
       return;
     }
 
-    const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
+    const [row, col] = convert1DIndexInto2DIndex(cellIndex, 10);
 
-    itemToDropCanvas.coor = { row, col };
+    itemToDropCanvas.coor = [row, col];
 
     const ctx = itemToDropCanvas.getContext("2d");
     ctx.clearRect(0, 0, itemToDropCanvas.width, itemToDropCanvas.height);
@@ -670,7 +674,7 @@ function prepareItemToDrop(item, cb) {
       e.target
     );
 
-    const { row, col } = convert1DIndexInto2DIndex(cellIndex, 10);
+    const [row, col] = convert1DIndexInto2DIndex(cellIndex, 10);
 
     item.s = false;
 
