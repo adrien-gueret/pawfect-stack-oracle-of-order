@@ -9,7 +9,7 @@ import specificGame from "./specificGame/index.js";
 (() => {
   initState();
 
-  initUI(specificGame.favicon);
+  initUI(specificGame.f);
 
   let isSoundInit = false;
   initSections(async ({ currentSection, nextSection, vars }) => {
@@ -19,12 +19,12 @@ import specificGame from "./specificGame/index.js";
     }
 
     if (nextSection === "scenarioSection") {
-      await runScenario(specificGame.runScenario, vars.end);
+      await runScenario(specificGame.l, vars.end);
 
       goToSection("mainGame");
     }
     if (nextSection === "mainGame") {
-      startGame(getThisGameFinishedLevelCount() ?? 0, specificGame.start);
+      startGame(getThisGameFinishedLevelCount() ?? 0, specificGame.s);
     }
   });
 })();

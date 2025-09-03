@@ -247,7 +247,7 @@ function renderFavicon(pixels) {
   const colors = ["transparent", "#331c1a", "#FEEBC9"];
 
   pixels.forEach((row, rowIndex) => {
-    row.forEach((pixelValue, columnIndex) => {
+    row.split("").forEach((pixelValue, columnIndex) => {
       ctx.fillStyle = colors[pixelValue];
       ctx.fillRect(columnIndex + 2, rowIndex, 1, 1);
     });
