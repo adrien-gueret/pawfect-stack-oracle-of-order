@@ -1,3 +1,5 @@
+import { drawItem } from "../../items/index.js";
+
 export function rotate(item, angle = 0, drawScale = 2) {
   const currentRotate = item.rot ?? 0;
   item.rot = (currentRotate + angle) % 360;

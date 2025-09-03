@@ -304,7 +304,12 @@ async function placeItem(item, row, col, isWizard) {
   }
 
   if (checkEnd()) {
-    endGame(!isMagicGoalReached());
+    endGame(
+      !isMagicGoalReached(),
+      isMagicGoalReached()
+        ? "Mia managed to reach her magic goal despite your efforts to stop her..."
+        : "You prevented Mia from reaching the required magic concentration, well done!"
+    );
     return true;
   }
 

@@ -293,11 +293,9 @@ export function isMagicGoalReached() {
 let currentLevelIndex = null;
 let currentSpecificGameStart = null;
 
-export const endGame = (hasWon) => {
+export const endGame = (hasWon, description) => {
   endTitle.innerHTML = hasWon ? "Congratulations!" : "Oops...";
-  endDescription.innerHTML = hasWon
-    ? "You prevented Mia from reaching the required magic concentration, well done!"
-    : "Mia managed to reach her magic goal despite your efforts to stop her...";
+  endDescription.innerHTML = description;
   endButtonNext.innerHTML = hasWon ? "Next" : "Retry";
 
   const nextLevelIndex = currentLevelIndex + 1;

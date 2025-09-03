@@ -556,7 +556,12 @@ function prepareItemToDrop(item) {
     }
 
     if (checkEnd()) {
-      endGame(isMagicGoalReached());
+      endGame(
+        isMagicGoalReached(),
+        isMagicGoalReached()
+          ? "The cellar is tidy and has enough magic concentration!"
+          : "The maximum number of items has been reached, but the magic concentration is not sufficient..."
+      );
     } else {
       shop.inert = false;
       actionsMenu.inert = false;
