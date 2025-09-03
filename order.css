@@ -1,11 +1,5 @@
 [data-current-section="home"] main {
-  background-image: radial-gradient(
-    circle at 50% 50%,
-    #a0302d 0 60%,
-    #e86f63 0 80%,
-    #ffae99 0 90%,
-    #fff7f3 0 100%
-  );
+  background-image: conic-gradient(from 45deg, #ffae99 0 50%, #a0302d 0 100%);
 }
 
 div.Rotarigus,

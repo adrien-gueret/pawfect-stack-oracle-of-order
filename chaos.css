@@ -1,11 +1,5 @@
 [data-current-section="home"] main {
-  background-image: radial-gradient(
-    circle at 50% 50%,
-    #205d61 0 60%,
-    #3e878b 0 80%,
-    #66bfc3 0 90%,
-    #8ef7fb 0 100%
-  );
+  background-image: conic-gradient(from 45deg, #66bfc3 0 50%, #205d61 0 100%);
 }
 
 div.Pushtoright,

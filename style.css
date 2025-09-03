@@ -118,6 +118,15 @@ body:not([data-current-section]) #gameOptions,
   margin-top: 96px;
 }
 
+#home a {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 150px;
+}
+
 #home a,
 #home a:hover,
 #endButtonNext,
