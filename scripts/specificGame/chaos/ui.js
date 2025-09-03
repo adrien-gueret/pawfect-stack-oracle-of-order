@@ -713,7 +713,7 @@ export function startGame(levelIndex) {
   actionsMenu.append(document.createTextNode("Tricks"));
   getActions().forEach((action, index) => {
     const d = document.createElement("div");
-    d.className = `${action.name.replaceAll(" ", "")} s`;
+    d.className = `${action[0].replaceAll(" ", "")} s`;
     actionsMenu.append(d);
     action.canvas = d;
 

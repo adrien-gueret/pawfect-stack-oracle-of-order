@@ -92,9 +92,10 @@ export function getItemUniqIdBelowItem(itemUniqId, board) {
   return Array.from(result);
 }
 
-const newEmptyBoard = () => Array.from({ length: 10 }, () => Array(10).fill(0));
-
 const levels = (() => {
+  const newEmptyBoard = () =>
+    Array.from({ length: 10 }, () => Array(10).fill(0));
+
   const firstLevel = newEmptyBoard();
   firstLevel[0][9] = -1;
   firstLevel[0][0] = -1;

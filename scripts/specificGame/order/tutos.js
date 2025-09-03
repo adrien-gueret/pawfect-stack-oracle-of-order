@@ -110,7 +110,7 @@ export default async function startTuto(levelIndex) {
     const { detail: spellCasted } = await waitFor("spell:casted");
 
     updateHelp(
-      `${spellCasted.name.toUpperCase()}! You have cast your first spell! Its magic cost has increased by 1.`,
+      `${spellCasted[0].toUpperCase()}! You have cast your first spell! Its magic cost has increased by 1.`,
       ["noshop"],
       ["nocursor"]
     );

@@ -75,8 +75,10 @@ export function setInteractive(item, valueLabel, onClick) {
       return;
     }
     const prev = helpContainer.innerHTML;
+    const itemName = item.name || item[0];
+    const itemDesc = item.desc || item[1];
 
-    helpContainer.innerHTML = `<span><b>${item.name}</b>: ${item.desc} ${
+    helpContainer.innerHTML = `<span><b>${itemName}</b>: ${itemDesc} ${
       valueLabel ? `<i>(${valueLabel}: <b>${item.value ?? 0}</b>)</i>` : ""
     }</span>`;
 

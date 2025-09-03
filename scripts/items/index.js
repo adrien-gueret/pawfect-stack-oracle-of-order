@@ -128,12 +128,12 @@ export function drawItem(
   justFirstTile = false,
   overlaps = []
 ) {
+  const baseMult = mult * 16;
+
   const canvas = item.canvas;
   const ctx = canvas.getContext("2d");
   const img = new Image();
   img.src = SPRITES_SRC;
-
-  const baseMult = mult * 16;
 
   const itemWidth = item.shape[0].length * baseMult;
   const itemHeight = item.shape.length * baseMult;

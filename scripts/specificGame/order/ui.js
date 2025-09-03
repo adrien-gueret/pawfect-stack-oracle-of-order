@@ -591,7 +591,7 @@ export function startGame(levelIndex) {
     const d = document.createElement("div");
     d.dataset.cost = 0;
     action.value = 0;
-    d.className = `${action.name} s`;
+    d.className = `${action[0]} s`;
     actionsMenu.append(d);
     action.canvas = d;
 
