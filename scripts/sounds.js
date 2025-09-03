@@ -1,4 +1,5 @@
-import { toggleMuteSounds, areSoundMuted } from "./state.js";
+import { areSoundMuted } from "./state.js";
+import { dispatch } from "./store.js";
 
 function playSound(f) {
   if (areSoundMuted()) {
@@ -353,7 +354,7 @@ export function plantGrowth() {
 }
 
 export function toggleSounds(isMuted) {
-  toggleMuteSounds(isMuted);
+  dispatch("toggleMuteSounds", isMuted);
 
   if (isMuted) {
     stopMainMusic();

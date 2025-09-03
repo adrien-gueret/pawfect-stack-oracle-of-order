@@ -313,8 +313,7 @@ export function startGame(levelIndex, specificGameStart) {
 
   gameEnd.classList.remove("v");
 
-  const row = `<div></div>`;
-  gameTable.innerHTML = row.repeat(100);
+  gameTable.innerHTML = "<div></div>".repeat(100);
 
   renderWallsCanvas();
 
@@ -337,8 +336,9 @@ export function startGame(levelIndex, specificGameStart) {
 
   baseBoard.flat().forEach((val, index) => {
     if (val === -1) {
-      const cell = gameTable.children[index];
-      cell.className = `brick v${Math.floor(Math.random() * 2)}`;
+      gameTable.children[index].className = `brick v${Math.floor(
+        Math.random() * 2
+      )}`;
     }
   });
 
@@ -347,20 +347,12 @@ export function startGame(levelIndex, specificGameStart) {
   specificGameStart(levelIndex);
 }
 
-function toggleSoundsCheckbox(isChecked) {
-  soundsCheckbox.checked = isChecked;
-}
-
 export default function init(faviconPixels) {
   renderFavicon(faviconPixels);
 
-  toggleSoundsCheckbox(!areSoundMuted());
+  soundsCheckbox.checked = !areSoundMuted();
 
-  soundsCheckbox.onchange = (e) => {
-    const isChecked = e.currentTarget.checked;
-    toggleSounds(!isChecked);
-    toggleSoundsCheckbox(isChecked);
-  };
+  soundsCheckbox.onchange = (e) => toggleSounds(!e.currentTarget.checked);
 
   resetSave.onclick = (e) => {
     if (confirm("Are you sure you want to reset the game save?")) {
