@@ -373,4 +373,15 @@ export default function init(faviconPixels) {
     toggleSounds(!isChecked);
     toggleSoundsCheckbox(isChecked);
   };
+
+  resetSave.onclick = (e) => {
+    if (confirm("Are you sure you want to reset the game save?")) {
+      dispatch({
+        type: "setFinishedLevelCount",
+        payload: 0,
+      });
+    } else {
+      e.preventDefault();
+    }
+  };
 }

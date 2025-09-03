@@ -131,6 +131,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     "setBoard",
     "spendMagic",
     "setFinishedLevelCount",
+    "resetGame",
   ];
 
   reduxActionNamesToMangle.forEach((actionName, i) => {
