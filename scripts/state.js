@@ -10,7 +10,7 @@ const defaultState = {
   chaos: 0, // Last level index for 'chaos game'
 };
 
-export function reducer(state = defaultState, { type, payload }) {
+export function reducer(state = defaultState, type, payload) {
   switch (type) {
     case "initGame":
       return {
@@ -172,10 +172,7 @@ export const getTotalItems = () => {
 export const areSoundMuted = () => getState().m;
 
 export const toggleMuteSounds = (isMuted) =>
-  dispatch({
-    type: "toggleMuteSounds",
-    payload: { isMuted },
-  });
+  dispatch("toggleMuteSounds", isMuted);
 
 export function getMagic() {
   return (

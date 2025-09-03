@@ -9,7 +9,8 @@ export const setState = (newState) => {
   storeKey("state", state);
 };
 
-export const dispatch = (action) => setState(reducer(state, action));
+export const dispatch = (type, payload) =>
+  setState(reducer(state, type, payload));
 
 export default function init(defaultReducer, defaultState) {
   reducer = defaultReducer;

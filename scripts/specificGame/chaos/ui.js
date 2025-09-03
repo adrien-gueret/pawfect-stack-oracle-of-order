@@ -193,10 +193,7 @@ async function pushItem(canvas, direction = -1) {
 
   const currentBoard = getCurrentBoard();
   const boardWithoutItem = removeItemToBoard(item.uniqId, currentBoard);
-  dispatch({
-    type: "setBoard",
-    payload: applyItemToBoard(item, boardWithoutItem, newCol, row),
-  });
+  dispatch("setBoard", applyItemToBoard(item, boardWithoutItem, newCol, row));
 
   putItem();
 
@@ -285,10 +282,7 @@ async function placeItem(item, row, col, isWizard) {
 
   setInteractiveBg(item);
 
-  dispatch({
-    type: "setBoard",
-    payload: applyItemToBoard(item, getCurrentBoard(), col, row),
-  });
+  dispatch("setBoard", applyItemToBoard(item, getCurrentBoard(), col, row));
 
   putItem();
 
@@ -338,10 +332,7 @@ const hydravoOnCat = async () => {
   catItem.canvas.inert = true;
   document.body.classList.add("catRunning");
 
-  dispatch({
-    type: "setBoard",
-    payload: removeItemToBoard(catItem.uniqId, getCurrentBoard()),
-  });
+  dispatch("setBoard", removeItemToBoard(catItem.uniqId, getCurrentBoard()));
 
   meow();
 
@@ -510,10 +501,7 @@ const hydravoOnPlant = async () => {
   setInteractive(newPlant, "magic");
   setZIndex(newPlant);
 
-  dispatch({
-    type: "setBoard",
-    payload: newBoard,
-  });
+  dispatch("setBoard", newBoard);
 
   magicScore.innerHTML = getMagic();
 

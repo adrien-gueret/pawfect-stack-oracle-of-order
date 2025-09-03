@@ -111,10 +111,7 @@ export function destroyItem(item) {
     setTimeout(() => {
       canvas.dispatchEvent(new MouseEvent("mouseleave"));
       canvas.remove();
-      dispatch({
-        type: "setBoard",
-        payload: removeItemToBoard(item.uniqId, getCurrentBoard()),
-      });
+      dispatch("setBoard", removeItemToBoard(item.uniqId, getCurrentBoard()));
       resolve();
     }, 333);
   });
@@ -151,10 +148,7 @@ export async function applyGravity() {
         const newRow = row + delta;
         canvas.coor = [newRow, col];
 
-        dispatch({
-          type: "setBoard",
-          payload: applyItemToBoard(item, newBoard, col, newRow),
-        });
+        dispatch("setBoard", applyItemToBoard(item, newBoard, col, newRow));
 
         if (!delta) {
           return;
@@ -299,10 +293,7 @@ export const endGame = (hasWon, description) => {
   const nextLevelIndex = currentLevelIndex + 1;
 
   if (hasWon) {
-    dispatch({
-      type: "setFinishedLevelCount",
-      payload: nextLevelIndex,
-    });
+    dispatch("setFinishedLevelCount", nextLevelIndex);
   }
 
   endButtonNext.onclick = () =>
@@ -351,10 +342,7 @@ export function startGame(levelIndex, specificGameStart) {
     }
   });
 
-  dispatch({
-    type: "initGame",
-    payload: baseBoard,
-  });
+  dispatch("initGame", baseBoard);
 
   specificGameStart(levelIndex);
 }
@@ -376,10 +364,7 @@ export default function init(faviconPixels) {
 
   resetSave.onclick = (e) => {
     if (confirm("Are you sure you want to reset the game save?")) {
-      dispatch({
-        type: "setFinishedLevelCount",
-        payload: 0,
-      });
+      dispatch("setFinishedLevelCount", 0);
     } else {
       e.preventDefault();
     }

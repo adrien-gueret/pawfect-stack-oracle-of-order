@@ -243,10 +243,7 @@ const actionCallbacks = [
         setInteractive(newPlant, "magic");
         setZIndex(newPlant);
 
-        dispatch({
-          type: "setBoard",
-          payload: newBoard,
-        });
+        dispatch("setBoard", newBoard);
       }
 
       cb();
@@ -265,10 +262,7 @@ const actionCallbacks = [
 ];
 
 const increaseActionCost = (action) => {
-  dispatch({
-    type: "spendMagic",
-    payload: action.value++,
-  });
+  dispatch("spendMagic", action.value++);
   action.canvas.dataset.cost = Math.min(action.value, 5);
   magicScore.innerHTML = getMagic();
 };
@@ -304,10 +298,7 @@ const catRun = async () => {
   catItem.animate();
   catItem.canvas.inert = true;
 
-  dispatch({
-    type: "setBoard",
-    payload: removeItemToBoard(catItem.uniqId, getCurrentBoard()),
-  });
+  dispatch("setBoard", removeItemToBoard(catItem.uniqId, getCurrentBoard()));
 
   meow();
 
@@ -350,15 +341,15 @@ const moveCat = () => {
 
   meow();
 
-  dispatch({
-    type: "setBoard",
-    payload: applyItemToBoard(
+  dispatch(
+    "setBoard",
+    applyItemToBoard(
       catItem,
       removeItemToBoard(catItem.uniqId, getCurrentBoard()),
       coordinates[1],
       coordinates[0]
-    ),
-  });
+    )
+  );
 
   return applyGravity();
 };
@@ -510,10 +501,7 @@ function prepareItemToDrop(item) {
 
     setInteractiveBg(item);
 
-    dispatch({
-      type: "setBoard",
-      payload: applyItemToBoard(item, getCurrentBoard(), col, row),
-    });
+    dispatch("setBoard", applyItemToBoard(item, getCurrentBoard(), col, row));
 
     putItem();
 
