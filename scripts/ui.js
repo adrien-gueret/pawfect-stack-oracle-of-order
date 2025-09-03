@@ -59,7 +59,7 @@ export function setInteractiveBg(item) {
   item.canvas.addEventListener("mouseenter", () => {
     if (item.deleted) return;
     item.hover = true;
-    drawItem(item, 3, "rgba(255, 255, 255, 0.2)");
+    drawItem(item, 3, "#fff3");
   });
 
   item.canvas.addEventListener("mouseleave", () => {
@@ -228,11 +228,7 @@ export const initCatAnimation = (c) => {
       return;
     }
 
-    drawItem(
-      c,
-      3,
-      c.run ? null : c.hover ? "rgba(255, 255, 255, 0.2)" : "#331c1a"
-    );
+    drawItem(c, 3, c.run ? null : c.hover ? "#fff3" : "#331c1a");
   };
 
   animate();

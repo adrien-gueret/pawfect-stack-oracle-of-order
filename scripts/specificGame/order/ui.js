@@ -480,7 +480,7 @@ function prepareItemToDrop(item) {
       gameTable.style.cursor = "not-allowed";
     }
 
-    drawItem(item, 3, "rgba(255, 255, 255, 0.2)", false, overlaps);
+    drawItem(item, 3, "#fff3", false, overlaps);
   };
 
   gameTable.onclick = async (e) => {

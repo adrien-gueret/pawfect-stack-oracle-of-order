@@ -176,7 +176,7 @@ export function drawItem(
                 overlapCoor.col === col && overlapCoor.row === row
             )
           ) {
-            ctx.fillStyle = "rgba(255, 0, 0, 0.6)";
+            ctx.fillStyle = "#ff000099";
             ctx.fillRect(destX, destY, baseMult, baseMult);
           } else if (bg) {
             ctx.fillStyle = bg;

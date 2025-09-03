@@ -183,14 +183,13 @@ a:hover,
   padding: 64px;
   justify-content: space-around;
   background-color: #3a2520;
-  background-image: linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05) 25%,
-      transparent 25%
-    ),
-    linear-gradient(-45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.05) 75%);
+  background-image: conic-gradient(
+    from 135deg,
+    #ffffff0d 0 25%,
+    transparent 0 50%,
+    #0000000d 0 75%,
+    transparent 0
+  );
   background-size: 190px 192px;
 }
 
@@ -322,19 +321,9 @@ div.s {
   --target-y: var(--y);
 }
 
-.scenarioMelusine {
-  --x: 0;
-  --y: -1152px;
-}
-
 .scenarioMelusine.shocked {
   --x: -128px;
   --y: -1280px;
-}
-
-.scenarioCat {
-  --x: -256px;
-  --y: -1408px;
 }
 
 .scenarioMaster.r {
@@ -500,7 +489,7 @@ div.s {
 }
 
 #gameTable > div {
-  border: 1px solid rgba(254, 235, 201, 0.2);
+  border: 1px solid #feebc933;
   position: relative;
   overflow: hidden;
 }
@@ -618,14 +607,10 @@ div.Rotaleftus:after {
   top: 0;
   right: 0;
   bottom: 0;
-
   color: #feebc9;
   font-size: 2rem;
   text-align: center;
   z-index: 1000;
-}
-
-#gameEnd {
   display: none;
 }
 

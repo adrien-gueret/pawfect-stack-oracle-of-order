@@ -22,7 +22,8 @@ import specificGame from "./specificGame/index.js";
       await runScenario(specificGame.runScenario, vars.end);
 
       goToSection("mainGame");
-    } else if (nextSection === "mainGame") {
+    }
+    if (nextSection === "mainGame") {
       startGame(getThisGameFinishedLevelCount() ?? 0, specificGame.start);
     }
   });
