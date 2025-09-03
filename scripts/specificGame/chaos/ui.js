@@ -10,7 +10,6 @@ import {
   checkApplyItemToBoard,
   applyItemToBoard,
   removeItemToBoard,
-  growPlant,
 } from "../../board/index.js";
 import {
   initCatAnimation,
@@ -387,6 +386,92 @@ async function ejectum() {
   await checkGravity();
 
   return true;
+}
+
+function growPlant(driedPlantCanvas, board) {
+  const descStart = "By watering the dried plant, it";
+  let fullPlant = {
+    uniqId: driedPlantCanvas.gameItem.uniqId,
+    name: "Carnivorous Plant",
+    desc: descStart + " has fully grown and regained all its magic!",
+    value: 9,
+    canvas: document.createElement("canvas"),
+    shape: [
+      [1, 1],
+      [0, 1],
+    ],
+    x: 0,
+    y: 96,
+  };
+
+  let mediumPlant = {
+    ...fullPlant,
+    desc: descStart + " has grown a bit and regained some of its magic.",
+    value: 6,
+    canvas: document.createElement("canvas"),
+    shape: [[1], [1]],
+    x: 16,
+    y: 96,
+  };
+
+  let smallPlant = {
+    ...fullPlant,
+    desc: descStart + " tried to grow but something blocked it...",
+    value: 3,
+    canvas: document.createElement("canvas"),
+    shape: [[1]],
+    x: 16,
+    y: 112,
+  };
+
+  const boardWithoutDriedPlant = removeItemToBoard(
+    driedPlantCanvas.gameItem.uniqId,
+    board
+  );
+
+  driedPlantCanvas.dispatchEvent(new MouseEvent("mouseleave"));
+
+  let newPlant;
+
+  [
+    [fullPlant, [-1, -1]],
+    [mediumPlant, [-1, -0]],
+    [smallPlant, [0, 0]],
+  ].some(([currentPlant, [baseRowDelta, baseColumnDelta]]) => {
+    currentPlant.canvas.coor = { ...driedPlantCanvas.coor };
+    currentPlant.canvas.coor.row += baseRowDelta;
+    currentPlant.canvas.coor.col += baseColumnDelta;
+
+    const overlaps = checkApplyItemToBoard(
+      currentPlant,
+      boardWithoutDriedPlant,
+      currentPlant.canvas.coor.col,
+      currentPlant.canvas.coor.row
+    );
+
+    if (overlaps.length) {
+      return false;
+    }
+
+    newPlant = currentPlant;
+
+    return true;
+  });
+
+  const newBoard = applyItemToBoard(
+    newPlant,
+    boardWithoutDriedPlant,
+    newPlant.canvas.coor.col,
+    newPlant.canvas.coor.row
+  );
+
+  driedPlantCanvas.replaceWith(newPlant.canvas);
+  newPlant.canvas.id = driedPlantCanvas.id;
+
+  newPlant.canvas.style.left = `${(newPlant.canvas.coor.col + 1) * 48}px`;
+  newPlant.canvas.style.top = `${(newPlant.canvas.coor.row + 1) * 48}px`;
+
+  return [newBoard, newPlant];
 }
 
 const hydravoOnPlant = async () => {
