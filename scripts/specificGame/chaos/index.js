@@ -32,7 +32,7 @@ export default {
 
       const scenarioScenes = [
         "Master! Grimalkin keeps bothering me!",
-        "Don't worry, Mia, you did a great job despite him! The concentration of magic in the cellar is perfect! Hehehe...",
+        "Don't worry, Mia, you did a great job despite him! The concentration of magic in the cellar is just enough! Hehehe...",
         "What's happening, Master?",
       ];
 

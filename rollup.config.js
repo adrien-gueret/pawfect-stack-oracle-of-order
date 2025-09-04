@@ -9,9 +9,7 @@ export default {
   plugins: [
     replace({
       preventAssignment: true,
-      "process.env.GAME_TYPE": JSON.stringify(
-        process.env.GAME_TYPE || "default"
-      ),
+      "process.env.GAME_TYPE": JSON.stringify(process.env.GAME_TYPE || "order"),
     }),
   ],
 };

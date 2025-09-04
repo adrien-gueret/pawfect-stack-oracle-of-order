@@ -240,12 +240,14 @@ const actionCallbacks = [
     prepareTrick(action, "l", async (canvas) => {
       await pushItem(canvas);
       cb();
+      await nextWizardAction();
     });
   },
   (action, cb) => {
     prepareTrick(action, "r", async (canvas) => {
       await pushItem(canvas, 1);
       cb();
+      await nextWizardAction();
     });
   },
 ];

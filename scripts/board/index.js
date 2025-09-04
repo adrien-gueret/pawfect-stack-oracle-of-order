@@ -144,7 +144,8 @@ const levels = (() => {
 
 const itemGoals = [15, 18, 20];
 
-const magicGoals = [40, 60, 70];
+const magicGoals =
+  process.env.GAME_TYPE === "order" ? [40, 60, 70] : [40, 40, 40];
 
 export const getLevel = (levelIndex = 0) => [
   levels[levelIndex],
