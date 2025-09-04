@@ -291,7 +291,7 @@ async function placeItem(item, row, col, isWizard) {
   item.justDrop = !isWizard;
 
   if (id(item) === 11) {
-    Object.defineProperty(item, "value", {
+    Object.defineProperty(item, "2", {
       get() {
         return getSpecificBookMagic(item[6]);
       },

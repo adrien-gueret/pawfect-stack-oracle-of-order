@@ -97,39 +97,41 @@ function updateActionsState() {
 
 function growPlant(driedPlantCanvas, board) {
   const descStart = "By watering the dried plant, it";
-  let fullPlant = {
-    uniqId: driedPlantCanvas.gameItem[6],
-    name: "Carnivorous Plant",
-    desc: descStart + " has fully grown and regained all its magic!",
-    value: 9,
-    canvas: document.createElement("canvas"),
-    shape: [
+  const fullPlant = [
+    "Carnivorous Plant",
+    descStart + " has fully grown and regained all its magic!",
+    9,
+    [
       [1, 1],
       [0, 1],
     ],
-    x: 0,
-    y: 96,
-  };
+    [0, 96],
+    0,
+    driedPlantCanvas.gameItem[6],
+    document.createElement("canvas"),
+  ];
 
-  let mediumPlant = {
-    ...fullPlant,
-    desc: descStart + " has grown a bit and regained some of its magic.",
-    value: 6,
-    canvas: document.createElement("canvas"),
-    shape: [[1], [1]],
-    x: 16,
-    y: 96,
-  };
+  const mediumPlant = [
+    "Carnivorous Plant",
+    descStart + " has grown a bit and regained some of its magic.",
+    6,
+    [[1], [1]],
+    [16, 96],
+    0,
+    driedPlantCanvas.gameItem[6],
+    document.createElement("canvas"),
+  ];
 
-  let smallPlant = {
-    ...fullPlant,
-    desc: descStart + " tried to grow but something blocked it...",
-    value: 3,
-    canvas: document.createElement("canvas"),
-    shape: [[1]],
-    x: 16,
-    y: 112,
-  };
+  const smallPlant = [
+    "Carnivorous Plant",
+    descStart + " tried to grow but something blocked it...",
+    3,
+    [[1]],
+    [16, 112],
+    0,
+    driedPlantCanvas.gameItem[6],
+    document.createElement("canvas"),
+  ];
 
   const boardWithoutDriedPlant = removeItemToBoard(
     driedPlantCanvas.gameItem[6],
@@ -262,8 +264,9 @@ const actionCallbacks = [
 ];
 
 const increaseActionCost = (action) => {
-  dispatch("speMagic", action.value++);
-  action[7].dataset.cost = Math.min(action.value, 5);
+  action[2] = action[2] ?? 0;
+  dispatch("spendMagic", action[2]++);
+  action[7].dataset.cost = Math.min(action[2], 5);
   magicScore.innerHTML = getMagic();
 };
 
@@ -512,7 +515,7 @@ function prepareItemToDrop(item) {
     item.justDrop = true;
 
     if (id(item) === 11) {
-      Object.defineProperty(item, "value", {
+      Object.defineProperty(item, "2", {
         get() {
           return getSpecificBookMagic(item[6]);
         },
@@ -579,7 +582,7 @@ export function startGame(levelIndex) {
   getActions().forEach((action, index) => {
     const d = document.createElement("div");
     d.dataset.cost = 0;
-    action.value = 0;
+    action[2] = 0;
     d.className = `${action[0]} s`;
     actionsMenu.append(d);
     action[7] = d;

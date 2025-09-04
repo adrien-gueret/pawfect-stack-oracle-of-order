@@ -175,7 +175,7 @@ export function getMagic() {
       const canvas = document.getElementById("i" + uniqId);
       const isBook = id(canvas.gameItem) === 11;
 
-      return acc + (isBook ? 0 : canvas.gameItem?.value ?? 0);
+      return acc + (isBook ? 0 : canvas.gameItem?.[2] ?? 0);
     }, 0) -
     (getState().s ?? 0) +
     getBooksMagic()
