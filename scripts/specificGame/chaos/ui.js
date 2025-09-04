@@ -365,7 +365,7 @@ async function ejectum() {
       const itemId = currentBoard[row][col];
       if (itemId !== 0) {
         const canvas = document.getElementById("i" + itemId);
-        if (canvas?.gameItem?.fromCat) {
+        if (canvas?.gameItem?.fromCat && !canvas?.gameItem?.justDrop) {
           catItems.push(canvas.gameItem);
         }
       }
