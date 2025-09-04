@@ -241,6 +241,10 @@ export function getRandomWizardItem() {
   return getRandomItem(items.filter((item) => item[5] === 0));
 }
 
+export function getRandomSpecialWizardItem() {
+  return getRandomItem([items[0], items[6], items[11]]);
+}
+
 export function getRandomCatItem() {
   return {
     ...getRandomItem(items.filter((item) => item[5] === 1)),

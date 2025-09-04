@@ -1,6 +1,7 @@
 import {
   drawItem,
   getRandomWizardItem,
+  getRandomSpecialWizardItem,
   getRandomCatItem,
   getCat,
   id,
@@ -312,7 +313,9 @@ async function placeItem(item, row, col, isWizard) {
 }
 
 async function placeRandomWizardItem() {
-  const item = getRandomWizardItem();
+  const item = Math.floor(Math.random() * 2)
+    ? getRandomSpecialWizardItem()
+    : getRandomWizardItem();
   attachCanvasToItem(item);
   const position = getBestPositionForItem(item);
 
