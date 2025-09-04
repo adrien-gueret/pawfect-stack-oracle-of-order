@@ -435,6 +435,7 @@ function growPlant(driedPlantCanvas, board) {
     [mediumPlant, [-1, -0]],
     [smallPlant, [0, 0]],
   ].some(([currentPlant, [baseRowDelta, baseColumnDelta]]) => {
+    currentPlant.canvas.gameItem = currentPlant;
     currentPlant.canvas.coor = [...driedPlantCanvas.coor];
     currentPlant.canvas.coor[0] += baseRowDelta;
     currentPlant.canvas.coor[1] += baseColumnDelta;

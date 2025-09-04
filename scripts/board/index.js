@@ -146,6 +146,8 @@ const itemGoals = [15, 18, 20];
 
 const magicGoals = [40, 60, 70];
 
-export const getLevel = (levelIndex = 0) => {
-  return [levels[levelIndex], itemGoals[levelIndex], magicGoals[levelIndex]];
-};
+export const getLevel = (levelIndex = 0) => [
+  levels[levelIndex],
+  itemGoals[levelIndex],
+  magicGoals[levelIndex],
+];
