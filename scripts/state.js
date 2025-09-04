@@ -31,7 +31,7 @@ export function reducer(state = defaultState, type, payload) {
     case "toggleMuteSounds":
       return {
         ...state,
-        m: payload.isMuted,
+        m: payload,
       };
     case "setFinishedLevelCount":
       return {
@@ -164,7 +164,7 @@ export const getItemUniqIds = () => {
 export const getTotalItems = () =>
   getItemUniqIds().filter((id) => {
     const canvas = document.getElementById("i" + id);
-    return canvas && !canvas.gameItem?.isCat;
+    return canvas && !canvas.gameItem?.[5] < 2;
   }).length;
 
 export const areSoundMuted = () => getState().m;

@@ -144,7 +144,7 @@ import { zip, COMPRESSION_LEVEL } from "zip-a-folder";
     indexHTML = indexHTML.replaceAll(re, "_" + i);
   });
 
-  const propertiesToMangle = ["justDrop", "gameItem", "canvas"];
+  const propertiesToMangle = ["justDrop", "gameItem", "deleted"];
 
   propertiesToMangle.forEach((propName, i) => {
     const re = new RegExp(`(?<=\\.)${propName}\\b`, "g");

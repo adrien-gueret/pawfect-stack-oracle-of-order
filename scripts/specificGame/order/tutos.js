@@ -48,7 +48,7 @@ export default async function startTuto(levelIndex) {
     const { detail: selectedItem } = await waitFor("item:selected");
 
     updateHelp(
-      `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`,
+      `${selectedItem[1]}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`,
       ["noshop", "nocursor"]
     );
 

@@ -1,10 +1,10 @@
 import { drawItem } from "../../items/index.js";
 
 export function rotate(item, angle = 0, drawScale = 2) {
-  const currentRotate = item.rot ?? 0;
-  item.rot = (currentRotate + angle) % 360;
+  const currentRotate = item[8] ?? 0;
+  item[8] = (currentRotate + angle) % 360;
 
-  let newShape = item.shape;
+  let newShape = item[3];
 
   for (let t = 0; t < angle / 90; t++) {
     const rotated = [];
@@ -17,9 +17,9 @@ export function rotate(item, angle = 0, drawScale = 2) {
     }
     newShape = rotated;
   }
-  item.shape = newShape;
+  item[3] = newShape;
 
-  item.canvas.width = item.canvas.width;
+  item[7].width = item[7].width;
   drawItem(item, drawScale);
 
   return item;

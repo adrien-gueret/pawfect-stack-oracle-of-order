@@ -56,13 +56,13 @@ function renderWallsCanvas() {
 }
 
 export function setInteractiveBg(item) {
-  item.canvas.addEventListener("mouseenter", () => {
+  item[7].addEventListener("mouseenter", () => {
     if (item.deleted) return;
     item.hover = true;
     drawItem(item, 3, "#fff3");
   });
 
-  item.canvas.addEventListener("mouseleave", () => {
+  item[7].addEventListener("mouseleave", () => {
     if (item.deleted) return;
     item.hover = false;
     drawItem(item, 3, "#331c1a");
@@ -70,19 +70,19 @@ export function setInteractiveBg(item) {
 }
 
 export function setInteractive(item, valueLabel, onClick) {
-  item.canvas.onmouseenter = () => {
+  item[7].onmouseenter = () => {
     if (item.justDrop) {
       return;
     }
     const prev = helpContainer.innerHTML;
-    const itemName = item.name || item[0];
-    const itemDesc = item.desc || item[1];
+    const itemName = item[0];
+    const itemDesc = item[1];
 
     helpContainer.innerHTML = `<span><b>${itemName}</b>: ${itemDesc} ${
-      valueLabel ? `<i>(${valueLabel}: <b>${item.value ?? 0}</b>)</i>` : ""
+      valueLabel ? `<i>(${valueLabel}: <b>${item[2] ?? 0}</b>)</i>` : ""
     }</span>`;
 
-    item.canvas.onmouseleave = () => {
+    item[7].onmouseleave = () => {
       if (item.justDrop) {
         delete item.justDrop;
         return;
@@ -92,15 +92,14 @@ export function setInteractive(item, valueLabel, onClick) {
     };
   };
 
-  item.canvas.onclick = onClick;
+  item[7].onclick = onClick;
 }
 
 export function destroyItem(item) {
   return new Promise((resolve) => {
-    const canvas = item.canvas;
+    const canvas = item[7];
 
-    item.x = 32;
-    item.y = 112;
+    item[4] = [32, 112];
 
     item.deleted = true;
 
@@ -111,7 +110,7 @@ export function destroyItem(item) {
     setTimeout(() => {
       canvas.dispatchEvent(new MouseEvent("mouseleave"));
       canvas.remove();
-      dispatch("setBoard", removeItemToBoard(item.uniqId, getCurrentBoard()));
+      dispatch("setBoard", removeItemToBoard(item[6], getCurrentBoard()));
       resolve();
     }, 333);
   });
@@ -133,7 +132,7 @@ export async function applyGravity() {
         let isOnFloor = false;
         let rowToCheck = row;
 
-        let newBoard = removeItemToBoard(item.uniqId, getCurrentBoard());
+        let newBoard = removeItemToBoard(item[6], getCurrentBoard());
 
         while (!isOnFloor) {
           rowToCheck++;
@@ -155,7 +154,7 @@ export async function applyGravity() {
         }
 
         const itemUniqIdsBelowMovedItem = getItemUniqIdBelowItem(
-          item.uniqId,
+          item[6],
           getCurrentBoard()
         );
 
@@ -215,8 +214,7 @@ export const initCatAnimation = (c) => {
 
   const animate = () => {
     clearTimeout(clock);
-    c.x = c.x === 32 ? 48 : 32;
-    c.y = c.run ? 192 : 176;
+    c[4] = [c[4][0] === 32 ? 48 : 32, c.run ? 192 : 176];
 
     clock = setTimeout(animate, c.run ? 333 : 1000);
 

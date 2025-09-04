@@ -60,7 +60,7 @@ export default async function startTuto(levelIndex) {
     do {
       const results = await waitFor("item:dropped", forceNextWizardAction(0));
       itemDropped = results?.detail;
-    } while (!itemDropped?.isCat);
+    } while (itemDropped?.[5] !== 2);
 
     levelGoals.style.removeProperty("display");
 
@@ -90,7 +90,7 @@ export default async function startTuto(levelIndex) {
     const { detail: selectedItem } = await waitFor("item:selected");
 
     updateHelp(
-      `${selectedItem.name}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`,
+      `${selectedItem[0]}? Ok then! It's appeared in the cellar. Move it with your mouse and click to place it. Caution: gravity will affect it!`,
       ["noshop", "nocursor"]
     );
 

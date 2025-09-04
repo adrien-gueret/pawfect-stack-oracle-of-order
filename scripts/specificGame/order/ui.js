@@ -38,19 +38,19 @@ import { putItem, plantGrowth, itemDisappears, meow } from "../../sounds.js";
 function addItemInPool(forcedItem) {
   const item = forcedItem || getRandomWizardItem();
 
-  item.canvas = document.createElement("canvas");
-  item.canvas.className = "c" + id(item);
-  item.canvas.id = "i" + item.uniqId;
-  item.canvas.gameItem = item;
+  item[7] = document.createElement("canvas");
+  item[7].className = "c" + id(item);
+  item[7].id = "i" + item[6];
+  item[7].gameItem = item;
 
   drawItem(item, 2);
 
-  shop.append(item.canvas);
+  shop.append(item[7]);
 
   setInteractive(item, "magic", async () => {
     shop.inert = true;
 
-    await item.canvas.animate(
+    await item[7].animate(
       [{ transform: "translateY(0)" }, { transform: "translateY(-300px)" }],
       {
         duration: 333,
@@ -71,7 +71,7 @@ async function goBackItemToShop(item) {
   gameTable.style.cursor = "default";
   actionsMenu.inert = false;
 
-  await item.canvas.animate(
+  await item[7].animate(
     [{ transform: "translateY(0)" }, { transform: "translateY(300px)" }],
     {
       duration: 333,
@@ -81,9 +81,9 @@ async function goBackItemToShop(item) {
 
   drawItem(item, 2);
 
-  item.canvas.style.removeProperty("left");
-  item.canvas.style.removeProperty("top");
-  shop.append(item.canvas);
+  item[7].style.removeProperty("left");
+  item[7].style.removeProperty("top");
+  shop.append(item[7]);
 }
 
 function updateActionsState() {
@@ -98,7 +98,7 @@ function updateActionsState() {
 function growPlant(driedPlantCanvas, board) {
   const descStart = "By watering the dried plant, it";
   let fullPlant = {
-    uniqId: driedPlantCanvas.gameItem.uniqId,
+    uniqId: driedPlantCanvas.gameItem[6],
     name: "Carnivorous Plant",
     desc: descStart + " has fully grown and regained all its magic!",
     value: 9,
@@ -132,7 +132,7 @@ function growPlant(driedPlantCanvas, board) {
   };
 
   const boardWithoutDriedPlant = removeItemToBoard(
-    driedPlantCanvas.gameItem.uniqId,
+    driedPlantCanvas.gameItem[6],
     board
   );
 
@@ -144,7 +144,7 @@ function growPlant(driedPlantCanvas, board) {
     [
       fullPlant,
       (() => {
-        switch (driedPlantCanvas.gameItem.rot) {
+        switch (driedPlantCanvas.gameItem[8]) {
           case 90:
             return [-1, 0];
           case 180:
@@ -159,7 +159,7 @@ function growPlant(driedPlantCanvas, board) {
     [
       mediumPlant,
       (() => {
-        switch (driedPlantCanvas.gameItem.rot) {
+        switch (driedPlantCanvas.gameItem[8]) {
           case 90:
           case 180:
             return [0, 0];
@@ -172,17 +172,17 @@ function growPlant(driedPlantCanvas, board) {
     ],
     [smallPlant, [0, 0]],
   ].some(([currentPlant, [baseRowDelta, baseColumnDelta]]) => {
-    const rotatedPlant = rotate(currentPlant, driedPlantCanvas.gameItem.rot, 3);
-    rotatedPlant.canvas.gameItem = rotatedPlant;
-    rotatedPlant.canvas.coor = [...driedPlantCanvas.coor];
-    rotatedPlant.canvas.coor[0] += baseRowDelta;
-    rotatedPlant.canvas.coor[1] += baseColumnDelta;
+    const rotatedPlant = rotate(currentPlant, driedPlantCanvas.gameItem[8], 3);
+    rotatedPlant[7].gameItem = rotatedPlant;
+    rotatedPlant[7].coor = [...driedPlantCanvas.coor];
+    rotatedPlant[7].coor[0] += baseRowDelta;
+    rotatedPlant[7].coor[1] += baseColumnDelta;
 
     const overlaps = checkApplyItemToBoard(
       rotatedPlant,
       boardWithoutDriedPlant,
-      rotatedPlant.canvas.coor[1],
-      rotatedPlant.canvas.coor[0]
+      rotatedPlant[7].coor[1],
+      rotatedPlant[7].coor[0]
     );
 
     if (overlaps.length) {
@@ -197,15 +197,15 @@ function growPlant(driedPlantCanvas, board) {
   const newBoard = applyItemToBoard(
     newPlant,
     boardWithoutDriedPlant,
-    newPlant.canvas.coor[1],
-    newPlant.canvas.coor[0]
+    newPlant[7].coor[1],
+    newPlant[7].coor[0]
   );
 
-  driedPlantCanvas.replaceWith(newPlant.canvas);
-  newPlant.canvas.id = driedPlantCanvas.id;
+  driedPlantCanvas.replaceWith(newPlant[7]);
+  newPlant[7].id = driedPlantCanvas.id;
 
-  newPlant.canvas.style.left = `${(newPlant.canvas.coor[1] + 1) * 48}px`;
-  newPlant.canvas.style.top = `${(newPlant.canvas.coor[0] + 1) * 48}px`;
+  newPlant[7].style.left = `${(newPlant[7].coor[1] + 1) * 48}px`;
+  newPlant[7].style.top = `${(newPlant[7].coor[0] + 1) * 48}px`;
 
   return [newBoard, newPlant];
 }
@@ -229,7 +229,7 @@ const actionCallbacks = [
   },
   (action, cb) => {
     prepareSpellToCast(action, "h", async (domSpellTarget) => {
-      if (domSpellTarget.gameItem.isCat) {
+      if (domSpellTarget.gameItem[5] === 2) {
         await catRun();
       } else {
         const [newBoard, newPlant] = growPlant(
@@ -262,8 +262,8 @@ const actionCallbacks = [
 ];
 
 const increaseActionCost = (action) => {
-  dispatch("spendMagic", action.value++);
-  action.canvas.dataset.cost = Math.min(action.value, 5);
+  dispatch("speMagic", action.value++);
+  action[7].dataset.cost = Math.min(action.value, 5);
   magicScore.innerHTML = getMagic();
 };
 
@@ -283,7 +283,7 @@ function cat() {
 
 const addCatItem = () => {
   const item = getRandomCatItem();
-  item.desc = "A gift from the cat. It's useless...";
+  item[1] = "A gift from the cat. It's useless...";
 
   meow();
 
@@ -296,13 +296,13 @@ const catRun = async () => {
   const catItem = cat();
   catItem.run = true;
   catItem.animate();
-  catItem.canvas.inert = true;
+  catItem[7].inert = true;
 
-  dispatch("setBoard", removeItemToBoard(catItem.uniqId, getCurrentBoard()));
+  dispatch("setBoard", removeItemToBoard(catItem[6], getCurrentBoard()));
 
   meow();
 
-  catItem.canvas
+  catItem[7]
     .animate(
       [
         { transform: "translate(0, 0)" },
@@ -314,7 +314,7 @@ const catRun = async () => {
       }
     )
     .finished.then(() => {
-      catItem.canvas.remove();
+      catItem[7].remove();
     });
 
   await applyGravity();
@@ -324,20 +324,20 @@ const moveCat = () => {
   const catItem = cat();
   catItem.run = false;
   catRunSince = 0;
-  walls.prepend(catItem.canvas);
-  catItem.canvas.inert = false;
+  walls.prepend(catItem[7]);
+  catItem[7].inert = false;
 
   const coordinates = getRandomCoordinatesOfEmptySpaceAboveFloor(
-    removeItemToBoard(catItem.uniqId, getCurrentBoard())
+    removeItemToBoard(catItem[6], getCurrentBoard())
   );
 
   if (!coordinates) {
     return;
   }
 
-  catItem.canvas.style.left = `${coordinates[1] * 48 + 48}px`;
-  catItem.canvas.style.top = `${coordinates[0] * 48 + 48}px`;
-  catItem.canvas.coor = [...coordinates];
+  catItem[7].style.left = `${coordinates[1] * 48 + 48}px`;
+  catItem[7].style.top = `${coordinates[0] * 48 + 48}px`;
+  catItem[7].coor = [...coordinates];
 
   meow();
 
@@ -345,7 +345,7 @@ const moveCat = () => {
     "setBoard",
     applyItemToBoard(
       catItem,
-      removeItemToBoard(catItem.uniqId, getCurrentBoard()),
+      removeItemToBoard(catItem[6], getCurrentBoard()),
       coordinates[1],
       coordinates[0]
     )
@@ -368,7 +368,7 @@ function prepareSpellToCast(spell, className, cast) {
     document.body.classList.remove(className);
     document.body.removeEventListener("mousemove", followMouse);
     document.body.removeEventListener("click", run);
-    spell.canvas.classList.remove("casting");
+    spell[7].classList.remove("casting");
     spellCloneElement?.remove();
   }
 
@@ -404,8 +404,8 @@ function prepareSpellToCast(spell, className, cast) {
     shop.inert = false;
     return;
   }
-  spellCloneElement = spell.canvas.cloneNode();
-  const { left, top } = spell.canvas.getBoundingClientRect();
+  spellCloneElement = spell[7].cloneNode();
+  const { left, top } = spell[7].getBoundingClientRect();
   walls.append(spellCloneElement);
 
   followMouse({ clientX: left, clientY: top });
@@ -413,17 +413,17 @@ function prepareSpellToCast(spell, className, cast) {
   document.body.classList.add(className);
   document.body.addEventListener("mousemove", followMouse);
   document.body.addEventListener("click", run);
-  spell.canvas.classList.add("casting");
+  spell[7].classList.add("casting");
 
   shop.inert = true;
 }
 
 function prepareItemToDrop(item) {
   drawItem(item, 3);
-  const itemToDropCanvas = item.canvas;
-  item.canvas.style.left = "240px";
-  item.canvas.style.top = "240px";
-  item.canvas.style.zIndex = 100;
+  const itemToDropCanvas = item[7];
+  itemToDropCanvas.style.left = "240px";
+  itemToDropCanvas.style.top = "240px";
+  itemToDropCanvas.style.zIndex = 100;
   walls.append(itemToDropCanvas);
   actionsMenu.inert = true;
 
@@ -496,7 +496,7 @@ function prepareItemToDrop(item) {
 
     drawItem(item, 3, "#331c1a");
 
-    item.canvas.onclick = null;
+    item[7].onclick = null;
     setZIndex(item);
 
     setInteractiveBg(item);
@@ -514,7 +514,7 @@ function prepareItemToDrop(item) {
     if (id(item) === 11) {
       Object.defineProperty(item, "value", {
         get() {
-          return getSpecificBookMagic(item.uniqId);
+          return getSpecificBookMagic(item[6]);
         },
       });
     }
@@ -527,7 +527,7 @@ function prepareItemToDrop(item) {
     let hasAddedItem = false;
 
     if (catRunSince === 0 || catRunSince >= 3) {
-      if (!cat().canvas.parentNode) {
+      if (!cat()[7].parentNode) {
         await moveCat();
       } else {
         const catActions = [moveCat, addCatItem];
@@ -582,7 +582,7 @@ export function startGame(levelIndex) {
     action.value = 0;
     d.className = `${action[0]} s`;
     actionsMenu.append(d);
-    action.canvas = d;
+    action[7] = d;
 
     setInteractive(action, "cost", () => {
       actionCallbacks[index](action, () => {

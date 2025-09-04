@@ -1,120 +1,116 @@
+/*
+  0: NAME
+  1: DESCRIPTION
+  2: MAGIC VALUE
+  3: SHAPE
+  4: SPRITESHEET POSITION
+  5: 0: Wizard Item, 1: Cat Item, 2: Cat itself
+  6: UNIQ ID
+  7: CANVAS
+  8: ROTATION
+*/
+
 const items = [
-  {
-    name: "Potion",
-    desc: "A small object highly concentrated in magic, but fragile.",
-    value: 4,
-    shape: [[1]],
-    x: 32,
-    y: 0,
-  },
-  {
-    name: "Cauldron",
-    desc: "The classic tool in any wizard's kit.",
-    value: 6,
-    shape: [
+  [
+    "Potion",
+    "A small object highly concentrated in magic, but fragile.",
+    4,
+    [[1]],
+    [32, 0],
+    0,
+  ],
+  [
+    "Cauldron",
+    "The classic tool in any wizard's kit.",
+    6,
+    [
       [1, 1],
       [1, 1],
     ],
-    x: 16,
-    y: 16,
-  },
-  {
-    name: "Candle",
-    desc: "Low in magic concentration, this candle takes up little space.",
-    value: 3,
-    shape: [[1], [1]],
-    x: 48,
-    y: 0,
-  },
-  {
-    name: "Dead Fish",
-    fromCat: true,
-    shape: [
+    [16, 16],
+    0,
+  ],
+  [
+    "Candle",
+    "A source of light and warmth, often used in magical rituals.",
+    3,
+    [[1], [1]],
+    [48, 0],
+    0,
+  ],
+  [
+    "Dead Fish",
+    "",
+    0,
+    [
       [1, 1],
       [1, 0],
     ],
-    x: 0,
-    y: 0,
-  },
-  {
-    name: "Hat",
-    desc: "An old hat still highly concentrated in magic.",
-    value: 5,
-    shape: [
+    [0, 0],
+    1,
+  ],
+  [
+    "Hat",
+    "An old hat still highly concentrated in magic.",
+    5,
+    [
       [0, 1],
       [1, 1],
     ],
-    x: 32,
-    y: 32,
-  },
-  {
-    name: "Broom",
-    desc: "Perfect for wizards on the move, this magic broom is very bulky.",
-    value: 7,
-    shape: [
+    [32, 32],
+    0,
+  ],
+  [
+    "Broom",
+    "Perfect for wizards on the move, this magic broom is very bulky.",
+    7,
+    [
       [1, 0],
       [1, 1],
       [0, 1],
     ],
-    x: 32,
-    y: 80,
-  },
-  {
-    name: "Dried Plant",
-    desc: "This thirsty plant has lost much of its magic.",
-    value: 1,
-    shape: [[1]],
-    x: 0,
-    y: 112,
-  },
-  {
-    name: "Dead Mouse",
-    fromCat: true,
-    shape: [[1, 1]],
-    x: 0,
-    y: 48,
-  },
-  {
-    name: "Magic Wand",
-    desc: "A very powerful magical tool... and bulky!",
-    value: 6,
-    shape: [[1, 1, 1, 1]],
-    x: 0,
-    y: 64,
-  },
-  {
-    name: "Ball of Wool",
-    fromCat: true,
-    shape: [[1]],
-    x: 32,
-    y: 128,
-  },
-  {
-    name: "Dead Snake",
-    fromCat: true,
-    shape: [
+    [32, 80],
+    0,
+  ],
+  [
+    "Dried Plant",
+    "This thirsty plant needs water and has lost much of its magic.",
+    1,
+    [[1]],
+    [0, 112],
+    0,
+  ],
+  ["Dead Mouse", "", 0, [[1, 1]], [0, 48], 1],
+  [
+    "Magic Wand",
+    "A very powerful magical tool... and bulky!",
+    6,
+    [[1, 1, 1, 1]],
+    [0, 64],
+    0,
+  ],
+  ["Ball of Wool", "", 0, [[1]], [32, 128], 1],
+  [
+    "Dead Snake",
+    "",
+    0,
+    [
       [0, 1],
       [1, 1],
       [1, 0],
     ],
-    x: 32,
-    y: 128,
-  },
-  {
-    name: "Grimoires",
-    desc: "If you put them next to other grimoires, their magic increases.",
-    value: 2,
-    shape: [[1]],
-    x: 0,
-    y: 128,
-  },
-  {
-    name: "Grimalkin",
-    shape: [[1]],
-    isCat: true,
-    x: 32,
-    y: 176,
-  },
+    [32, 128],
+    1,
+  ],
+  [
+    "Grimoires",
+    "If they're put next to other grimoires, their magic increases.",
+    2,
+    [[1]],
+    [0, 128],
+    0,
+  ],
+  ["Grimalkin", "", 0, [[1]], [32, 176], 2],
 ];
 
 export const SPRITES_SRC = "./images/sprites.png";
@@ -130,13 +126,13 @@ export function drawItem(
 ) {
   const baseMult = mult * 16;
 
-  const canvas = item.canvas;
+  const canvas = item[7];
   const ctx = canvas.getContext("2d");
   const img = new Image();
   img.src = SPRITES_SRC;
 
-  const itemWidth = item.shape[0].length * baseMult;
-  const itemHeight = item.shape.length * baseMult;
+  const itemWidth = item[3][0].length * baseMult;
+  const itemHeight = item[3].length * baseMult;
 
   if (itemWidth !== canvas.width && itemHeight !== canvas.height) {
     canvas.width = itemWidth;
@@ -146,8 +142,8 @@ export function drawItem(
   img.onload = () => {
     ctx.imageSmoothingEnabled = false;
 
-    const rot = (item.rot ?? 0) % 360;
-    const shape = item.shape;
+    const rot = (item[8] ?? 0) % 360;
+    const shape = item[3];
     const h = shape.length;
     const w = shape[0].length;
 
@@ -191,8 +187,8 @@ export function drawItem(
 
           ctx.drawImage(
             img,
-            item.x + (justFirstTile ? 0 : srcCol * 16),
-            item.y + (justFirstTile ? 0 : srcRow * 16),
+            item[4][0] + (justFirstTile ? 0 : srcCol * 16),
+            item[4][1] + (justFirstTile ? 0 : srcRow * 16),
             16,
             16,
             -baseMult / 2,
@@ -208,42 +204,46 @@ export function drawItem(
 }
 
 export function id(n) {
-  return items.findIndex((item) => item.name === n.name);
+  return items.findIndex((item) => item[0] === n[0]);
 }
 
 export function setZIndex(item) {
-  const area = item.shape.reduce(
+  const area = item[3].reduce(
     (acc, row) => acc + row.reduce((rAcc, col) => rAcc + col, 0),
     0
   );
-  item.canvas.style.zIndex = Math.max(1, 10 - area);
+  item[7].style.zIndex = Math.max(1, 10 - area);
 }
 
 export function getCat(desc) {
-  const cat = items.find((item) => item.isCat);
-  cat.uniqId = ++lastUniqId;
-  cat.desc = desc;
-  cat.canvas = document.createElement("canvas");
-  cat.canvas.id = "i" + cat.uniqId;
-  cat.canvas.className = "cat";
-  cat.canvas.style.zIndex = 1;
-  cat.canvas.gameItem = cat;
+  const cat = [...items.find((item) => item[5] === 2)];
+  cat[6] = ++lastUniqId;
+  cat[1] = desc;
+  cat[7] = document.createElement("canvas");
+  cat[7].id = "i" + cat[6];
+  cat[7].className = "cat";
+  cat[7].style.zIndex = 1;
+  cat[7].gameItem = cat;
   setZIndex(cat);
   return cat;
 }
 
 function getRandomItem(fromItems) {
   const randomIndex = Math.floor(Math.random() * fromItems.length);
-  return { uniqId: ++lastUniqId, ...fromItems[randomIndex] };
+
+  const item = [...fromItems[randomIndex]];
+  item[6] = ++lastUniqId;
+
+  return item;
 }
 
 export function getRandomWizardItem() {
-  return getRandomItem(items.filter((item) => !item.fromCat && !item.isCat));
+  return getRandomItem(items.filter((item) => item[5] === 0));
 }
 
 export function getRandomCatItem() {
   return {
-    ...getRandomItem(items.filter((item) => item.fromCat)),
+    ...getRandomItem(items.filter((item) => item[5] === 1)),
   };
 }
 

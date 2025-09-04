@@ -1,5 +1,5 @@
 export function checkApplyItemToBoard(item, board, x, y) {
-  const itemShape = item.shape;
+  const itemShape = item[3];
 
   const overlaps = [];
 
@@ -38,13 +38,13 @@ export function getRandomCoordinatesOfEmptySpaceAboveFloor(board) {
 }
 
 export function applyItemToBoard(item, board, x, y) {
-  const itemShape = item.shape;
+  const itemShape = item[3];
 
   const newBoard = board.map((row) => [...row]);
   for (let i = 0; i < itemShape.length; i++) {
     for (let j = 0; j < itemShape[i].length; j++) {
       if (itemShape[i][j]) {
-        newBoard[y + i][x + j] = item.uniqId;
+        newBoard[y + i][x + j] = item[6];
       }
     }
   }
