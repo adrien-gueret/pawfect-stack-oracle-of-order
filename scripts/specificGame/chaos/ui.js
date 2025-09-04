@@ -510,6 +510,8 @@ const hydravoOnPlant = async () => {
 
   dispatch("setBoard", newBoard);
 
+  drawItem(newPlant, 3);
+
   magicScore.innerHTML = getMagic();
 
   return true;
@@ -609,7 +611,7 @@ function prepareItemToDrop(item, cb) {
   walls.classList.add("dragging");
 
   gameTable.onmousemove = (e) => {
-    shop.inert = item[5] === 1;
+    shop.inert = item[5] === 2;
 
     const cellIndex = Array.prototype.indexOf.call(
       e.target.parentNode.children,

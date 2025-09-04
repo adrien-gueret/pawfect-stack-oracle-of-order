@@ -242,7 +242,14 @@ export function getRandomWizardItem() {
 }
 
 export function getRandomSpecialWizardItem() {
-  return getRandomItem([items[0], items[6], items[11]]);
+  return getRandomItem([
+    items[0],
+    items[0],
+    items[0],
+    items[6],
+    items[6],
+    items[11],
+  ]);
 }
 
 export function getRandomCatItem() {
