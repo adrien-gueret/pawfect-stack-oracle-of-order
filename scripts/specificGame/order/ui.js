@@ -99,43 +99,41 @@ function updateActionsState() {
 
 function growPlant(driedPlantCanvas, board) {
   const descStart = "By watering the dried plant, it";
-  const plantName = "Carnivorous Plant";
 
-  const fullPlant = [
-    plantName,
-    descStart + " has fully grown and regained all its magic!",
+  const createPlant = (description, value, shape, coordinates) => [
+    "Carnivorous Plant",
+    descStart + description,
+    value,
+    shape,
+    coordinates,
+    0,
+    driedPlantCanvas.gameItem[6],
+    document.createElement("canvas"),
+  ];
+
+  const fullPlant = createPlant(
+    " has fully grown and regained all its magic!",
     9,
     [
       [1, 1],
       [0, 1],
     ],
-    [0, 96],
-    0,
-    driedPlantCanvas.gameItem[6],
-    document.createElement("canvas"),
-  ];
+    [0, 96]
+  );
 
-  const mediumPlant = [
-    plantName,
-    descStart + " has grown a bit and regained some of its magic.",
+  const mediumPlant = createPlant(
+    " has grown a bit and regained some of its magic.",
     6,
     [[1], [1]],
-    [16, 96],
-    0,
-    driedPlantCanvas.gameItem[6],
-    document.createElement("canvas"),
-  ];
+    [16, 96]
+  );
 
-  const smallPlant = [
-    plantName,
-    descStart + " tried to grow but something blocked it...",
+  const smallPlant = createPlant(
+    " tried to grow but something blocked it...",
     3,
     [[1]],
-    [16, 112],
-    0,
-    driedPlantCanvas.gameItem[6],
-    document.createElement("canvas"),
-  ];
+    [16, 112]
+  );
 
   const boardWithoutDriedPlant = removeItemToBoard(
     driedPlantCanvas.gameItem[6],
