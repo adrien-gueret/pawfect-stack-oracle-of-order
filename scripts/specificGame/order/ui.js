@@ -290,6 +290,8 @@ const addCatItem = () => {
 
   meow();
 
+  helpContainer.innerHTML = `Grimalkin gave us a ${item[0]}...`;
+
   addItemInPool(item);
 };
 
@@ -341,6 +343,8 @@ const moveCat = () => {
   catItem[7].style.left = `${coordinates[1] * 48 + 48}px`;
   catItem[7].style.top = `${coordinates[0] * 48 + 48}px`;
   catItem[7].coor = [...coordinates];
+
+  helpContainer.innerHTML = `Grimalkin has moved in the cellar.`;
 
   meow();
 
