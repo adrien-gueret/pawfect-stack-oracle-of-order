@@ -53,6 +53,19 @@ The witch can cast spells to aid her in her task, while the cat can pull off a f
 
 When starting a level, each spell costs 0 magic. This cost increases after each use (but is capped at 5).
 
+#### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/6c99b7bd-4cc9-48de-a74b-933b639fa3f7" /> Rotaleftus / Rotarightus
+
+Rotate **all** items in the reserve 90° to the left or right. Useful for optimizing space when tidying up items.
+
+#### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/fee430b5-c115-4bbf-8e73-1cb2345371c8" /> Hydravo
+
+Cast this spell on the cat to make it run.
+Maybe casting it on a dried plant will do something…
+
+#### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/b30a3053-b1e7-4f27-8ecb-52367a62def0" /> Ejectum
+
+Destroy any item in the cellar. This spell is meant to get rid of the cat’s junk, but you can also remove your Master’s items if needed.
+
 ### <img width="60" src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Cat tricks
 
 Each trick is free! But don't forget: every time the witch casts _Hydravo_ on you, you **must** use the _Move_ trick to return to the cellar...
