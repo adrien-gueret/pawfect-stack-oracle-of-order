@@ -71,7 +71,7 @@ export function setInteractiveBg(item) {
 
 export function setInteractive(item, valueLabel, onClick) {
   item[7].onmouseenter = () => {
-    if (item.justDrop) {
+    if (item[10]) {
       return;
     }
     const prev = helpContainer.innerHTML;
@@ -83,8 +83,8 @@ export function setInteractive(item, valueLabel, onClick) {
     }</span>`;
 
     item[7].onmouseleave = () => {
-      if (item.justDrop) {
-        delete item.justDrop;
+      if (item[10]) {
+        item[10] = false;
         return;
       }
 

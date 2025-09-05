@@ -229,26 +229,23 @@ async function goBackItemToShop(item) {
 }
 
 const actionCallbacks = [
-  (action, cb) => {
+  () => {
     prepareItemToDrop(cat(), () => {
-      cb();
       document.body.classList.remove("catRunning");
       shop.inert = false;
       catJustMoved = true;
     });
     shop.inert = true;
   },
-  (action, cb) => {
+  (action) => {
     prepareTrick(action, "l", async (canvas) => {
       await pushItem(canvas);
-      cb();
       await nextWizardAction();
     });
   },
-  (action, cb) => {
+  (action) => {
     prepareTrick(action, "r", async (canvas) => {
       await pushItem(canvas, 1);
-      cb();
       await nextWizardAction();
     });
   },
@@ -293,13 +290,13 @@ async function placeItem(item, row, col, isWizard) {
 
   await applyGravity().then(checkPushableSates);
 
-  item.justDrop = !isWizard;
+  item[10] = !isWizard;
 
   [actionsMenu, shop, walls].forEach((node) => {
     node.addEventListener(
       "mouseenter",
       () => {
-        item.justDrop = false;
+        item[10] = false;
       },
       {
         once: true,
@@ -386,7 +383,7 @@ async function ejectum() {
   itemUniqIds.forEach((itemUniqId) => {
     const item = getItemFromUniqId(itemUniqId);
 
-    if (item?.[5] === 1 && !item?.justDrop) {
+    if (item?.[5] === 1 && !item?.[10]) {
       catItems.push(item);
     }
   });
@@ -739,9 +736,7 @@ export function startGame(levelIndex) {
     action[7] = d;
 
     setInteractive(action, "", () => {
-      actionCallbacks[index](action, () => {
-        action.justDrop = true;
-      });
+      actionCallbacks[index](action);
     });
   });
 

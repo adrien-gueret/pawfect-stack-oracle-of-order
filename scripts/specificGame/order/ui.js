@@ -575,7 +575,7 @@ function prepareItemToDrop(item) {
 
     updateActionsState();
 
-    item.justDrop = true;
+    item[10] = true;
 
     if (id(item) === 11) {
       Object.defineProperty(item, "2", {
@@ -662,7 +662,7 @@ export function startGame(levelIndex) {
 
     setInteractive(action, "cost", () => {
       actionCallbacks[index](action, () => {
-        action.justDrop = true;
+        action[10] = true;
         dispatchEvent(new CustomEvent("spell:casted", { detail: action }));
       });
     });

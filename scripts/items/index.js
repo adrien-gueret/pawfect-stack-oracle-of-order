@@ -9,6 +9,7 @@
   7: CANVAS
   8: ROTATION
   9: COORDINATES IN BOARD
+  10: JUST DROPPED
 */
 
 const items = [
