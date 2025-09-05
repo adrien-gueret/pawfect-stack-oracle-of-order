@@ -28,6 +28,7 @@ import {
   getCurrentBoard,
   getMagic,
   getSpecificBookMagic,
+  getItemUniqIds,
 } from "../../state.js";
 import { dispatch } from "../../store.js";
 
@@ -284,6 +285,66 @@ function cat() {
   return cat.c;
 }
 
+function getPushableItem() {
+  const itemUniqIds = getItemUniqIds();
+  const currentBoard = getCurrentBoard();
+
+  const itemsPushableStates = [];
+
+  itemUniqIds.forEach((uniqId) => {
+    const canvas = document.getElementById("i" + uniqId);
+    if (!canvas?.gameItem) return;
+
+    const item = canvas.gameItem;
+    const [row, col] = canvas.coor;
+
+    const tempBoard = removeItemToBoard(uniqId, currentBoard);
+
+    if (checkApplyItemToBoard(item, tempBoard, col - 1, row).length === 0) {
+      itemsPushableStates.push([item, -1]);
+    }
+
+    if (checkApplyItemToBoard(item, tempBoard, col + 1, row).length === 0) {
+      itemsPushableStates.push([item, 1]);
+    }
+  });
+
+  return (
+    itemsPushableStates[
+      Math.floor(Math.random() * itemsPushableStates.length)
+    ] ?? []
+  );
+}
+
+async function pushItem() {
+  const [item, direction] = getPushableItem();
+
+  if (!item) return false;
+
+  const canvas = item[7];
+
+  const [row, col] = canvas.coor;
+
+  const newCol = col + direction;
+
+  canvas.coor = [row, newCol];
+  canvas.style.left = `${(newCol + 1) * 48}px`;
+
+  const currentBoard = getCurrentBoard();
+  const boardWithoutItem = removeItemToBoard(item[6], currentBoard);
+  dispatch("setBoard", applyItemToBoard(item, boardWithoutItem, newCol, row));
+
+  putItem();
+
+  helpContainer.innerHTML = `Grimalkin has pushed ${item[0]} to the ${
+    direction > 0 ? "right" : "left"
+  }!`;
+
+  await applyGravity();
+
+  return true;
+}
+
 const addCatItem = () => {
   const item = getRandomCatItem();
   item[1] = "A gift from the cat. It's useless...";
@@ -335,10 +396,6 @@ const moveCat = () => {
   const coordinates = getRandomCoordinatesOfEmptySpaceAboveFloor(
     removeItemToBoard(catItem[6], getCurrentBoard())
   );
-
-  if (!coordinates) {
-    return;
-  }
 
   catItem[7].style.left = `${coordinates[1] * 48 + 48}px`;
   catItem[7].style.top = `${coordinates[0] * 48 + 48}px`;
@@ -537,10 +594,20 @@ function prepareItemToDrop(item) {
       if (!cat()[7].parentNode) {
         await moveCat();
       } else {
-        const catActions = [moveCat, addCatItem];
+        const catActions = [
+          moveCat,
+          addCatItem,
+          addCatItem,
+          pushItem,
+          pushItem,
+          pushItem,
+        ];
         const catAction =
           catActions[ce.ci ?? Math.floor(Math.random() * catActions.length)];
-        await catAction();
+        const results = await catAction();
+        if (results === false) {
+          await moveCat();
+        }
         hasAddedItem = catAction === addCatItem;
       }
     } else {
