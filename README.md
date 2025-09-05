@@ -2,6 +2,11 @@
 
 A web browser games, made for [JS13K 2025](https://js13kgames.com/2025/).
 
+_Please note: this repository was created specifically for JS13K. **Pawfect Stack** is actually two games, both managed in a single repo here: https://github.com/adrien-gueret/pawfect-stack
+However, since JS13K requires one repository per game... here it is!
+Make sure to check the common monorepo to get the latest version of the code!_
+
+
 ## Oracle of Order
 
 <img width="320" height="320" alt="pawfect-stack-oracle-of-order" src="https://github.com/user-attachments/assets/69d66d08-2baa-4f3e-9786-344749024697" />
