@@ -69,3 +69,11 @@ Destroy any item in the cellar. This spell is meant to get rid of the cat’s ju
 ### <img width="60" src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Cat tricks
 
 Each trick is free! But don't forget: every time the witch casts _Hydravo_ on you, you **must** use the _Move_ trick to return to the cellar...
+
+#### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/715cf8b7-12d2-4481-bc05-d8219eafecdc" /> Move
+
+Move the cat anywhere you want in the cellar. If any objects are placed above him, they’ll fall!
+
+#### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/e9afdf3b-98ce-42f4-9585-fb2cee6f1ca5" /> Push to left/right
+
+Push any items in the cellar one column to the left or right. Useful for making items fall and disrupting the witch’s tidying.
