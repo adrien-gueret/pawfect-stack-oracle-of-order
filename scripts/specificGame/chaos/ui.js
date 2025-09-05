@@ -409,8 +409,10 @@ async function ejectum() {
 function growPlant(driedPlantCanvas, board) {
   const descStart = "By watering the dried plant, it";
 
+  const plantName = "Carnivorous Plant";
+
   const fullPlant = [
-    "Carnivorous Plant",
+    plantName,
     descStart + " has fully grown and regained all its magic!",
     9,
     [
@@ -424,7 +426,7 @@ function growPlant(driedPlantCanvas, board) {
   ];
 
   const mediumPlant = [
-    "Carnivorous Plant",
+    plantName,
     descStart + " has grown a bit and regained some of its magic.",
     6,
     [[1], [1]],
@@ -435,7 +437,7 @@ function growPlant(driedPlantCanvas, board) {
   ];
 
   const smallPlant = [
-    "Carnivorous Plant",
+    plantName,
     descStart + " tried to grow but something blocked it...",
     3,
     [[1]],
