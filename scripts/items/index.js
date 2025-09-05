@@ -8,6 +8,7 @@
   6: UNIQ ID
   7: CANVAS
   8: ROTATION
+  9: COORDINATES IN BOARD
 */
 
 const items = [
@@ -204,7 +205,7 @@ export function drawItem(
 }
 
 export function id(n) {
-  return items.findIndex((item) => item[0] === n[0]);
+  return n && items.findIndex((item) => item[0] === n[0]);
 }
 
 export function setZIndex(item) {
@@ -256,6 +257,11 @@ export function getRandomCatItem() {
   return {
     ...getRandomItem(items.filter((item) => item[5] === 1)),
   };
+}
+
+export function getItemFromUniqId(uniqId) {
+  const canvas = document.getElementById("i" + uniqId);
+  return canvas?.gameItem;
 }
 
 export default items;

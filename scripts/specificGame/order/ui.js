@@ -5,6 +5,7 @@ import {
   getCat,
   id,
   setZIndex,
+  getItemFromUniqId,
 } from "../../items/index.js";
 import { rotate } from "./items.js";
 import {
@@ -177,15 +178,16 @@ function growPlant(driedPlantCanvas, board) {
   ].some(([currentPlant, [baseRowDelta, baseColumnDelta]]) => {
     const rotatedPlant = rotate(currentPlant, driedPlantCanvas.gameItem[8], 3);
     rotatedPlant[7].gameItem = rotatedPlant;
-    rotatedPlant[7].coor = [...driedPlantCanvas.coor];
-    rotatedPlant[7].coor[0] += baseRowDelta;
-    rotatedPlant[7].coor[1] += baseColumnDelta;
+
+    rotatedPlant[9] = [...driedPlantCanvas.gameItem[9]];
+    rotatedPlant[9][0] += baseRowDelta;
+    rotatedPlant[9][1] += baseColumnDelta;
 
     const overlaps = checkApplyItemToBoard(
       rotatedPlant,
       boardWithoutDriedPlant,
-      rotatedPlant[7].coor[1],
-      rotatedPlant[7].coor[0]
+      rotatedPlant[9][1],
+      rotatedPlant[9][0]
     );
 
     if (overlaps.length) {
@@ -200,15 +202,15 @@ function growPlant(driedPlantCanvas, board) {
   const newBoard = applyItemToBoard(
     newPlant,
     boardWithoutDriedPlant,
-    newPlant[7].coor[1],
-    newPlant[7].coor[0]
+    newPlant[9][1],
+    newPlant[9][0]
   );
 
   driedPlantCanvas.replaceWith(newPlant[7]);
   newPlant[7].id = driedPlantCanvas.id;
 
-  newPlant[7].style.left = `${(newPlant[7].coor[1] + 1) * 48}px`;
-  newPlant[7].style.top = `${(newPlant[7].coor[0] + 1) * 48}px`;
+  newPlant[7].style.left = `${(newPlant[9][1] + 1) * 48}px`;
+  newPlant[7].style.top = `${(newPlant[9][0] + 1) * 48}px`;
 
   return [newBoard, newPlant];
 }
@@ -292,11 +294,11 @@ function getPushableItem() {
   const itemsPushableStates = [];
 
   itemUniqIds.forEach((uniqId) => {
-    const canvas = document.getElementById("i" + uniqId);
-    if (!canvas?.gameItem) return;
+    const item = getItemFromUniqId(uniqId);
 
-    const item = canvas.gameItem;
-    const [row, col] = canvas.coor;
+    if (!item) return;
+
+    const [row, col] = item[9];
 
     const tempBoard = removeItemToBoard(uniqId, currentBoard);
 
@@ -323,11 +325,11 @@ async function pushItem() {
 
   const canvas = item[7];
 
-  const [row, col] = canvas.coor;
+  const [row, col] = item[9];
 
   const newCol = col + direction;
 
-  canvas.coor = [row, newCol];
+  item[9][1] = newCol;
   canvas.style.left = `${(newCol + 1) * 48}px`;
 
   const currentBoard = getCurrentBoard();
@@ -399,7 +401,7 @@ const moveCat = () => {
 
   catItem[7].style.left = `${coordinates[1] * 48 + 48}px`;
   catItem[7].style.top = `${coordinates[0] * 48 + 48}px`;
-  catItem[7].coor = [...coordinates];
+  catItem[9] = [...coordinates];
 
   helpContainer.innerHTML = `Grimalkin has moved in the cellar.`;
 
@@ -520,7 +522,7 @@ function prepareItemToDrop(item) {
 
     const [row, col] = convert1DIndexInto2DIndex(cellIndex, 10);
 
-    itemToDropCanvas.coor = [row, col];
+    item[9] = [row, col];
 
     const ctx = itemToDropCanvas.getContext("2d");
     ctx.clearRect(0, 0, itemToDropCanvas.width, itemToDropCanvas.height);

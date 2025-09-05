@@ -6,6 +6,7 @@ import {
   getCat,
   id,
   setZIndex,
+  getItemFromUniqId,
 } from "../../items/index.js";
 import {
   checkApplyItemToBoard,
@@ -40,11 +41,12 @@ function checkPushableSates() {
   const currentBoard = getCurrentBoard();
 
   itemUniqIds.forEach((uniqId) => {
-    const canvas = document.getElementById("i" + uniqId);
-    if (!canvas?.gameItem) return;
+    const item = getItemFromUniqId(uniqId);
+    if (!item) return;
 
-    const item = canvas.gameItem;
-    const [row, col] = canvas.coor;
+    const canvas = item[7];
+
+    const [row, col] = item[9];
 
     const tempBoard = removeItemToBoard(uniqId, currentBoard);
 
@@ -76,10 +78,9 @@ function getBestPositionForItem(item) {
   }
 
   if (id(item) === 0) {
-    const stablePositions = validPositions.filter(([row, col]) => {
-      if (row === currentBoard.length - 1) return true;
-      return currentBoard[row + 1][col] !== 0;
-    });
+    const stablePositions = validPositions.filter(([row, col]) =>
+      row === currentBoard.length - 1 ? true : currentBoard[row + 1][col] !== 0
+    );
 
     if (stablePositions.length > 0) {
       return stablePositions[0];
@@ -122,8 +123,9 @@ function getBestPositionForItem(item) {
           ) {
             const itemId = currentBoard[r][c];
             if (itemId !== 0) {
-              const canvas = document.getElementById("i" + itemId);
-              if (canvas && id(canvas.gameItem) === 11) {
+              const item = getItemFromUniqId(itemId);
+
+              if (id(item) === 11) {
                 bookCount++;
               }
             }
@@ -185,11 +187,11 @@ function addItemInPool() {
 
 async function pushItem(canvas, direction = -1) {
   const item = canvas.gameItem;
-  const [row, col] = canvas.coor;
+  const [row, col] = item[9];
 
   const newCol = col + direction;
 
-  canvas.coor = [row, newCol];
+  item[9][1] = newCol;
   canvas.style.left = `${(newCol + 1) * 48}px`;
 
   const currentBoard = getCurrentBoard();
@@ -272,8 +274,8 @@ function followMouse({ clientX, clientY }) {
 }
 
 async function placeItem(item, row, col, isWizard) {
+  item[9] = [row, col];
   item[7].onclick = null;
-  item[7].coor = [row, col];
   item[7].style.left = `${(col + 1) * 48}px`;
   item[7].style.top = `${(row + 1) * 48}px`;
 
@@ -382,9 +384,10 @@ async function ejectum() {
   const catItems = [];
 
   itemUniqIds.forEach((itemUniqId) => {
-    const canvas = document.getElementById("i" + itemUniqId);
-    if (canvas?.gameItem?.[5] === 1 && !canvas?.gameItem?.justDrop) {
-      catItems.push(canvas.gameItem);
+    const item = getItemFromUniqId(itemUniqId);
+
+    if (item?.[5] === 1 && !item?.justDrop) {
+      catItems.push(item);
     }
   });
 
@@ -457,15 +460,15 @@ function growPlant(driedPlantCanvas, board) {
     [smallPlant, [0, 0]],
   ].some(([currentPlant, [baseRowDelta, baseColumnDelta]]) => {
     currentPlant[7].gameItem = currentPlant;
-    currentPlant[7].coor = [...driedPlantCanvas.coor];
-    currentPlant[7].coor[0] += baseRowDelta;
-    currentPlant[7].coor[1] += baseColumnDelta;
+    currentPlant[9] = [...driedPlantCanvas.gameItem[9]];
+    currentPlant[9][0] += baseRowDelta;
+    currentPlant[9][1] += baseColumnDelta;
 
     const overlaps = checkApplyItemToBoard(
       currentPlant,
       boardWithoutDriedPlant,
-      currentPlant[7].coor[1],
-      currentPlant[7].coor[0]
+      currentPlant[9][1],
+      currentPlant[9][0]
     );
 
     if (overlaps.length) {
@@ -480,15 +483,15 @@ function growPlant(driedPlantCanvas, board) {
   const newBoard = applyItemToBoard(
     newPlant,
     boardWithoutDriedPlant,
-    newPlant[7].coor[1],
-    newPlant[7].coor[0]
+    newPlant[9][1],
+    newPlant[9][0]
   );
 
   driedPlantCanvas.replaceWith(newPlant[7]);
   newPlant[7].id = driedPlantCanvas.id;
 
-  newPlant[7].style.left = `${(newPlant[7].coor[1] + 1) * 48}px`;
-  newPlant[7].style.top = `${(newPlant[7].coor[0] + 1) * 48}px`;
+  newPlant[7].style.left = `${(newPlant[9][1] + 1) * 48}px`;
+  newPlant[7].style.top = `${(newPlant[9][0] + 1) * 48}px`;
 
   return [newBoard, newPlant];
 }
@@ -501,9 +504,9 @@ const hydravoOnPlant = async () => {
     for (let col = 0; col < currentBoard[row].length; col++) {
       const itemId = currentBoard[row][col];
       if (itemId > 0) {
-        const canvas = document.getElementById("i" + itemId);
-        if (canvas && id(canvas.gameItem) === 6) {
-          driedPlants.push(canvas);
+        const item = getItemFromUniqId(itemId);
+        if (id(item) === 6) {
+          driedPlants.push(item[7]);
         }
       }
     }
@@ -652,7 +655,7 @@ function prepareItemToDrop(item, cb) {
 
     const [row, col] = convert1DIndexInto2DIndex(cellIndex, 10);
 
-    itemToDropCanvas.coor = [row, col];
+    item[9] = [row, col];
 
     const ctx = itemToDropCanvas.getContext("2d");
     ctx.clearRect(0, 0, itemToDropCanvas.width, itemToDropCanvas.height);

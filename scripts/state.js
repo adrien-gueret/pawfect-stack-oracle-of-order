@@ -1,6 +1,6 @@
-import { id } from "./items/index.js";
+import { id, getItemFromUniqId } from "./items/index.js";
 import { getKey } from "./save.js";
-import initStore, { dispatch, getState } from "./store.js";
+import initStore, { getState } from "./store.js";
 
 const defaultState = {
   m: true, // is sound muted
@@ -53,9 +53,9 @@ function buildTempBoard(board) {
   const tempBoard = [];
   board.forEach((row, rowIndex) => {
     tempBoard[rowIndex] = [];
-    row.forEach((itemId, colIndex) => {
-      const canvas = document.getElementById("i" + itemId);
-      const isBook = canvas ? id(canvas.gameItem) === 11 : false;
+    row.forEach((uniqId, colIndex) => {
+      const item = getItemFromUniqId(uniqId);
+      const isBook = item ? id(item) === 11 : false;
       tempBoard[rowIndex][colIndex] = isBook ? 1 : 0;
     });
   });
@@ -162,9 +162,9 @@ export const getItemUniqIds = () => {
 };
 
 export const getTotalItems = () =>
-  getItemUniqIds().filter((id) => {
-    const canvas = document.getElementById("i" + id);
-    return canvas && !canvas.gameItem?.[5] < 2;
+  getItemUniqIds().filter((uniqId) => {
+    const item = getItemFromUniqId(uniqId);
+    return item?.[5] < 2;
   }).length;
 
 export const areSoundMuted = () => getState().m;
@@ -172,10 +172,10 @@ export const areSoundMuted = () => getState().m;
 export function getMagic() {
   return (
     getItemUniqIds().reduce((acc, uniqId) => {
-      const canvas = document.getElementById("i" + uniqId);
-      const isBook = id(canvas.gameItem) === 11;
+      const item = getItemFromUniqId(uniqId);
+      const isBook = id(item) === 11;
 
-      return acc + (isBook ? 0 : canvas.gameItem?.[2] ?? 0);
+      return acc + (isBook ? 0 : item?.[2] ?? 0);
     }, 0) -
     (getState().s ?? 0) +
     getBooksMagic()

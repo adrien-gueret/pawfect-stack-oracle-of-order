@@ -1,4 +1,4 @@
-import { drawItem, id, SPRITES_SRC } from "./items/index.js";
+import { drawItem, id, SPRITES_SRC, getItemFromUniqId } from "./items/index.js";
 import {
   checkApplyItemToBoard,
   applyItemToBoard,
@@ -125,9 +125,9 @@ export async function applyGravity() {
     atLeastOneItemHasMoved = false;
     await Promise.all(
       itemUniqIds.map(async (itemUniqId) => {
-        const canvas = document.getElementById("i" + itemUniqId);
-        const [row, col] = canvas.coor;
-        const item = canvas.gameItem;
+        const item = getItemFromUniqId(itemUniqId);
+        const canvas = item[7];
+        const [row, col] = item[9];
 
         let isOnFloor = false;
         let rowToCheck = row;
@@ -145,7 +145,7 @@ export async function applyGravity() {
         atLeastOneItemHasMoved = atLeastOneItemHasMoved || hasCurrentItemMoved;
 
         const newRow = row + delta;
-        canvas.coor = [newRow, col];
+        item[9] = [newRow, col];
 
         dispatch("setBoard", applyItemToBoard(item, newBoard, col, newRow));
 
@@ -184,8 +184,7 @@ export async function applyGravity() {
         if (hasCurrentItemMoved) {
           await Promise.all(
             itemUniqIdsBelowMovedItem.map((belowItemUniqId) => {
-              const canvas = document.getElementById("i" + belowItemUniqId);
-              const item = canvas.gameItem;
+              const item = getItemFromUniqId(belowItemUniqId);
 
               return new Promise((resolve) => {
                 if (id(item) === 0) {
