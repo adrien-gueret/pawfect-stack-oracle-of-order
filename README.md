@@ -24,17 +24,23 @@ You are a cat. Probably the most beautiful one of all, let's be honest. But toda
 
 In both games, you'll have to handle some magical items. Some of them have some specificites:
 
-- Potion: Very fragile. If another item falls on it, or if it falls by itself, it will break.
+### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/a200a559-81ec-4a41-a8b7-3b17e35ab95c" style="image-rendering:pixelated" /> Potion
+
+Very fragile. If another item falls on it, or if it falls by itself, it will break.
   
 <img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Place your potions carefully so nothing can fall on them.<br>
 <img src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Drop other items onto these potions... or push them into the void!  
 
-- Grimoires: The more grimoires are placed next to each other, the higher their magic score will be.
+### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/637b6bc0-72d6-48af-ba7f-e5da5ef5324e" /> Grimories
+
+The more grimoires are placed next to each other, the higher their magic score will be.
 
 <img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Try to place grimoires next to each other.<br>
 <img src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Try to keep grimoires apart.
 
-- Dried plant: Needs water. When watered, it will grow if there’s enough space, increasing its magic score.
+### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/6cc6b067-2e2b-4eef-bae9-512f2c04024e" /> Dried plant
+
+Needs water. When watered, it will grow if there’s enough space, increasing its magic score.
 
 <img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Water them as soon as there’s space so they can grow!<br>
 <img src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Block them to stop them from growing as they should!
