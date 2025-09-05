@@ -2,8 +2,12 @@
 
 ## Oracle of Order
 
-Vous êtes une sorcière. Pas la plus grande de toutes, loin de là ! Vous n'êtes qu'une apprentie ; il faut bien commencer quelque part. Votre maître vous a demandé de ranger son armoire afin de canaliser toute la magie de la façon la plus optimisée possible. Cela devrait être facile n'est-ce pas ? Mais c'est sans compter le chat de compagnie du maître qui a bien son mot à dire, et il semble bien décidé à vous embêter…
+<img width="320" height="320" alt="pawfect-stack-oracle-of-order" src="https://github.com/user-attachments/assets/69d66d08-2baa-4f3e-9786-344749024697" />
+
+You are a witch. Not the greatest one of all, far from it! You're just an apprentice — everyone has to start somewhere. Your master has asked you to tidy up his cellar in order to channel all the magic as efficiently as possible. Sounds easy enough, right? But that's without taking into account your master's pet cat, who has plenty to say about it… and seems quite determined to get in your way.
 
 ## Oracle of Chaos
 
-Vous êtes un chat. Probablement le plus beau de tous, on peut le dire. Mais aujourd'hui, vous êtes inquiet. Votre humain de compagnie a engagé une jeune sorcière pour ranger son armoire. Et ça ne vous plaît pas ! En tant que chat digne de ce nom vous allez tout faire pour lui mettre des bâtons dans les roues. Cela devrait être facile n'est-ce pas ? Mais c'est sans compter la petite sorcière qui ne va pas se laisser faire, et elle a plus d'un tour de magie dans son sac…
+<img width="320" height="320" alt="pawfect-stack-oracle-of-chaos" src="https://github.com/user-attachments/assets/6414974a-ce1e-43e4-834b-76f8d9b511b1" />
+
+You are a cat. Probably the most beautiful one of all, let's be honest. But today, you're worried. Your human has taken on a young witch to tidy up his cellar. And you don't like that one bit! As a proper cat, you'll do everything in your power to make her life difficult. Sounds easy enough, right? But that's without taking into account the little witch, who won't let herself be pushed around — and she's got more than a few magic tricks up her sleeve…
