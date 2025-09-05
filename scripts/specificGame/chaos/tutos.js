@@ -42,7 +42,7 @@ export default async function startTuto(levelIndex) {
     });
 
     updateHelp(
-      "This is my territory. Mia has already place an item in the cellar... We have to stop her!",
+      "Mia has already place an item in the cellar... We have to stop her!",
       ["noshop"]
     );
 
@@ -52,7 +52,7 @@ export default async function startTuto(levelIndex) {
     actionsDomNodes[0].style.removeProperty("display");
 
     updateHelp(
-      'To be able to act, I have to be in the cellar. Click on the "Move" trick, on the upper right and place me in the cellar.',
+      'I have to be in the cellar: click on the "Move" trick on the upper right and place me in the cellar.',
       ["nocursor"]
     );
 
@@ -75,7 +75,7 @@ export default async function startTuto(levelIndex) {
     await waitForClick();
 
     updateHelp(
-      'She has already placed two items and her magic score increases... What if we send her a little "gift"? Click to see my own treasures!',
+      'She has already placed two items and her magic score increases... What if we send her a little "gift"? Click to see my own items!',
       ["noshop"]
     );
 

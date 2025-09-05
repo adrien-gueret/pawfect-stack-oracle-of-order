@@ -42,14 +42,14 @@ export default {
 
       if (hasFinishedOtherGame) {
         scenarioScenes.push(
-          "Meow! <i>(The Master used Mia to accumulate magic, become overpowered and dominate the world!)</i>",
-          "Meow... <i>(I tried everything to prevent Mia from helping him without her knowing...)</i>",
-          "Meow!!! <i>(Attack! We must stop him!)</i>",
+          "Meow!*<br>*<i>(The Master used Mia to accumulate magic, become overpowered and dominate the world!)",
+          "Meow...*<br>*<i>I tried everything to prevent Mia from helping him without her knowing...)",
+          "Meow!!!*<br>*<i>(Attack! We must stop him!)",
           "",
           "Master... ? Are you alright? Grimalkin jumped on you... That won't help with your allergy to his fur!"
         );
       } else {
-        scenarioScenes.push("Meow... <i>(Oh no, I've failed...)</i>");
+        scenarioScenes.push("Meow...*<br><i>*(Oh no, I've failed...)");
       }
 
       let currentScene = -1;

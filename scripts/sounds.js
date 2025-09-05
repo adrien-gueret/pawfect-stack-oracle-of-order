@@ -17,142 +17,77 @@ function playSound(f) {
 }
 
 function playMainMusic() {
-  if (areSoundMuted()) {
-    return;
-  }
+  if (areSoundMuted()) return;
 
-  const step = 0.25;
-  const base = 440;
-  const semi = 1.05946;
+  const step = 0.25,
+    base = 440,
+    semi = 1.05946;
+
   const notes = [
-    10,
-    12,
     13,
-    12,
-    10,
-    12,
-    15,
-    13,
-    12,
-    10,
-    12,
-    13,
-    15,
-    13,
-    12,
     ,
-    19,
-    19,
-    19,
-    19,
-    21,
-    21,
-    21,
-    21,
-    18,
-    18,
-    18,
-    18,
-    19,
-    19,
-    19,
-    19,
-    10,
-    12,
-    15,
     13,
-    12,
-    10,
-    12,
-    15,
-    13,
-    12,
-    15,
-    17,
-    15,
-    13,
-    12,
     ,
-    19,
-    21,
-    21,
-    21,
-    23,
-    23,
-    23,
-    23,
-    21,
-    21,
-    21,
-    21,
-    19,
-    19,
-    19,
-    19,
     10,
-    12,
-    13,
-    12,
-    10,
-    12,
-    15,
-    13,
-    12,
-    10,
-    12,
-    13,
-    15,
-    13,
-    12,
     ,
-    19,
-    19,
-    19,
-    19,
-    21,
-    21,
-    21,
-    21,
-    18,
-    18,
-    18,
-    18,
-    19,
-    19,
-    19,
-    19,
-    12,
     13,
-    15,
-    13,
-    12,
-    10,
-    12,
-    13,
-    15,
-    17,
-    15,
-    13,
-    12,
-    10,
-    12,
     ,
-    21,
-    19,
-    21,
-    19,
-    21,
-    23,
-    21,
-    19,
-    21,
-    19,
-    21,
-    23,
-    21,
-    19,
-    21,
-    19,
+    6,
+    ,
+    10,
+    ,
+    13,
+    ,
+    ,
+    ,
+    2,
+    13,
+    10,
+    ,
+    13,
+    ,
+    6,
+    ,
+    8,
+    ,
+    6,
+    ,
+    5,
+    ,
+    ,
+    ,
+    10,
+    ,
+    10,
+    ,
+    11,
+    ,
+    10,
+    ,
+    8,
+    ,
+    6,
+    ,
+    5,
+    ,
+    2,
+    13,
+    10,
+    ,
+    8,
+    ,
+    6,
+    ,
+    5,
+    ,
+    6,
+    ,
+    8,
+    ,
+    10,
+    ,
+    ,
+    ,
   ];
 
   if (!playMainMusic.ctx) playMainMusic.ctx = new AudioContext();
@@ -160,26 +95,41 @@ function playMainMusic() {
 
   const t0 = Math.max(ctx.currentTime + 0.03, 0);
   const g = ctx.createGain();
+  g.gain.value = 0.85;
   g.connect(ctx.destination);
 
   notes.forEach((n, i) => {
-    if (!n) return;
-    const start = t0 + i * step;
-    const stop = start + 0.24;
+    const start = t0 + i * step,
+      stop = start + 0.24;
+    if (n) {
+      const o = ctx.createOscillator(),
+        gn = ctx.createGain();
+      o.type = "square";
+      o.frequency.setValueAtTime(base * Math.pow(semi, 13 - n), start);
 
-    const osc = ctx.createOscillator();
-    osc.type = "triangle";
-    osc.frequency.setValueAtTime(base * Math.pow(semi, 13 - n), start);
+      gn.gain.setValueAtTime(0, start);
+      gn.gain.linearRampToValueAtTime(0.9, start + 0.01);
+      gn.gain.exponentialRampToValueAtTime(0.0001, stop);
+      o.connect(gn);
+      gn.connect(g);
+      o.start(start);
+      o.stop(stop + 0.01);
+    }
 
-    const gn = ctx.createGain();
-    gn.gain.setValueAtTime(1, start);
-    gn.gain.setTargetAtTime(0.0001, start + 0.22, 0.01);
-
-    osc.connect(gn);
-    gn.connect(g);
-
-    osc.start(start);
-    osc.stop(stop);
+    if (i % 2 === 0) {
+      const root = i % 4 === 0 ? 13 : 6;
+      const b = ctx.createOscillator(),
+        gb = ctx.createGain();
+      b.type = "triangle";
+      b.frequency.setValueAtTime(base * Math.pow(semi, 13 - root - 12), start);
+      gb.gain.setValueAtTime(0, start);
+      gb.gain.linearRampToValueAtTime(0.6, start + 0.01);
+      gb.gain.exponentialRampToValueAtTime(0.0001, stop);
+      b.connect(gb);
+      gb.connect(g);
+      b.start(start);
+      b.stop(stop + 0.01);
+    }
   });
 
   clearTimeout(playMainMusic.timer);
