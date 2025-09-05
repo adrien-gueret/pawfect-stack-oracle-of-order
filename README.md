@@ -1,5 +1,7 @@
 # Pawfect Stack
 
+**Two** web browser games, made for [JS13K 2025](https://js13kgames.com/2025/).
+
 ## Oracle of Order
 
 <img width="320" height="320" alt="pawfect-stack-oracle-of-order" src="https://github.com/user-attachments/assets/69d66d08-2baa-4f3e-9786-344749024697" />
@@ -17,3 +19,11 @@ You are a cat. Probably the most beautiful one of all, let's be honest. But toda
 
 <a href="https://js13kgames.com/2025/games/pawfect-stack-oracle-of-chaos">
 <img width="80" src="https://img.shields.io/badge/play-a0302d.svg?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSI2MDAiIGhlaWdodD0iNjAwIj48cGF0aCBkPSJNMTI5IDExMWMtNTUgNC05MyA2Ni05MyA3OEwwIDM5OGMtMiA3MCAzNiA5MiA2OSA5MWgxYzc5IDAgODctNTcgMTMwLTEyOGgyMDFjNDMgNzEgNTAgMTI4IDEyOSAxMjhoMWMzMyAxIDcxLTIxIDY5LTkxbC0zNi0yMDljMC0xMi00MC03OC05OC03OGgtMTBjLTYzIDAtOTIgMzUtOTIgNDJIMjM2YzAtNy0yOS00Mi05Mi00MmgtMTV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+" alt="Play" /></a>
+
+## About items...
+
+In both games, you'll have to handle some magical items. Some of them have some specificites:
+
+- Potion: Very fragile. If another item falls on it, or if it falls by itself, it will break.
+- Grimoires: The more grimoires are placed next to each other, the higher their magic score will be.
+- Dried plant: Needs water. When watered, it will grow if there’s enough space, increasing its magic score.
