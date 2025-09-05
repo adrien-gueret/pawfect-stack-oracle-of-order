@@ -67,7 +67,7 @@ export default async function startTuto(levelIndex) {
     actionsMenu.inert = true;
 
     updateHelp(
-      "The game ends when the required number of items is in the cellar; we win if Mia's magic goal is NOT reached. Check the top left of the screen!",
+      "The game ends when the required number of items is in the cellar; we win if Mia's magic goal is NOT reached. See at the top left of the screen!",
       [],
       ["nocursor"]
     );

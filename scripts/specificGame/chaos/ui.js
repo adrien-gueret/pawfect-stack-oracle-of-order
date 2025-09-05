@@ -293,6 +293,18 @@ async function placeItem(item, row, col, isWizard) {
 
   item.justDrop = !isWizard;
 
+  [actionsMenu, shop, walls].forEach((node) => {
+    node.addEventListener(
+      "mouseenter",
+      () => {
+        item.justDrop = false;
+      },
+      {
+        once: true,
+      }
+    );
+  });
+
   if (id(item) === 11) {
     Object.defineProperty(item, "2", {
       get() {
@@ -325,6 +337,8 @@ async function placeRandomWizardItem() {
     return placeRandomWizardItem();
   }
 
+  helpContainer.innerHTML = `Mia has placed a new item: ${item[0]}!`;
+
   setInteractive(item, "magic");
 
   await placeItem(item, position[0], position[1], true);
@@ -336,6 +350,8 @@ const hydravoOnCat = async () => {
   catItem.animate();
   catItem[7].inert = true;
   document.body.classList.add("catRunning");
+
+  helpContainer.innerHTML = `Mia has cast a Hydravo on myself, run!!!`;
 
   dispatch("setBoard", removeItemToBoard(catItem[6], getCurrentBoard()));
 
@@ -362,26 +378,23 @@ const hydravoOnCat = async () => {
 };
 
 async function ejectum() {
-  const currentBoard = getCurrentBoard();
+  const itemUniqIds = getItemUniqIds();
   const catItems = [];
 
-  for (let row = 0; row < currentBoard.length; row++) {
-    for (let col = 0; col < currentBoard[row].length; col++) {
-      const itemId = currentBoard[row][col];
-      if (itemId !== 0) {
-        const canvas = document.getElementById("i" + itemId);
-        if (canvas?.gameItem?.[5] === 1 && !canvas?.gameItem?.justDrop) {
-          catItems.push(canvas.gameItem);
-        }
-      }
+  itemUniqIds.forEach((itemUniqId) => {
+    const canvas = document.getElementById("i" + itemUniqId);
+    if (canvas?.gameItem?.[5] === 1 && !canvas?.gameItem?.justDrop) {
+      catItems.push(canvas.gameItem);
     }
-  }
+  });
 
   if (catItems.length === 0) {
     return false;
   }
 
   const itemToRemove = catItems[Math.floor(Math.random() * catItems.length)];
+
+  helpContainer.innerHTML = `Mia has cast a Ejectum on a ${itemToRemove[0]}.`;
 
   await destroyItem(itemToRemove);
   itemDisappears();
@@ -502,6 +515,8 @@ const hydravoOnPlant = async () => {
 
   const randomPlant =
     driedPlants[Math.floor(Math.random() * driedPlants.length)];
+
+  helpContainer.innerHTML = `Mia has cast Hydravo on a dried plant, making it bloom!`;
 
   const [newBoard, newPlant] = growPlant(randomPlant, currentBoard);
   plantGrowth();

@@ -90,7 +90,7 @@ export default async function startTuto(levelIndex) {
     levelGoals.style.removeProperty("display");
 
     updateHelp(
-      "The game ends when we place the required number of items; we win if we've reached the minimum required amount of magic. Check the top left of the screen!",
+      "The game ends when we place the required number of items; we win if we've reached the minimum required amount of magic. See at the top left of the screen!",
       ["noshop"]
     );
 
