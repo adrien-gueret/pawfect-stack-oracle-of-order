@@ -44,3 +44,15 @@ Needs water. When watered, it will grow if there’s enough space, increasing it
 
 <img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Water them as soon as there’s space so they can grow!<br>
 <img src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Block them to stop them from growing as they should!
+
+## Spells and tricks
+
+The witch can cast spells to aid her in her task, while the cat can pull off a few tricks.
+
+### <img width="60" src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Witch spells
+
+When starting a level, each spell costs 0 magic. This cost increases after each use (but is capped at 5).
+
+### <img width="60" src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Cat tricks
+
+Each trick is free! But don't forget: every time the witch casts _Hydravo_ on you, you **must** use the _Move_ trick to return to the cellar...
