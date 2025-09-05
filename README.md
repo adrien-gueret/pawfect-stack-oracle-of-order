@@ -26,15 +26,15 @@ In both games, you'll have to handle some magical items. Some of them have some 
 
 - Potion: Very fragile. If another item falls on it, or if it falls by itself, it will break.
   
-<img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Place your potions carefully so nothing can fall on them.
+<img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Place your potions carefully so nothing can fall on them.<br>
 <img src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Drop other items onto these potions... or push them into the void!  
 
 - Grimoires: The more grimoires are placed next to each other, the higher their magic score will be.
 
-<img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Try to place grimoires next to each other.
+<img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Try to place grimoires next to each other.<br>
 <img src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Try to keep grimoires apart.
 
 - Dried plant: Needs water. When watered, it will grow if there’s enough space, increasing its magic score.
 
-<img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Water them as soon as there’s space so they can grow!
+<img src="https://img.shields.io/badge/order-205d61.svg" alt="Oracle of Order" /> Water them as soon as there’s space so they can grow!<br>
 <img src="https://img.shields.io/badge/chaos-a0302d.svg" alt="Oracle of Chaos" /> Block them to stop them from growing as they should!
