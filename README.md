@@ -22,7 +22,7 @@ You are a cat. Probably the most beautiful one of all, let's be honest. But toda
 
 ## About items...
 
-In both games, you'll have to handle some magical items. Some of them have some specificites:
+In both games, you’ll have to deal with magical items. Some of them have special properties:
 
 ### <img width="48" height="48" alt="" src="https://github.com/user-attachments/assets/a200a559-81ec-4a41-a8b7-3b17e35ab95c" style="image-rendering:pixelated" /> Potion
 
